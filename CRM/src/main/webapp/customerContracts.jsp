@@ -10,9 +10,9 @@
     String ctx=request.getContextPath();
      int cartCount=session.getAttribute("shopCart")!=null?((Map<?,?>)session.getAttribute("shopCart")).size():0;
 %><%! Object nvl(Object v,Object d){return v!=null?v:d;} %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Hợp Đồng - CRM</title>
+        <title>Contracts - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -376,50 +376,50 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item on"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item on"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
         <main class="main">
             <div class="pg-hd">
-                <h1><i class="fas fa-file-contract"></i> Hợp Đồng Dịch Vụ</h1>
-                <p>Hợp đồng bảo hành và bảo trì thiết bị của bạn</p>
+                <h1><i class="fas fa-file-contract"></i> Service Contracts</h1>
+                <p>Your equipment warranty and maintenance contracts</p>
             </div>
 
             <div class="info-bar">
                 <i class="fas fa-info-circle"></i>
-                <span>Để tạo hợp đồng mới, vui lòng liên hệ nhân viên hỗ trợ qua
-                    <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600">Chat hỗ trợ</a></span>
+                <span>To create a new contract, please contact a support agent via
+                    <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600">Support Chat</a></span>
             </div>
 
             <div class="stats">
-                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-file-contract"></i></div><div><div class="sm-val"><%=contracts.size()%></div><div class="sm-lbl">Tổng hợp đồng</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-shield-alt"></i></div><div><div class="sm-val"><%=warrantyCount%></div><div class="sm-lbl">Bảo hành (WARRANTY)</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-tools"></i></div><div><div class="sm-val"><%=maintCount%></div><div class="sm-lbl">Bảo trì (MAINTENANCE)</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-file-contract"></i></div><div><div class="sm-val"><%=contracts.size()%></div><div class="sm-lbl">Total Contracts</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-shield-alt"></i></div><div><div class="sm-val"><%=warrantyCount%></div><div class="sm-lbl">Warranty (WARRANTY)</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-tools"></i></div><div><div class="sm-val"><%=maintCount%></div><div class="sm-lbl">Maintenance (MAINTENANCE)</div></div></div>
             </div>
 
             <%if(contracts.isEmpty()){%>
-            <div class="empty"><i class="fas fa-file-contract"></i>Bạn chưa có hợp đồng nào.<br>
-                <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:8px">Liên hệ nhân viên hỗ trợ →</a>
+            <div class="empty"><i class="fas fa-file-contract"></i>You have no contracts yet.<br>
+                <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:8px">Contact a support agent →</a>
             </div>
             <%}else{%>
             <div class="ct-grid">
@@ -442,8 +442,8 @@
                         <span class="b <%=sc%>"><%=c.getStatusLabel()%></span>
                     </div>
                     <div class="ct-card-body">
-                        <div class="ct-row"><i class="fas fa-calendar-alt"></i> Từ: <%=c.getStartDate()%> → <%=c.getEndDate()%></div>
-                        <div class="ct-row"><i class="fas fa-user-tie"></i> Tạo bởi: <%=c.getCreatedByName()%></div>
+                        <div class="ct-row"><i class="fas fa-calendar-alt"></i> From: <%=c.getStartDate()%> → <%=c.getEndDate()%></div>
+                        <div class="ct-row"><i class="fas fa-user-tie"></i> Created by: <%=c.getCreatedByName()%></div>
                         <%if(c.getNotes()!=null&&!c.getNotes().isEmpty()){%>
                         <div class="ct-row"><i class="fas fa-sticky-note"></i> <%=c.getNotes()%></div>
                         <%}%>
@@ -451,9 +451,9 @@
                     <div class="ct-card-foot">
                         <div class="ct-eq-count">
                             <i class="fas fa-desktop" style="color:var(--primary)"></i>
-                            <%=c.getEquipmentCount()%> thiết bị · <%=c.getServiceRequestCount()%> yêu cầu
+                            <%=c.getEquipmentCount()%> equipment · <%=c.getServiceRequestCount()%> requests
                         </div>
-                        <a href="<%=ctx%>/customerContracts?action=detail&id=<%=c.getId()%>" class="btn-detail">Chi tiết →</a>
+                        <a href="<%=ctx%>/customerContracts?action=detail&id=<%=c.getId()%>" class="btn-detail">Details →</a>
                     </div>
                 </div>
                 <%}%>

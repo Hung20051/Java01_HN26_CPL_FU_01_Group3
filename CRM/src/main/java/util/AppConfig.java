@@ -16,7 +16,7 @@ public class AppConfig {
         }
     }
 
-    public static final String BASE_URL = "http://localhost:9999/CRM";
+    public static final String BASE_URL = "http://localhost:9999/DRSMS";
 
     // Google OAuth
     public static final String GOOGLE_CLIENT_ID     = props.getProperty("google.client.id");

@@ -11,7 +11,7 @@
     String ctx = request.getContextPath();
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Admin Dashboard</title>
@@ -268,70 +268,70 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
-            <div class="page-title"><i class="fas fa-tachometer-alt"></i> Bảng Điều Khiển Quản Trị</div>
+            <div class="page-title"><i class="fas fa-tachometer-alt"></i> Admin Control Panel</div>
             <div class="welcome-banner">
                 <i class="fas fa-info-circle"></i>
                 <div>
-                    <h3>Chào Mừng, <%= currentUser.getFullName() %>!</h3>
-                    <p>Tại đây bạn có thể quản lý người dùng, vai trò và cài đặt hệ thống.</p>
+                    <h3>Welcome, <%= currentUser.getFullName() %>!</h3>
+                    <p>Here you can manage users, roles and system settings.</p>
                 </div>
             </div>
             <div class="cards-grid">
                 <div class="card">
                     <i class="fas fa-users" style="color:#3498db;"></i>
-                    <h3>Quản Lý Người Dùng</h3>
-                    <p>Tạo, chỉnh sửa và phân quyền người dùng trong hệ thống.</p>
-                    <a href="<%= ctx %>/user/list" class="btn btn-blue">Danh Sách Người Dùng</a>
-                    <a href="<%= ctx %>/user/create" class="btn btn-outline">+ Thêm Người Dùng</a>
+                    <h3>User Management</h3>
+                    <p>Create, edit and assign permissions to users in the system.</p>
+                    <a href="<%= ctx %>/user/list" class="btn btn-blue">User List</a>
+                    <a href="<%= ctx %>/user/create" class="btn btn-outline">+ Add User</a>
                 </div>
                 <div class="card">
                     <i class="fas fa-user-tag" style="color:#27ae60;"></i>
-                    <h3>Quản Lý Vai Trò</h3>
-                    <p>Tạo và quản lý vai trò, phân quyền truy cập hệ thống.</p>
-                    <a href="<%= ctx %>/role/list" class="btn btn-green">Danh Sách Vai Trò</a>
+                    <h3>Role Management</h3>
+                    <p>Create and manage roles and system access permissions.</p>
+                    <a href="<%= ctx %>/role/list" class="btn btn-green">Role List</a>
                 </div>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-                    <div class="stat-info"><h4><%= totalUsers %></h4><p>Tổng Người Dùng</p></div>
+                    <div class="stat-info"><h4><%= totalUsers %></h4><p>Total Users</p></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon green"><i class="fas fa-user-tag"></i></div>
-                    <div class="stat-info"><h4><%= totalRoles %></h4><p>Số Vai Trò</p></div>
+                    <div class="stat-info"><h4><%= totalRoles %></h4><p>Total Roles</p></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon orange"><i class="fas fa-shield-alt"></i></div>
-                    <div class="stat-info"><h4>Active</h4><p>Trạng Thái Hệ Thống</p></div>
+                    <div class="stat-info"><h4>Active</h4><p>System Status</p></div>
                 </div>
             </div>
             <div class="system-info">
-                <h3><i class="fas fa-info-circle" style="color:#3498db;"></i> Thông Tin Hệ Thống</h3>
+                <h3><i class="fas fa-info-circle" style="color:#3498db;"></i> System Information</h3>
                 <div class="info-grid">
                     <div class="info-col">
-                        <h4>Tính Năng</h4>
-                        <div class="info-item"><i class="fas fa-check"></i> CRUD Người Dùng</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Quản Lý Vai Trò</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Phân Quyền Hệ Thống</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Đăng Nhập Google / Facebook</div>
+                        <h4>Features</h4>
+                        <div class="info-item"><i class="fas fa-check"></i> User CRUD</div>
+                        <div class="info-item"><i class="fas fa-check"></i> Role Management</div>
+                        <div class="info-item"><i class="fas fa-check"></i> System Authorization</div>
+                        <div class="info-item"><i class="fas fa-check"></i> Google / Facebook Login</div>
                     </div>
                     <div class="info-col">
-                        <h4>Bảo Mật</h4>
-                        <div class="info-item"><i class="fas fa-check"></i> Mã Hóa Mật Khẩu BCrypt</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Phân Quyền Theo Vai Trò</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Kiểm Soát Quản Trị</div>
-                        <div class="info-item"><i class="fas fa-check"></i> Session Timeout 30 phút</div>
+                        <h4>Security</h4>
+                        <div class="info-item"><i class="fas fa-check"></i> BCrypt Password Encryption</div>
+                        <div class="info-item"><i class="fas fa-check"></i> Role-Based Access Control</div>
+                        <div class="info-item"><i class="fas fa-check"></i> Admin Access Control</div>
+                        <div class="info-item"><i class="fas fa-check"></i> Session Timeout 30 minutes</div>
                     </div>
                 </div>
             </div>

@@ -21,9 +21,9 @@
     boolean canCancel="PENDING".equals(sr.getStatus());
     int cartCount=session.getAttribute("shopCart")!=null?((Map<?,?>)session.getAttribute("shopCart")).size():0;
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title><%=sr.getRequestCode()%> - CRM</title>
+        <title><%=sr.getRequestCode()%> - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -502,26 +502,26 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -529,23 +529,23 @@
             <div class="breadcrumb">
                 <a href="<%=ctx%>/customerDashboard"><i class="fas fa-home"></i></a>
                 <span class="breadcrumb-sep">›</span>
-                <a href="<%=ctx%>/customerServiceRequests">Yêu cầu sửa chữa</a>
+                <a href="<%=ctx%>/customerServiceRequests">Repair Requests</a>
                 <span class="breadcrumb-sep">›</span>
                 <span><%=sr.getRequestCode()%></span>
             </div>
 
             <div class="page-hd">
                 <div class="page-hd-left">
-                    <h1><i class="fas fa-clipboard-check"></i> Chi Tiết Yêu Cầu <span><%=sr.getRequestCode()%></span></h1>
+                    <h1><i class="fas fa-clipboard-check"></i> Request Detail <span><%=sr.getRequestCode()%></span></h1>
                     <p><%=sr.getTitle()%></p>
                 </div>
                 <div class="actions">
-                    <a href="<%=ctx%>/customerServiceRequests" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+                    <a href="<%=ctx%>/customerServiceRequests" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
                     <%if(canCancel){%>
-                    <form method="post" action="<%=ctx%>/customerServiceRequests" onsubmit="return confirm('Bạn chắc chắn muốn hủy yêu cầu này?')">
+                    <form method="post" action="<%=ctx%>/customerServiceRequests" onsubmit="return confirm('Are you sure you want to cancel this request?')">
                         <input type="hidden" name="action" value="cancel">
                         <input type="hidden" name="id" value="<%=sr.getId()%>">
-                        <button type="submit" class="btn-cancel-big"><i class="fas fa-times-circle"></i> Hủy Yêu Cầu</button>
+                        <button type="submit" class="btn-cancel-big"><i class="fas fa-times-circle"></i> Cancel Request</button>
                     </form>
                     <%}%>
                 </div>
@@ -554,61 +554,61 @@
             <%if("REJECTED".equals(sr.getStatus())&&sr.getRejectReason()!=null){%>
             <div class="reject-box">
                 <i class="fas fa-ban"></i>
-                <div><strong>Yêu cầu bị từ chối:</strong> <%=sr.getRejectReason()%></div>
+                <div><strong>Request rejected:</strong> <%=sr.getRejectReason()%></div>
             </div>
             <%}%>
 
             <div class="grid-detail">
                 <div>
-                    <!-- Thông tin chung -->
+                    <!-- General information -->
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-info"></i></div><div class="card-hd-title">Thông Tin Yêu Cầu</div></div>
+                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-info"></i></div><div class="card-hd-title">Request Information</div></div>
                         <div class="card-body">
-                            <div class="info-row"><div class="info-lbl">Mã yêu cầu</div><div class="info-val"><strong style="font-family:monospace;color:var(--primary)"><%=sr.getRequestCode()%></strong></div></div>
-                            <div class="info-row"><div class="info-lbl">Tiêu đề</div><div class="info-val"><strong><%=sr.getTitle()%></strong></div></div>
+                            <div class="info-row"><div class="info-lbl">Request Code</div><div class="info-val"><strong style="font-family:monospace;color:var(--primary)"><%=sr.getRequestCode()%></strong></div></div>
+                            <div class="info-row"><div class="info-lbl">Title</div><div class="info-val"><strong><%=sr.getTitle()%></strong></div></div>
                             <div class="info-row">
-                                <div class="info-lbl">Hợp đồng</div>
+                                <div class="info-lbl">Contract</div>
                                 <div class="info-val">
                                     <a href="<%=ctx%>/customerContracts?action=detail&id=<%=sr.getContractId()%>" style="color:var(--primary);font-weight:700;font-family:monospace"><%=sr.getContractCode()%></a>
                                     <span style="margin-left:7px;padding:3px 8px;border-radius:5px;font-size:.75rem;font-weight:700;background:<%=isW?"#d1fae5":"#dbeafe"%>;color:<%=isW?"#065f46":"#1e40af"%>">
-                                        <%=isW?"Bảo hành":"Bảo trì"%>
+                                        <%=isW?"Warranty":"Maintenance"%>
                                     </span>
                                 </div>
                             </div>
-                            <div class="info-row"><div class="info-lbl">Ưu tiên</div><div class="info-val"><span class="b <%=pc%>"><%=sr.getPriorityLabel()%></span></div></div>
-                            <div class="info-row"><div class="info-lbl">Trạng thái</div><div class="info-val"><span class="b <%=sc%>"><%=sr.getStatusLabel()%></span></div></div>
-                            <div class="info-row"><div class="info-lbl">Ngày tạo</div><div class="info-val"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%></div></div>
+                            <div class="info-row"><div class="info-lbl">Priority</div><div class="info-val"><span class="b <%=pc%>"><%=sr.getPriorityLabel()%></span></div></div>
+                            <div class="info-row"><div class="info-lbl">Status</div><div class="info-val"><span class="b <%=sc%>"><%=sr.getStatusLabel()%></span></div></div>
+                            <div class="info-row"><div class="info-lbl">Created Date</div><div class="info-val"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%></div></div>
                                 <%if(sr.getCompletedAt()!=null){%>
-                            <div class="info-row"><div class="info-lbl">Hoàn thành</div><div class="info-val" style="color:var(--success);font-weight:600"><%=sr.getCompletedAt().toString().replace("T"," ").substring(0,16)%></div></div>
+                            <div class="info-row"><div class="info-lbl">Completed</div><div class="info-val" style="color:var(--success);font-weight:600"><%=sr.getCompletedAt().toString().replace("T"," ").substring(0,16)%></div></div>
                                 <%}%>
                         </div>
                     </div>
 
-                    <!-- Mô tả -->
+                    <!-- Description -->
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--muted)"><i class="fas fa-align-left"></i></div><div class="card-hd-title">Mô Tả Sự Cố</div></div>
+                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--muted)"><i class="fas fa-align-left"></i></div><div class="card-hd-title">Issue Description</div></div>
                         <div class="card-body">
                             <div class="desc-box"><%=sr.getDescription().replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\n","<br>")%></div>
                         </div>
                     </div>
 
-                    <!-- Thiết bị -->
+                    <!-- Equipment -->
                     <div class="card">
                         <div class="card-hd">
                             <div class="card-hd-icon" style="background:#7c3aed"><i class="fas fa-desktop"></i></div>
-                            <div class="card-hd-title">Thiết Bị Cần Sửa (<%=eqList.size()%>)</div>
+                            <div class="card-hd-title">Equipment to Repair (<%=eqList.size()%>)</div>
                         </div>
                         <div class="card-body" style="padding-top:4px;padding-bottom:4px">
                             <%if(eqList.isEmpty()){%>
-                            <p style="color:var(--muted);font-size:.84rem;padding:10px 0">Chưa có thông tin thiết bị.</p>
+                            <p style="color:var(--muted);font-size:.84rem;padding:10px 0">No equipment information available.</p>
                             <%}else{for(int i=0;i<eqList.size();i++){ServiceRequestEquipment eq=eqList.get(i);%>
                             <div class="eq-item">
                                 <div class="eq-num"><%=i+1%></div>
                                 <div style="flex:1">
-                                    <div class="eq-name"><%=eq.getDisplayName()!=null?eq.getDisplayName():"Thiết bị #"+eq.getCustomerEquipmentId()%></div>
+                                    <div class="eq-name"><%=eq.getDisplayName()!=null?eq.getDisplayName():"Equipment #"+eq.getCustomerEquipmentId()%></div>
                                     <div class="eq-serial"><i class="fas fa-barcode" style="font-size:.7rem"></i> <%=eq.getDisplaySerial()!=null?eq.getDisplaySerial():"N/A"%>
                                         <span style="margin-left:6px;padding:1px 6px;border-radius:3px;background:<%="EXTERNAL".equals(eq.getSource())?"#fef9c3":"#e0e7ff"%>;color:<%="EXTERNAL".equals(eq.getSource())?"#854d0e":"#3730a3"%>;font-size:.7rem">
-                                            <%="EXTERNAL".equals(eq.getSource())?"Ngoài HT":"Trong HT"%>
+                                            <%="EXTERNAL".equals(eq.getSource())?"External":"In-System"%>
                                         </span>
                                     </div>
                                     <%if(eq.getIssueDescription()!=null&&!eq.getIssueDescription().isEmpty()){%>
@@ -623,9 +623,9 @@
 
                 <!-- Right column -->
                 <div>
-                    <!-- Tiến độ -->
+                    <!-- Progress -->
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--success)"><i class="fas fa-tasks"></i></div><div class="card-hd-title">Tiến Độ Xử Lý</div></div>
+                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--success)"><i class="fas fa-tasks"></i></div><div class="card-hd-title">Processing Progress</div></div>
                         <div class="card-body">
                             <div class="timeline">
                                 <%
@@ -639,20 +639,20 @@
                                 <div class="tl-item">
                                     <div class="tl-dot done"><i class="fas fa-check"></i></div>
                                     <div class="tl-content">
-                                        <div class="tl-label">Đã gửi yêu cầu</div>
+                                        <div class="tl-label">Request Submitted</div>
                                         <div class="tl-sub"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toLocalDate():""%></div>
                                     </div>
                                 </div>
                                 <%if(cancelled){%>
                                 <div class="tl-item">
                                     <div class="tl-dot" style="background:#f3f4f6;border-color:#d1d5db;color:#9ca3af"><i class="fas fa-ban"></i></div>
-                                    <div class="tl-content"><div class="tl-label" style="color:var(--muted)">Đã hủy</div></div>
+                                    <div class="tl-content"><div class="tl-label" style="color:var(--muted)">Cancelled</div></div>
                                 </div>
                                 <%}else if(rejected){%>
                                 <div class="tl-item">
                                     <div class="tl-dot" style="background:#fee2e2;border-color:var(--danger);color:var(--danger)"><i class="fas fa-times"></i></div>
                                     <div class="tl-content">
-                                        <div class="tl-label" style="color:var(--danger)">Bị từ chối</div>
+                                        <div class="tl-label" style="color:var(--danger)">Rejected</div>
                                         <div class="tl-sub"><%=sr.getReviewedAt()!=null?sr.getReviewedAt().toLocalDate():""%></div>
                                     </div>
                                 </div>
@@ -662,7 +662,7 @@
                                         <i class="fas fa-<%=p2?"check":"clock"%>"></i>
                                     </div>
                                     <div class="tl-content">
-                                        <div class="tl-label"><%=p2?"Đã duyệt":"Chờ Technical Manager duyệt"%></div>
+                                        <div class="tl-label"><%=p2?"Approved":"Awaiting Technical Manager Approval"%></div>
                                         <%if(p2&&sr.getReviewedByName()!=null){%><div class="tl-sub"><%=sr.getReviewedByName()%> · <%=sr.getReviewedAt()!=null?sr.getReviewedAt().toLocalDate():""%></div><%}%>
                                     </div>
                                 </div>
@@ -671,8 +671,8 @@
                                         <i class="fas fa-<%=p3?"check":"spinner"%>"></i>
                                     </div>
                                     <div class="tl-content">
-                                        <div class="tl-label"><%=p3?"Đang/Đã xử lý":"Chờ kỹ thuật viên"%></div>
-                                        <%if(sr.getAssignedToName()!=null){%><div class="tl-sub">KTV: <%=sr.getAssignedToName()%></div><%}%>
+                                        <div class="tl-label"><%=p3?"In Progress / Processed":"Awaiting Technician"%></div>
+                                        <%if(sr.getAssignedToName()!=null){%><div class="tl-sub">Technician: <%=sr.getAssignedToName()%></div><%}%>
                                     </div>
                                 </div>
                                 <div class="tl-item">
@@ -680,7 +680,7 @@
                                         <i class="fas fa-<%=p4?"check-circle":"flag"%>"></i>
                                     </div>
                                     <div class="tl-content">
-                                        <div class="tl-label"><%=p4?"Hoàn thành!":"Hoàn thành"%></div>
+                                        <div class="tl-label"><%=p4?"Completed!":"Completion"%></div>
                                         <%if(p4&&sr.getCompletedAt()!=null){%><div class="tl-sub" style="color:var(--success)"><%=sr.getCompletedAt().toLocalDate()%></div><%}%>
                                     </div>
                                 </div>
@@ -689,9 +689,9 @@
                         </div>
                     </div>
 
-                    <!-- Kỹ thuật viên -->
+                    <!-- Technician -->
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon" style="background:#0891b2"><i class="fas fa-user-hard-hat"></i></div><div class="card-hd-title">Nhân Viên Phụ Trách</div></div>
+                        <div class="card-hd"><div class="card-hd-icon" style="background:#0891b2"><i class="fas fa-user-hard-hat"></i></div><div class="card-hd-title">Assigned Staff</div></div>
                         <div class="card-body">
                             <%if(sr.getAssignedToName()!=null){%>
                             <div style="display:flex;align-items:center;gap:10px">
@@ -700,24 +700,24 @@
                                 </div>
                                 <div>
                                     <div style="font-size:.875rem;font-weight:600;color:var(--text)"><%=sr.getAssignedToName()%></div>
-                                    <div style="font-size:.76rem;color:var(--muted)">Kỹ thuật viên</div>
+                                    <div style="font-size:.76rem;color:var(--muted)">Technician</div>
                                 </div>
                             </div>
                             <%}else{%>
-                            <p style="color:var(--muted);font-size:.84rem;text-align:center;padding:10px 0"><i class="fas fa-user-clock" style="font-size:1.5rem;display:block;margin-bottom:6px;opacity:.3"></i>Chưa phân công</p>
+                            <p style="color:var(--muted);font-size:.84rem;text-align:center;padding:10px 0"><i class="fas fa-user-clock" style="font-size:1.5rem;display:block;margin-bottom:6px;opacity:.3"></i>Not yet assigned</p>
                             <%}%>
                         </div>
                     </div>
 
-                    <!-- Loại hợp đồng note -->
+                    <!-- Contract type note -->
                     <div class="card" style="background:<%=isW?"#f0fdf4":"#eff6ff"%>;border-color:<%=isW?"#bbf7d0":"#bfdbfe"%>">
                         <div class="card-body">
                             <div style="display:flex;align-items:center;gap:9px">
                                 <i class="fas fa-<%=isW?"shield-alt":"tools"%>" style="font-size:1.2rem;color:<%=isW?"var(--success)":"var(--info)"%>"></i>
                                 <div>
-                                    <div style="font-size:.84rem;font-weight:700;color:<%=isW?"#065f46":"#1e40af"%>"><%=isW?"Hợp đồng Bảo Hành":"Hợp đồng Bảo Trì"%></div>
+                                    <div style="font-size:.84rem;font-weight:700;color:<%=isW?"#065f46":"#1e40af"%>"><%=isW?"Warranty Contract":"Maintenance Contract"%></div>
                                     <div style="font-size:.77rem;color:<%=isW?"#047857":"#1d4ed8"%>;margin-top:2px">
-                                        <%=isW?"Dịch vụ sửa chữa MIỄN PHÍ theo hợp đồng bảo hành":"Chi phí sửa chữa sẽ được tính và thông báo sau"%>
+                                        <%=isW?"Repair service is FREE under the warranty contract":"Repair costs will be calculated and notified later"%>
                                     </div>
                                 </div>
                             </div>

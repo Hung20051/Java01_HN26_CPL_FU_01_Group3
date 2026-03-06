@@ -12,14 +12,14 @@
     if("PAID".equals(inv.getStatus()))isc="b-paid";
     else if("CANCELLED".equals(inv.getStatus()))isc="b-cancelled";
     boolean overdue="UNPAID".equals(inv.getStatus())&&inv.getDueDate()!=null&&inv.getDueDate().isBefore(java.time.LocalDate.now());
-    // Kiểm tra thông báo thanh toán thành công
+    // Check payment success notification
     String paySuccess=request.getParameter("paySuccess");
     String errorMsg=request.getParameter("error");
      int cartCount=session.getAttribute("shopCart")!=null?((Map<?,?>)session.getAttribute("shopCart")).size():0;
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title><%=inv.getInvoiceCode()%> - CRM</title>
+        <title><%=inv.getInvoiceCode()%> - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -666,26 +666,26 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item on"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item on"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -693,34 +693,34 @@
             <div class="breadcrumb">
                 <a href="<%=ctx%>/customerDashboard"><i class="fas fa-home"></i></a>
                 <span class="breadcrumb-sep">›</span>
-                <a href="<%=ctx%>/customerInvoices">Hóa đơn</a>
+                <a href="<%=ctx%>/customerInvoices">Invoices</a>
                 <span class="breadcrumb-sep">›</span>
                 <span><%=inv.getInvoiceCode()%></span>
             </div>
-            <a href="<%=ctx%>/customerInvoices" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a href="<%=ctx%>/customerInvoices" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
 
-            <%-- Toast thông báo --%>
+            <%-- Notification toasts --%>
             <%if("cash".equals(paySuccess)){%>
             <div class="success-toast"><i class="fas fa-check-circle" style="font-size:1.2rem"></i>
-                <div><strong>Thanh toán tiền mặt thành công!</strong> Hóa đơn <%=inv.getInvoiceCode()%> đã được ghi nhận.</div>
+                <div><strong>Cash payment successful!</strong> Invoice <%=inv.getInvoiceCode()%> has been recorded.</div>
             </div>
             <%}else if("vnpay".equals(paySuccess)){%>
             <div class="success-toast"><i class="fas fa-check-circle" style="font-size:1.2rem"></i>
-                <div><strong>Thanh toán VNPay thành công!</strong> Hóa đơn <%=inv.getInvoiceCode()%> đã được thanh toán.</div>
+                <div><strong>VNPay payment successful!</strong> Invoice <%=inv.getInvoiceCode()%> has been paid.</div>
             </div>
             <%}else if("invalid".equals(errorMsg)||"session_expired".equals(errorMsg)){%>
             <div class="error-toast"><i class="fas fa-exclamation-triangle"></i>
-                <div>Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.</div>
+                <div>An error occurred during payment. Please try again.</div>
             </div>
             <%}%>
 
             <%if(overdue&&!"PAID".equals(inv.getStatus())){%>
             <div class="overdue-box"><i class="fas fa-exclamation-triangle"></i>
-                <div>Hóa đơn này đã <strong>quá hạn thanh toán</strong> (<%=inv.getDueDate()%>). Vui lòng thanh toán sớm.</div>
+                <div>This invoice is <strong>overdue</strong> (<%=inv.getDueDate()%>). Please make payment as soon as possible.</div>
             </div>
             <%}else if("PAID".equals(inv.getStatus())){%>
             <div class="paid-box"><i class="fas fa-check-circle" style="font-size:1.1rem"></i>
-                <div>Hóa đơn này đã được <strong>thanh toán đầy đủ</strong>. Cảm ơn bạn!</div>
+                <div>This invoice has been <strong>fully paid</strong>. Thank you!</div>
             </div>
             <%}%>
 
@@ -729,25 +729,25 @@
                     <!-- Invoice header -->
                     <div class="inv-header">
                         <div>
-                            <div class="inv-title"><i class="fas fa-receipt"></i> HÓA ĐƠN</div>
+                            <div class="inv-title"><i class="fas fa-receipt"></i> INVOICE</div>
                             <div class="inv-code"><%=inv.getInvoiceCode()%></div>
-                            <div class="inv-date">Ngày tạo: <%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%></div>
+                            <div class="inv-date">Created: <%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%></div>
                         </div>
                         <div class="inv-company">
-                            <strong>CRM System</strong><br>
-                            Dịch vụ kỹ thuật & bảo trì<br>
-                            Phụ trách: <%=inv.getCreatedByName()%>
+                            <strong>DRSMS System</strong><br>
+                            Technical & Maintenance Services<br>
+                            In charge: <%=inv.getCreatedByName()%>
                         </div>
                     </div>
 
                     <!-- Items -->
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-list"></i></div><div class="card-hd-title">Chi Tiết Dịch Vụ</div></div>
+                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-list"></i></div><div class="card-hd-title">Service Details</div></div>
                                 <%if(items.isEmpty()){%>
-                        <div class="card-body" style="color:var(--muted);text-align:center;padding:24px">Chưa có chi tiết dịch vụ</div>
+                        <div class="card-body" style="color:var(--muted);text-align:center;padding:24px">No service details available</div>
                         <%}else{%>
                         <table>
-                            <thead><tr><th>#</th><th>Mô tả</th><th>Loại</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead>
+                            <thead><tr><th>#</th><th>Description</th><th>Type</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
                             <tbody>
                                 <%for(int i=0;i<items.size();i++){InvoiceItem it=items.get(i);
                                   String itBg="#e0e7ff";String itCl="#3730a3";
@@ -769,9 +769,9 @@
                         <%}%>
                         <div style="padding:16px 20px;border-top:1px solid var(--border)">
                             <div style="max-width:280px;margin-left:auto">
-                                <div class="sum-row"><span class="lbl">Tạm tính</span><span><%=inv.getSubtotal()!=null?nf.format(inv.getSubtotal()):"0"%> ₫</span></div>
-                                <div class="sum-row"><span class="lbl">Thuế VAT (<%=inv.getTaxPercent()!=null?inv.getTaxPercent().intValue():0%>%)</span><span><%=inv.getTaxAmount()!=null?nf.format(inv.getTaxAmount()):"0"%> ₫</span></div>
-                                <div class="sum-row total"><span class="lbl">Tổng cộng</span><span><%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫</span></div>
+                                <div class="sum-row"><span class="lbl">Subtotal</span><span><%=inv.getSubtotal()!=null?nf.format(inv.getSubtotal()):"0"%> ₫</span></div>
+                                <div class="sum-row"><span class="lbl">VAT Tax (<%=inv.getTaxPercent()!=null?inv.getTaxPercent().intValue():0%>%)</span><span><%=inv.getTaxAmount()!=null?nf.format(inv.getTaxAmount()):"0"%> ₫</span></div>
+                                <div class="sum-row total"><span class="lbl">Total</span><span><%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫</span></div>
                             </div>
                         </div>
                     </div>
@@ -780,50 +780,50 @@
                 <!-- Right panel -->
                 <div>
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-info"></i></div><div class="card-hd-title">Thông Tin Hóa Đơn</div></div>
+                        <div class="card-hd"><div class="card-hd-icon"><i class="fas fa-info"></i></div><div class="card-hd-title">Invoice Information</div></div>
                         <div class="card-body">
                             <div class="info-grid" style="margin-bottom:14px">
-                                <div class="info-item"><div class="lbl">Mã hóa đơn</div><div class="val" style="font-family:monospace;font-weight:700;color:var(--primary)"><%=inv.getInvoiceCode()%></div></div>
-                                <div class="info-item"><div class="lbl">Trạng thái</div><div class="val"><span class="b <%=isc%>"><%=inv.getStatusLabel()%></span></div></div>
-                                <div class="info-item"><div class="lbl">Loại</div><div class="val"><%=inv.getInvoiceTypeLabel()%></div></div>
-                                <div class="info-item"><div class="lbl">Ngày tạo</div><div class="val"><%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%></div></div>
+                                <div class="info-item"><div class="lbl">Invoice Code</div><div class="val" style="font-family:monospace;font-weight:700;color:var(--primary)"><%=inv.getInvoiceCode()%></div></div>
+                                <div class="info-item"><div class="lbl">Status</div><div class="val"><span class="b <%=isc%>"><%=inv.getStatusLabel()%></span></div></div>
+                                <div class="info-item"><div class="lbl">Type</div><div class="val"><%=inv.getInvoiceTypeLabel()%></div></div>
+                                <div class="info-item"><div class="lbl">Created</div><div class="val"><%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%></div></div>
                                     <%if(inv.getDueDate()!=null){%>
-                                <div class="info-item"><div class="lbl">Hạn thanh toán</div>
+                                <div class="info-item"><div class="lbl">Due Date</div>
                                     <div class="val" style="<%=overdue?"color:var(--danger);font-weight:700":""%>"><%=inv.getDueDate()%><%=overdue?" ⚠️":""%></div>
                                 </div>
                                 <%}%>
                                 <%if(inv.getRequestCode()!=null){%>
-                                <div class="info-item"><div class="lbl">Yêu cầu SC</div>
+                                <div class="info-item"><div class="lbl">Repair Request</div>
                                     <div class="val"><a href="<%=ctx%>/customerServiceRequests?action=detail&id=<%=inv.getServiceRequestId()%>" style="color:var(--primary);font-family:monospace;font-weight:600"><%=inv.getRequestCode()%></a></div>
                                 </div>
                                 <%}%>
                             </div>
 
                             <div style="background:#f8fafc;border-radius:9px;padding:13px;margin-bottom:12px">
-                                <div style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:8px">TỔNG THANH TOÁN</div>
+                                <div style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:8px">TOTAL AMOUNT DUE</div>
                                 <div style="font-size:1.8rem;font-weight:800;color:<%="UNPAID".equals(inv.getStatus())?"var(--danger)":"var(--success)"%>">
                                     <%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫
                                 </div>
                                 <div style="font-size:.77rem;color:var(--muted);margin-top:4px">
-                                    <%if("PAID".equals(inv.getStatus())){%><i class="fas fa-check-circle" style="color:var(--success)"></i> Đã thanh toán đầy đủ
-                                    <%}else if("UNPAID".equals(inv.getStatus())){%><i class="fas fa-clock" style="color:var(--warning)"></i> Chờ thanh toán
-                                    <%}else{%><i class="fas fa-ban" style="color:var(--muted)"></i> Hóa đơn đã hủy<%}%>
+                                    <%if("PAID".equals(inv.getStatus())){%><i class="fas fa-check-circle" style="color:var(--success)"></i> Fully paid
+                                    <%}else if("UNPAID".equals(inv.getStatus())){%><i class="fas fa-clock" style="color:var(--warning)"></i> Awaiting payment
+                                    <%}else{%><i class="fas fa-ban" style="color:var(--muted)"></i> Invoice cancelled<%}%>
                                 </div>
                             </div>
 
-                            <%-- Nút thanh toán - chỉ hiện khi UNPAID --%>
+                            <%-- Payment buttons - only shown when UNPAID --%>
                             <%if("UNPAID".equals(inv.getStatus())){%>
                             <div class="pay-section">
-                                <div class="pay-title"><i class="fas fa-credit-card"></i> Chọn phương thức thanh toán</div>
+                                <div class="pay-title"><i class="fas fa-credit-card"></i> Select payment method</div>
                                 <div class="pay-btns">
                                     <button class="btn-pay-cash" onclick="openCashModal()">
-                                        <i class="fas fa-money-bill-wave"></i> Thanh toán tiền mặt
+                                        <i class="fas fa-money-bill-wave"></i> Pay with Cash
                                     </button>
                                     <form method="post" action="<%=ctx%>/customerPayment" id="vnpayForm">
                                         <input type="hidden" name="action" value="vnpay_simulate">
                                         <input type="hidden" name="invoiceId" value="<%=inv.getId()%>">
                                         <button type="submit" class="btn-pay-vnpay" style="width:100%">
-                                            <i class="fas fa-qrcode"></i> Thanh toán qua VNPay
+                                            <i class="fas fa-qrcode"></i> Pay via VNPay
                                         </button>
                                     </form>
                                 </div>
@@ -834,7 +834,7 @@
 
                     <%if(inv.getNotes()!=null&&!inv.getNotes().isEmpty()){%>
                     <div class="card">
-                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--warning)"><i class="fas fa-sticky-note"></i></div><div class="card-hd-title">Ghi Chú</div></div>
+                        <div class="card-hd"><div class="card-hd-icon" style="background:var(--warning)"><i class="fas fa-sticky-note"></i></div><div class="card-hd-title">Notes</div></div>
                         <div class="card-body" style="font-size:.855rem;color:var(--text);line-height:1.7"><%=inv.getNotes()%></div>
                     </div>
                     <%}%>
@@ -846,29 +846,29 @@
         <div class="modal-overlay" id="cashModal">
             <div class="modal">
                 <div class="modal-header">
-                    <div class="modal-title"><i class="fas fa-money-bill-wave" style="color:var(--success)"></i> Thanh toán tiền mặt</div>
+                    <div class="modal-title"><i class="fas fa-money-bill-wave" style="color:var(--success)"></i> Cash Payment</div>
                     <button class="modal-close" onclick="closeCashModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="cash-amount-display">
-                        <div class="cash-lbl">Số tiền cần thanh toán</div>
+                        <div class="cash-lbl">Amount to pay</div>
                         <div class="cash-amount"><%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫</div>
-                        <div class="cash-code">Mã hóa đơn: <%=inv.getInvoiceCode()%></div>
+                        <div class="cash-code">Invoice code: <%=inv.getInvoiceCode()%></div>
                     </div>
                     <ul class="cash-steps">
-                        <li><span class="step-num">1</span><span>Chuẩn bị đúng số tiền <strong><%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫</strong></span></li>
-                        <li><span class="step-num">2</span><span>Đến trực tiếp văn phòng CRM System hoặc đưa cho nhân viên kỹ thuật tại chỗ</span></li>
-                        <li><span class="step-num">3</span><span>Nhân viên sẽ xác nhận và cấp biên lai thanh toán cho bạn</span></li>
-                        <li><span class="step-num">4</span><span>Nhấn <strong>"Xác nhận đã thanh toán"</strong> để ghi nhận vào hệ thống</span></li>
+                        <li><span class="step-num">1</span><span>Prepare the exact amount of <strong><%=inv.getTotalAmount()!=null?nf.format(inv.getTotalAmount()):"0"%> ₫</strong></span></li>
+                        <li><span class="step-num">2</span><span>Visit the DRSMS System office in person or hand it to the on-site technician</span></li>
+                        <li><span class="step-num">3</span><span>The staff will confirm and issue a payment receipt for you</span></li>
+                        <li><span class="step-num">4</span><span>Click <strong>"Confirm Payment"</strong> to record it in the system</span></li>
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-modal-cancel" onclick="closeCashModal()">Hủy</button>
+                    <button class="btn-modal-cancel" onclick="closeCashModal()">Cancel</button>
                     <form method="post" action="<%=ctx%>/customerPayment" style="flex:1">
                         <input type="hidden" name="action" value="cash">
                         <input type="hidden" name="invoiceId" value="<%=inv.getId()%>">
                         <button type="submit" class="btn-confirm-cash" style="width:100%">
-                            <i class="fas fa-check"></i> Xác nhận đã thanh toán
+                            <i class="fas fa-check"></i> Confirm Payment
                         </button>
                     </form>
                 </div>
@@ -887,7 +887,7 @@
                     closeCashModal();
             });
 
-            // Tự ẩn toast sau 5s
+            // Auto-hide toast after 5s
             document.addEventListener('DOMContentLoaded', () => {
                 const toast = document.querySelector('.success-toast');
                 if (toast)

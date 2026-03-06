@@ -13,10 +13,10 @@
     String ctx       = request.getContextPath();
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Chỉnh Sửa Người Dùng</title>
+        <title>Edit User</title>
         <link rel="stylesheet" href="<%= ctx %>/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -261,60 +261,60 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
             <div class="page-header">
-                <div class="page-title"><i class="fas fa-user-edit"></i> Chỉnh Sửa Người Dùng</div>
-                <a href="<%= ctx %>/user/list" class="btn-back"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+                <div class="page-title"><i class="fas fa-user-edit"></i> Edit User</div>
+                <a href="<%= ctx %>/user/list" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
             </div>
 
-            <% if ("updated".equals(success)) { %><div class="alert alert-success">Cập nhật thành công!</div><% } %>
-            <% if ("password_changed".equals(success)) { %><div class="alert alert-success">Đổi mật khẩu thành công!</div><% } %>
-            <% if ("password_mismatch".equals(error)) { %><div class="alert alert-error">Mật khẩu xác nhận không khớp!</div><% } %>
+            <% if ("updated".equals(success)) { %><div class="alert alert-success">Updated successfully!</div><% } %>
+            <% if ("password_changed".equals(success)) { %><div class="alert alert-success">Password changed successfully!</div><% } %>
+            <% if ("password_mismatch".equals(error)) { %><div class="alert alert-error">Confirm password does not match!</div><% } %>
 
             <form method="post" action="<%= ctx %>/user/edit">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="id" value="<%= editUser.getId() %>">
                 <div class="card">
-                    <div class="card-header"><i class="fas fa-user-edit"></i> Thông Tin Người Dùng</div>
+                    <div class="card-header"><i class="fas fa-user-edit"></i> User Information</div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Tên Đăng Nhập</label>
+                            <label><i class="fas fa-user"></i> Username</label>
                             <input type="text" value="<%= editUser.getUsername() != null ? editUser.getUsername() : "" %>" disabled>
-                            <span class="hint">Không thể thay đổi tên đăng nhập</span>
+                            <span class="hint">Username cannot be changed</span>
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-envelope"></i> Email <span style="color:#e74c3c;">*</span></label>
                             <input type="email" name="email" value="<%= editUser.getEmail() != null ? editUser.getEmail() : "" %>" required>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-id-card"></i> Họ Và Tên</label>
+                            <label><i class="fas fa-id-card"></i> Full Name</label>
                             <input type="text" name="fullName" value="<%= editUser.getFullName() %>">
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-phone"></i> Số Điện Thoại</label>
+                            <label><i class="fas fa-phone"></i> Phone Number</label>
                             <input type="text" name="phone" value="<%= editUser.getPhone() != null ? editUser.getPhone() : "" %>">
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-toggle-on"></i> Trạng Thái</label>
+                            <label><i class="fas fa-toggle-on"></i> Status</label>
                             <select name="active">
-                                <option value="1" <%= editUser.isActive() ? "selected" : "" %>>Hoạt Động</option>
-                                <option value="0" <%= !editUser.isActive() ? "selected" : "" %>>Bị Khóa</option>
+                                <option value="1" <%= editUser.isActive() ? "selected" : "" %>>Active</option>
+                                <option value="0" <%= !editUser.isActive() ? "selected" : "" %>>Locked</option>
                             </select>
                         </div>
                     </div>
                     <div style="margin-top:20px;">
                         <label style="font-size:0.88rem; font-weight:600; color:#2c3e50; display:flex; align-items:center; gap:6px; margin-bottom:10px;">
-                            <i class="fas fa-user-tag"></i> Vai Trò
+                            <i class="fas fa-user-tag"></i> Role
                         </label>
                         <div class="roles-grid">
                             <% if (roles != null) for (Role r : roles) { %>
@@ -324,11 +324,11 @@
                             </label>
                             <% } %>
                         </div>
-                        <span class="hint" style="margin-top:8px; display:block;"><i class="fas fa-info-circle"></i> Thay đổi vai trò được lưu tự động</span>
+                        <span class="hint" style="margin-top:8px; display:block;"><i class="fas fa-info-circle"></i> Role changes are saved automatically</span>
                     </div>
                     <div class="form-actions">
-                        <a href="<%= ctx %>/user/list" class="btn-cancel">✕ Hủy</a>
-                        <button type="submit" class="btn-update"><i class="fas fa-save"></i> Cập Nhật</button>
+                        <a href="<%= ctx %>/user/list" class="btn-cancel">✕ Cancel</a>
+                        <button type="submit" class="btn-update"><i class="fas fa-save"></i> Update</button>
                     </div>
                 </div>
             </form>
@@ -337,25 +337,25 @@
                 <input type="hidden" name="action" value="changePassword">
                 <input type="hidden" name="id" value="<%= editUser.getId() %>">
                 <div class="card">
-                    <div class="card-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><i class="fas fa-key"></i> Đổi Mật Khẩu</div>
+                    <div class="card-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e);"><i class="fas fa-key"></i> Change Password</div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Mật Khẩu Mới <span style="color:#e74c3c;">*</span></label>
+                            <label><i class="fas fa-lock"></i> New Password <span style="color:#e74c3c;">*</span></label>
                             <div class="pass-wrapper">
-                                <input type="password" name="newPassword" id="newPass" required placeholder="Nhập mật khẩu mới">
+                                <input type="password" name="newPassword" id="newPass" required placeholder="Enter new password">
                                 <button type="button" class="pass-toggle" onclick="togglePass('newPass', this)"><i class="fas fa-eye"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Xác Nhận Mật Khẩu <span style="color:#e74c3c;">*</span></label>
+                            <label><i class="fas fa-lock"></i> Confirm Password <span style="color:#e74c3c;">*</span></label>
                             <div class="pass-wrapper">
-                                <input type="password" name="confirmPassword" id="confirmPass" required placeholder="Nhập lại mật khẩu">
+                                <input type="password" name="confirmPassword" id="confirmPass" required placeholder="Re-enter password">
                                 <button type="button" class="pass-toggle" onclick="togglePass('confirmPass', this)"><i class="fas fa-eye"></i></button>
                             </div>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn-pass"><i class="fas fa-key"></i> Đổi Mật Khẩu</button>
+                        <button type="submit" class="btn-pass"><i class="fas fa-key"></i> Change Password</button>
                     </div>
                 </div>
             </form>

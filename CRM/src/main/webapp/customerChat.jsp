@@ -10,9 +10,9 @@
     int cartCount=session.getAttribute("shopCart")!=null?((Map<?,?>)session.getAttribute("shopCart")).size():0;
 %>
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Chat Hỗ Trợ - CRM</title>
+        <title>Support Chat - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
@@ -451,29 +451,29 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item on"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item on"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
                 <div class="sb-user">
                     <div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div>
-                    <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div>
+                    <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div>
                 </div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -481,21 +481,21 @@
             <%if(agent==null){%>
             <div class="chat-hd">
                 <div class="chat-hd-info">
-                    <div class="chat-hd-name">Chat Hỗ Trợ</div>
-                    <div class="chat-hd-status" style="color:var(--muted)">Không khả dụng</div>
+                    <div class="chat-hd-name">Support Chat</div>
+                    <div class="chat-hd-status" style="color:var(--muted)">Unavailable</div>
                 </div>
             </div>
             <div class="no-agent">
                 <i class="fas fa-headset" style="font-size:2.5rem;opacity:.2"></i>
-                <p style="font-weight:600">Hiện chưa có nhân viên hỗ trợ</p>
-                <span style="font-size:.83rem">Vui lòng thử lại sau</span>
+                <p style="font-weight:600">No support agent available at the moment</p>
+                <span style="font-size:.83rem">Please try again later</span>
             </div>
             <%}else{%>
             <div class="chat-hd">
                 <div class="chat-ava"><%=agent.getFullName().substring(0,1).toUpperCase()%><span class="online-dot"></span></div>
                 <div class="chat-hd-info">
                     <div class="chat-hd-name"><%=agent.getFullName()%></div>
-                    <div class="chat-hd-status"><i class="fas fa-circle" style="font-size:.45rem"></i> Đang trực tuyến · Nhân viên hỗ trợ</div>
+                    <div class="chat-hd-status"><i class="fas fa-circle" style="font-size:.45rem"></i> Online · Support Agent</div>
                 </div>
             </div>
 
@@ -503,8 +503,8 @@
                 <%if(msgs.isEmpty()){%>
                 <div id="emptyChat" style="text-align:center;margin:auto;color:var(--muted)">
                     <div style="font-size:2.8rem;margin-bottom:10px">💬</div>
-                    <p style="font-weight:600;font-size:.88rem">Bắt đầu cuộc trò chuyện</p>
-                    <span style="font-size:.78rem">Gửi tin nhắn để được hỗ trợ</span>
+                    <p style="font-weight:600;font-size:.88rem">Start a conversation</p>
+                    <span style="font-size:.78rem">Send a message to get support</span>
                 </div>
                 <%}else{
                   String prevDate="";
@@ -534,14 +534,14 @@
             <div class="chat-input-area">
                 <div class="input-row">
                     <div class="input-wrap">
-                        <textarea class="chat-input" id="msgInput" placeholder="Nhập tin nhắn..."
+                        <textarea class="chat-input" id="msgInput" placeholder="Type a message..."
                                   rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)" maxlength="2000"></textarea>
                     </div>
-                    <button class="btn-send" id="sendBtn" onclick="sendMsg()" title="Gửi (Enter)">
+                    <button class="btn-send" id="sendBtn" onclick="sendMsg()" title="Send (Enter)">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
-                <div class="input-hint"><strong>Enter</strong> để gửi · <strong>Shift+Enter</strong> để xuống dòng</div>
+                <div class="input-hint"><strong>Enter</strong> to send · <strong>Shift+Enter</strong> for new line</div>
             </div>
             <%}%>
         </main>
@@ -552,11 +552,11 @@
             const MY_NAME = <%-- JSON-safe name --%>
             '<%=me.getFullName().replace("\\","\\\\").replace("'","\\'")%>';
 
-// lastId: ID của tin nhắn cuối cùng đã render từ server
+// lastId: ID of the last rendered message from server
             let lastId = <%=lastId%>;
             let pollTimer = null;
 
-// Set theo dõi các message ID đã render (tránh duplicate)
+// Set to track rendered message IDs (avoid duplicates)
             const renderedIds = new Set();
             document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
                 const n = parseInt(el.dataset.id);
@@ -582,16 +582,16 @@
                 }
             }
             function nowTime() {
-                return new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                return new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
             }
 
-// ── Render một tin nhắn vào DOM ────────────────────────────────
+// ── Render a message into the DOM ────────────────────────────────
             function appendMsg(m) {
                 const container = document.getElementById('chatMsgs');
                 if (!container)
                     return null;
 
-                // Xóa empty state
+                // Remove empty state
                 const emp = document.getElementById('emptyChat');
                 if (emp)
                     emp.remove();
@@ -631,7 +631,7 @@
                 return row;
             }
 
-// ── Gửi tin nhắn ──────────────────────────────────────────────
+// ── Send a message ──────────────────────────────────────────────
             function sendMsg() {
                 const inp = document.getElementById('msgInput');
                 const btn = document.getElementById('sendBtn');
@@ -643,7 +643,7 @@
                 btn.disabled = true;
                 inp.disabled = true;
 
-                // Hiển thị ngay (optimistic UI) với class sending
+                // Display immediately (optimistic UI) with sending class
                 const tempEl = appendMsg({
                     id: 'temp_' + Date.now(),
                     senderId: MY_ID,
@@ -659,7 +659,7 @@
                 inp.style.height = 'auto';
                 scrollDown(true);
 
-                // Gửi lên server - dùng URLSearchParams để servlet đọc được
+                // Send to server - use URLSearchParams so servlet can read it
                 const params = new URLSearchParams();
                 params.append('message', text);
 
@@ -675,7 +675,7 @@
                         })
                         .then(d => {
                             if (d.success && d.id) {
-                                // Cập nhật element tạm thành element thật
+                                // Update temp element to real element
                                 if (tempEl) {
                                     tempEl.dataset.id = d.id;
                                     tempEl.classList.remove('msg-sending');
@@ -684,7 +684,7 @@
                                 if (d.id > lastId)
                                     lastId = d.id;
                             } else {
-                                // Server trả về lỗi
+                                // Server returned error
                                 console.error('Send failed:', d);
                                 if (tempEl)
                                     tempEl.classList.add('msg-error');
@@ -702,7 +702,7 @@
                         });
             }
 
-// ── Long polling nhận tin nhắn mới ────────────────────────────
+// ── Long polling to receive new messages ────────────────────────────
             function poll() {
                 fetch(CTX + '/customerChat?action=poll&lastId=' + lastId)
                         .then(r => {
@@ -719,7 +719,7 @@
                                     renderedIds.add(m.id);
                                     if (m.id > lastId)
                                         lastId = m.id;
-                                    // Chỉ render tin của agent (tin của mình đã render qua sendMsg)
+                                    // Only render agent messages (own messages already rendered via sendMsg)
                                     if (m.senderId !== MY_ID) {
                                         appendMsg(m);
                                         appended = true;

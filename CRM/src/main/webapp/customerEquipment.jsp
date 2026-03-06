@@ -12,9 +12,9 @@
     long externalEq=equipmentList.stream().filter(e->"EXTERNAL".equals(e.getSource())).count();
     long underWarranty=equipmentList.stream().filter(CustomerEquipment::isUnderWarranty).count();
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Thiết Bị Của Tôi - CRM</title>
+        <title>My Equipment - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -418,53 +418,53 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item on"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
-            </nav>           
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item on"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
+            </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
         <main class="main">
             <div class="pg-hd">
-                <h1><i class="fas fa-desktop"></i> Thiết Bị Của Tôi</h1>
-                <p>Danh sách thiết bị bạn đang sở hữu — cả mua trong hệ thống lẫn bên ngoài</p>
+                <h1><i class="fas fa-desktop"></i> My Equipment</h1>
+                <p>List of equipment you currently own — both purchased within the system and from outside</p>
             </div>
 
             <div class="info-bar">
                 <i class="fas fa-info-circle"></i>
-                <span>Để thêm thiết bị vào hồ sơ, vui lòng liên hệ nhân viên hỗ trợ qua
-                    <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:700">Chat hỗ trợ</a></span>
+                <span>To add equipment to your profile, please contact a support agent via
+                    <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:700">Support Chat</a></span>
             </div>
 
             <div class="stats">
-                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-desktop"></i></div><div><div class="sm-val"><%=totalEq%></div><div class="sm-lbl">Tổng thiết bị</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-database"></i></div><div><div class="sm-val"><%=internalEq%></div><div class="sm-lbl">Mua từ hệ thống</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#fef9c3;color:#854d0e"><i class="fas fa-store"></i></div><div><div class="sm-val"><%=externalEq%></div><div class="sm-lbl">Mua bên ngoài</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-shield-alt"></i></div><div><div class="sm-val"><%=underWarranty%></div><div class="sm-lbl">Còn bảo hành</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-desktop"></i></div><div><div class="sm-val"><%=totalEq%></div><div class="sm-lbl">Total Equipment</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-database"></i></div><div><div class="sm-val"><%=internalEq%></div><div class="sm-lbl">Purchased In-System</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#fef9c3;color:#854d0e"><i class="fas fa-store"></i></div><div><div class="sm-val"><%=externalEq%></div><div class="sm-lbl">Purchased Externally</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-shield-alt"></i></div><div><div class="sm-val"><%=underWarranty%></div><div class="sm-lbl">Under Warranty</div></div></div>
             </div>
 
             <%if(equipmentList.isEmpty()){%>
             <div class="empty">
                 <i class="fas fa-desktop"></i>
-                Bạn chưa có thiết bị nào trong hồ sơ.<br>
-                <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:8px">Liên hệ hỗ trợ để thêm thiết bị →</a>
+                You have no equipment in your profile yet.<br>
+                <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:8px">Contact support to add equipment →</a>
             </div>
             <%}else{%>
             <div class="eq-grid">
@@ -480,9 +480,9 @@
                             <i class="fas fa-desktop"></i>
                         </div>
                         <div class="eq-tags">
-                            <span class="tag <%=isInternal?"tag-int":"tag-ext"%>"><%=isInternal?"Trong HT":"Ngoài HT"%></span>
+                            <span class="tag <%=isInternal?"tag-int":"tag-ext"%>"><%=isInternal?"In-System":"External"%></span>
                             <%if(eq.getWarrantyExpires()!=null){%>
-                            <span class="tag <%=underW?"tag-wok":"tag-wexp"%>"><%=underW?"Còn BH":"Hết BH"%></span>
+                            <span class="tag <%=underW?"tag-wok":"tag-wexp"%>"><%=underW?"In Warranty":"Expired"%></span>
                             <%}%>
                         </div>
                     </div>
@@ -493,13 +493,13 @@
                     <div class="eq-details">
                         <div class="eq-detail-row"><i class="fas fa-barcode"></i><span class="eq-serial"><%=eq.getDisplaySerial()%></span></div>
                                 <%if(eq.getPurchasedDate()!=null){%>
-                        <div class="eq-detail-row"><i class="fas fa-shopping-cart"></i><span>Mua: <%=eq.getPurchasedDate()%></span></div>
+                        <div class="eq-detail-row"><i class="fas fa-shopping-cart"></i><span>Purchased: <%=eq.getPurchasedDate()%></span></div>
                                 <%}%>
                                 <%if(eq.getWarrantyExpires()!=null){%>
                         <div class="eq-detail-row">
                             <i class="fas fa-shield-alt" style="color:<%=underW?"var(--success)":"var(--danger)"%>"></i>
                             <span style="color:<%=underW?"var(--success)":"var(--danger)"%>;font-weight:<%=underW?"500":"600"%>">
-                                Bảo hành <%=underW?"đến":"hết từ"%>: <%=eq.getWarrantyExpires()%>
+                                Warranty <%=underW?"until":"expired on"%>: <%=eq.getWarrantyExpires()%>
                             </span>
                         </div>
                         <%}%>
@@ -509,7 +509,7 @@
                     </div>
                     <div class="eq-card-foot">
                         <a href="<%=ctx%>/customerServiceRequests?action=create" class="btn-fix">
-                            <i class="fas fa-tools"></i> Tạo yêu cầu sửa
+                            <i class="fas fa-tools"></i> Create Repair Request
                         </a>
                         <a href="<%=ctx%>/customerContracts" class="btn-fix" style="background:#f1f5f9;color:var(--muted);flex:0">
                             <i class="fas fa-file-contract"></i>

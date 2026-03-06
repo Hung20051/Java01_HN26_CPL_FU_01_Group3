@@ -7,9 +7,9 @@
     String ctx=request.getContextPath();
     int cartCount=session.getAttribute("shopCart")!=null?((Map<?,?>)session.getAttribute("shopCart")).size():0;
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Tạo Yêu Cầu Sửa Chữa - CRM</title>
+        <title>Create Repair Request - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -475,26 +475,26 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -502,36 +502,36 @@
             <div class="breadcrumb">
                 <a href="<%=ctx%>/customerDashboard"><i class="fas fa-home"></i></a>
                 <span class="breadcrumb-sep">›</span>
-                <a href="<%=ctx%>/customerServiceRequests">Yêu cầu sửa chữa</a>
+                <a href="<%=ctx%>/customerServiceRequests">Repair Requests</a>
                 <span class="breadcrumb-sep">›</span>
-                <span>Tạo mới</span>
+                <span>Create New</span>
             </div>
 
             <%if(contracts.isEmpty()){%>
             <div class="no-contracts" style="max-width:780px">
                 <i class="fas fa-exclamation-triangle" style="font-size:1.2rem;color:var(--warning)"></i>
-                <div>Bạn chưa có hợp đồng dịch vụ nào đang hoạt động.
-                    Vui lòng <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600">liên hệ nhân viên hỗ trợ</a> để được tạo hợp đồng.
+                <div>You have no active service contracts.
+                    Please <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:600">contact a support agent</a> to create a contract.
                 </div>
             </div>
             <%}else{%>
             <div class="form-card">
                 <div class="form-hd">
-                    <h2><i class="fas fa-plus-circle"></i> Tạo Yêu Cầu Sửa Chữa Mới</h2>
-                    <p>Chọn hợp đồng và thiết bị cần sửa, mô tả sự cố để gửi cho đội kỹ thuật</p>
+                    <h2><i class="fas fa-plus-circle"></i> Create New Repair Request</h2>
+                    <p>Select a contract and equipment to repair, then describe the issue to send to the technical team</p>
                 </div>
                 <form method="post" action="<%=ctx%>/customerServiceRequests" onsubmit="return validate()">
                     <input type="hidden" name="action" value="create">
                     <div class="form-body">
                         <div style="margin-bottom:22px">
-                            <div class="sec-title">1. Chọn hợp đồng</div>
+                            <div class="sec-title">1. Select Contract</div>
                             <div class="fg">
-                                <label class="lbl">Hợp đồng của bạn <span>*</span></label>
+                                <label class="lbl">Your Contract <span>*</span></label>
                                 <select class="fc" name="contractId" id="contractSel" onchange="loadEquipment(this)" required>
-                                    <option value="">-- Chọn hợp đồng --</option>
+                                    <option value="">-- Select a contract --</option>
                                     <%for(Contract c:contracts){%>
                                     <option value="<%=c.getId()%>" data-type="<%=c.getContractType()%>">
-                                        <%=c.getContractCode()%> — <%=c.getContractTypeLabel()%> (<%=c.getEquipmentCount()%> thiết bị · Hết hạn: <%=c.getEndDate()%>)
+                                        <%=c.getContractCode()%> — <%=c.getContractTypeLabel()%> (<%=c.getEquipmentCount()%> equipment · Expires: <%=c.getEndDate()%>)
                                     </option>
                                     <%}%>
                                 </select>
@@ -540,53 +540,53 @@
                         </div>
 
                         <div style="margin-bottom:22px">
-                            <div class="sec-title">2. Chọn thiết bị cần sửa</div>
+                            <div class="sec-title">2. Select Equipment to Repair</div>
                             <div class="eq-wrap" id="eqWrap">
-                                <div class="eq-empty" id="eqEmpty">← Chọn hợp đồng để xem danh sách thiết bị</div>
-                                <div class="eq-loading" id="eqLoad"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div>
+                                <div class="eq-empty" id="eqEmpty">← Select a contract to view equipment list</div>
+                                <div class="eq-loading" id="eqLoad"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
                             </div>
                             <div class="hint-selected" id="hintSelected"></div>
                         </div>
 
                         <div style="margin-bottom:22px">
-                            <div class="sec-title">3. Mô tả sự cố chung</div>
+                            <div class="sec-title">3. Describe the General Issue</div>
                             <div class="fg">
-                                <label class="lbl">Tiêu đề yêu cầu <span>*</span></label>
+                                <label class="lbl">Request Title <span>*</span></label>
                                 <input type="text" class="fc" name="title" required minlength="10" maxlength="200"
-                                       placeholder="VD: Máy bơm kêu to, máy lạnh không đạt nhiệt độ...">
+                                       placeholder="E.g.: Pump making loud noise, air conditioner not reaching temperature...">
                             </div>
                             <div class="fg">
-                                <label class="lbl">Mô tả chi tiết <span>*</span></label>
+                                <label class="lbl">Detailed Description <span>*</span></label>
                                 <textarea class="fc" name="description" required minlength="20"
-                                          placeholder="Mô tả chi tiết tình trạng, thời điểm xảy ra, triệu chứng cụ thể..."></textarea>
+                                          placeholder="Describe the condition in detail, when it occurred, specific symptoms..."></textarea>
                             </div>
                         </div>
 
                         <div>
-                            <div class="sec-title">4. Mức độ ưu tiên</div>
+                            <div class="sec-title">4. Priority Level</div>
                             <div class="prio-grid">
                                 <label class="prio-card p-low" onclick="selPrio(this)">
                                     <input type="radio" name="priority" value="LOW">
-                                    <div class="prio-card-ico">🟢</div><div class="prio-card-lbl">Thấp</div>
+                                    <div class="prio-card-ico">🟢</div><div class="prio-card-lbl">Low</div>
                                 </label>
                                 <label class="prio-card p-med sel" onclick="selPrio(this)">
                                     <input type="radio" name="priority" value="MEDIUM" checked>
-                                    <div class="prio-card-ico">🟡</div><div class="prio-card-lbl">Trung bình</div>
+                                    <div class="prio-card-ico">🟡</div><div class="prio-card-lbl">Medium</div>
                                 </label>
                                 <label class="prio-card p-high" onclick="selPrio(this)">
                                     <input type="radio" name="priority" value="HIGH">
-                                    <div class="prio-card-ico">🟠</div><div class="prio-card-lbl">Cao</div>
+                                    <div class="prio-card-ico">🟠</div><div class="prio-card-lbl">High</div>
                                 </label>
                                 <label class="prio-card p-urg" onclick="selPrio(this)">
                                     <input type="radio" name="priority" value="URGENT">
-                                    <div class="prio-card-ico">🔴</div><div class="prio-card-lbl">Khẩn cấp</div>
+                                    <div class="prio-card-ico">🔴</div><div class="prio-card-lbl">Urgent</div>
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-ft">
-                        <button type="submit" class="btn-sub"><i class="fas fa-paper-plane"></i> Gửi Yêu Cầu</button>
-                        <a href="<%=ctx%>/customerServiceRequests" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+                        <button type="submit" class="btn-sub"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                        <a href="<%=ctx%>/customerServiceRequests" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
             </div>
@@ -625,7 +625,7 @@
                 const opt = sel.options[sel.selectedIndex];
                 const type = opt.dataset.type;
                 info.style.display = 'block';
-                info.innerHTML = '<i class="fas fa-info-circle"></i> Hợp đồng <strong>' + (type === 'WARRANTY' ? 'Bảo hành' : 'Bảo trì') + '</strong> — ' + (type === 'WARRANTY' ? 'Miễn phí sửa chữa trong thời hạn bảo hành' : 'Phí sửa chữa sẽ được tính theo thực tế');
+                info.innerHTML = '<i class="fas fa-info-circle"></i> <strong>' + (type === 'WARRANTY' ? 'Warranty' : 'Maintenance') + '</strong> contract — ' + (type === 'WARRANTY' ? 'Repairs are free within the warranty period' : 'Repair costs will be charged based on actual work');
 
                 empty.style.display = 'none';
                 load.style.display = 'block';
@@ -635,7 +635,7 @@
                         .then(data => {
                             load.style.display = 'none';
                             if (data.length === 0) {
-                                empty.textContent = 'Hợp đồng này chưa có thiết bị.';
+                                empty.textContent = 'This contract has no equipment.';
                                 empty.style.display = 'block';
                                 return;
                             }
@@ -649,10 +649,10 @@
                                         + '<label for="eq' + eq.id + '" style="cursor:pointer">'
                                         + '<div class="eq-item-name">' + eq.name + '</div>'
                                         + '<div class="eq-item-serial"><i class="fas fa-barcode" style="font-size:.7rem"></i> ' + eq.serial
-                                        + ' · <span style="background:' + (eq.source === 'EXTERNAL' ? '#fef9c3' : '#e0e7ff') + ';color:' + (eq.source === 'EXTERNAL' ? '#854d0e' : '#3730a3') + ';padding:1px 5px;border-radius:3px;font-size:.7rem">' + (eq.source === 'EXTERNAL' ? 'Ngoài HT' : 'Trong HT') + '</span></div>'
+                                        + ' · <span style="background:' + (eq.source === 'EXTERNAL' ? '#fef9c3' : '#e0e7ff') + ';color:' + (eq.source === 'EXTERNAL' ? '#854d0e' : '#3730a3') + ';padding:1px 5px;border-radius:3px;font-size:.7rem">' + (eq.source === 'EXTERNAL' ? 'External' : 'In-System') + '</span></div>'
                                         + '</label>'
                                         + '<div class="eq-item-desc" id="desc-wrap-' + eq.id + '">'
-                                        + '<textarea name="issueDescs[]" placeholder="Mô tả vấn đề riêng của thiết bị này (không bắt buộc)..." id="desc-' + eq.id + '"></textarea>'
+                                        + '<textarea name="issueDescs[]" placeholder="Describe the specific issue for this equipment (optional)..." id="desc-' + eq.id + '"></textarea>'
                                         + '</div>'
                                         + '</div>';
                                 wrap.appendChild(div);
@@ -662,7 +662,7 @@
                         })
                         .catch(() => {
                             load.style.display = 'none';
-                            empty.textContent = 'Lỗi tải danh sách thiết bị.';
+                            empty.textContent = 'Error loading equipment list.';
                             empty.style.display = 'block';
                         });
             }
@@ -679,18 +679,18 @@
                 const h = document.getElementById('hintSelected');
                 h.style.display = checked > 0 ? 'block' : 'none';
                 if (checked > 0)
-                    h.textContent = '✓ Đã chọn ' + checked + ' thiết bị';
+                    h.textContent = '✓ ' + checked + ' equipment selected';
             }
 
             function validate() {
                 const cid = document.getElementById('contractSel').value;
                 if (!cid) {
-                    alert('Vui lòng chọn hợp đồng!');
+                    alert('Please select a contract!');
                     return false;
                 }
                 const checked = document.querySelectorAll('input[name="equipmentIds[]"]:checked').length;
                 if (checked === 0) {
-                    alert('Vui lòng chọn ít nhất 1 thiết bị cần sửa!');
+                    alert('Please select at least 1 piece of equipment to repair!');
                     return false;
                 }
                 return true;

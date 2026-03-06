@@ -10,10 +10,10 @@
     String ctx = request.getContextPath();
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Chỉnh Sửa Vai Trò</title>
+        <title>Edit Role</title>
         <link rel="stylesheet" href="<%= ctx %>/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -208,49 +208,49 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list" class="active"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list" class="active"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
             <div class="page-header">
-                <div class="page-title"><i class="fas fa-edit"></i> Chỉnh Sửa Vai Trò</div>
-                <a href="<%= ctx %>/role/list" class="btn-back"><i class="fas fa-arrow-left"></i> Quay Lại Danh Sách</a>
+                <div class="page-title"><i class="fas fa-edit"></i> Edit Role</div>
+                <a href="<%= ctx %>/role/list" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
             </div>
             <form method="post" action="<%= ctx %>/role/edit">
                 <input type="hidden" name="id" value="<%= role.getId() %>">
                 <div class="card">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Tên Vai Trò *</label>
-                            <input type="text" name="name" value="<%= role.getName() %>" required placeholder="Nhập tên vai trò">
-                            <span class="hint">Nhập tên duy nhất cho vai trò</span>
+                            <label>Role Name *</label>
+                            <input type="text" name="name" value="<%= role.getName() %>" required placeholder="Enter role name">
+                            <span class="hint">Enter a unique name for the role</span>
                         </div>
                         <div class="form-group">
-                            <label>Mã Vai Trò</label>
+                            <label>Role ID</label>
                             <input type="text" value="<%= role.getId() %>" disabled>
-                            <span class="hint">Mã vai trò không thể thay đổi</span>
+                            <span class="hint">Role ID cannot be changed</span>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <a href="<%= ctx %>/role/list" class="btn-cancel">✕ Hủy</a>
-                        <button type="submit" class="btn-update"><i class="fas fa-save"></i> Cập Nhật Vai Trò</button>
+                        <a href="<%= ctx %>/role/list" class="btn-cancel">✕ Cancel</a>
+                        <button type="submit" class="btn-update"><i class="fas fa-save"></i> Update Role</button>
                     </div>
                 </div>
             </form>
             <div class="card">
                 <div class="warning-box">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Lưu Ý Quan Trọng</h4>
+                    <h4><i class="fas fa-exclamation-triangle"></i> Important Notes</h4>
                     <ul>
-                        <li>🔄 Thay đổi tên vai trò sẽ ảnh hưởng đến tất cả người dùng được gán vai trò này</li>
-                        <li>✅ Đảm bảo tên vai trò mới rõ ràng và mô tả đúng chức năng</li>
-                        <li>⚠️ Xem xét tác động đến quyền hạn và kiểm soát truy cập hệ thống</li>
+                        <li>🔄 Changing the role name will affect all users assigned to this role</li>
+                        <li>✅ Ensure the new role name is clear and accurately describes its function</li>
+                        <li>⚠️ Consider the impact on system permissions and access control</li>
                     </ul>
                 </div>
             </div>

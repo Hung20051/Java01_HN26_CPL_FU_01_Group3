@@ -23,10 +23,10 @@
     String rlEnc = URLEncoder.encode(role, "UTF-8");
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Quản Lý Người Dùng</title>
+        <title>User Management</title>
         <link rel="stylesheet" href="<%= ctx %>/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -344,42 +344,42 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
             <div class="page-header">
-                <div class="page-title"><i class="fas fa-users"></i> Quản Lý Người Dùng</div>
-                <a href="<%= ctx %>/user/create?action=create" class="btn-add"><i class="fas fa-plus"></i> Thêm Người Dùng</a>
+                <div class="page-title"><i class="fas fa-users"></i> User Management</div>
+                <a href="<%= ctx %>/user/create?action=create" class="btn-add"><i class="fas fa-plus"></i> Add User</a>
             </div>
 
-            <% if ("created".equals(success)) { %><div class="alert alert-success">Tạo người dùng thành công!</div><% } %>
-            <% if ("updated".equals(success)) { %><div class="alert alert-success">Cập nhật thành công!</div><% } %>
-            <% if ("deleted".equals(success)) { %><div class="alert alert-success">Xóa thành công!</div><% } %>
-            <% if (error != null) { %><div class="alert alert-error">Có lỗi xảy ra!</div><% } %>
+            <% if ("created".equals(success)) { %><div class="alert alert-success">User created successfully!</div><% } %>
+            <% if ("updated".equals(success)) { %><div class="alert alert-success">Updated successfully!</div><% } %>
+            <% if ("deleted".equals(success)) { %><div class="alert alert-success">Deleted successfully!</div><% } %>
+            <% if (error != null) { %><div class="alert alert-error">An error occurred!</div><% } %>
 
             <form method="get" action="<%= ctx %>/user/list">
                 <div class="search-bar">
-                    <input type="text" name="keyword" placeholder="Username, email, tên..." value="<%= keyword %>">
+                    <input type="text" name="keyword" placeholder="Username, email, name..." value="<%= keyword %>">
                     <select name="status">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="1" <%= "1".equals(status) ? "selected" : "" %>>Hoạt động</option>
-                        <option value="0" <%= "0".equals(status) ? "selected" : "" %>>Bị khóa</option>
+                        <option value="">All statuses</option>
+                        <option value="1" <%= "1".equals(status) ? "selected" : "" %>>Active</option>
+                        <option value="0" <%= "0".equals(status) ? "selected" : "" %>>Locked</option>
                     </select>
                     <select name="role">
-                        <option value="">Tất cả vai trò</option>
+                        <option value="">All roles</option>
                         <% if (roles != null) for (Role r : roles) { %>
                         <option value="<%= r.getName() %>" <%= r.getName().equals(role) ? "selected" : "" %>><%= r.getName().replace("_"," ") %></option>
                         <% } %>
                     </select>
-                    <button type="submit" class="btn-search"><i class="fas fa-search"></i> Tìm</button>
+                    <button type="submit" class="btn-search"><i class="fas fa-search"></i> Search</button>
                     <a href="<%= ctx %>/user/list" class="btn-reset"><i class="fas fa-redo"></i> Reset</a>
                 </div>
             </form>
@@ -388,9 +388,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th># ID</th><th>Username</th><th>Họ và Tên</th>
-                            <th>Email</th><th>Phone</th><th>Vai Trò</th>
-                            <th>Trạng Thái</th><th>Thao Tác</th>
+                            <th># ID</th><th>Username</th><th>Full Name</th>
+                            <th>Email</th><th>Phone</th><th>Role</th>
+                            <th>Status</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -404,17 +404,17 @@
                             <td><span class="role-badge role-<%= u.getRoleName() %>"><%= u.getRoleName() != null ? u.getRoleName().replace("_"," ") : "-" %></span></td>
                             <td>
                                 <% if (u.isActive()) { %>
-                                <span class="status-active"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Hoạt động</span>
+                                <span class="status-active"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Active</span>
                                 <% } else { %>
-                                <span class="status-inactive"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Bị khóa</span>
+                                <span class="status-inactive"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Locked</span>
                                 <% } %>
                             </td>
                             <td>
                                 <div class="action-btns">
-                                    <a href="<%= ctx %>/user/edit?action=edit&id=<%= u.getId() %>" class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></a>
+                                    <a href="<%= ctx %>/user/edit?action=edit&id=<%= u.getId() %>" class="btn-icon btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
                                     <a href="<%= ctx %>/user/delete?action=delete&id=<%= u.getId() %>"
-                                       class="btn-icon btn-delete" title="Xóa"
-                                       onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">
+                                       class="btn-icon btn-delete" title="Delete"
+                                       onclick="return confirm('Are you sure you want to delete this user?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -426,17 +426,17 @@
                 <% if (totalPages > 1) { %>
                 <div class="pagination">
                     <% if (currentPage > 1) { %>
-                    <a href="<%= ctx %>/user/list?page=<%= currentPage-1 %>&keyword=<%= kwEnc %>&status=<%= stEnc %>&role=<%= rlEnc %>">‹ Trước</a>
-                    <% } else { %><span class="disabled">‹ Trước</span><% } %>
+                    <a href="<%= ctx %>/user/list?page=<%= currentPage-1 %>&keyword=<%= kwEnc %>&status=<%= stEnc %>&role=<%= rlEnc %>">‹ Previous</a>
+                    <% } else { %><span class="disabled">‹ Previous</span><% } %>
                     <% for (int i = 1; i <= totalPages; i++) { %>
                     <% if (i == currentPage) { %><span class="active"><%= i %></span>
                     <% } else { %><a href="<%= ctx %>/user/list?page=<%= i %>&keyword=<%= kwEnc %>&status=<%= stEnc %>&role=<%= rlEnc %>"><%= i %></a><% } %>
                     <% } %>
                     <% if (currentPage < totalPages) { %>
-                    <a href="<%= ctx %>/user/list?page=<%= currentPage+1 %>&keyword=<%= kwEnc %>&status=<%= stEnc %>&role=<%= rlEnc %>">Tiếp ›</a>
-                    <% } else { %><span class="disabled">Tiếp ›</span><% } %>
+                    <a href="<%= ctx %>/user/list?page=<%= currentPage+1 %>&keyword=<%= kwEnc %>&status=<%= stEnc %>&role=<%= rlEnc %>">Next ›</a>
+                    <% } else { %><span class="disabled">Next ›</span><% } %>
                 </div>
-                <div class="total-info">Trang <%= currentPage %> / <%= totalPages %> (Tổng: <%= total %> người dùng)</div>
+                <div class="total-info">Page <%= currentPage %> / <%= totalPages %> (Total: <%= total %> users)</div>
                 <% } %>
             </div>
         </div>

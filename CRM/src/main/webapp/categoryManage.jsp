@@ -26,11 +26,11 @@
     }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý danh mục - CRM System</title>
+        <title>Category Management - DRSMS System</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             * {
@@ -399,18 +399,18 @@
     </head>
     <body>
         <aside class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-warehouse"></i> CRM System</div>
+            <div class="sidebar-brand"><i class="fas fa-warehouse"></i> DRSMS System</div>
             <nav class="sidebar-nav">
-                <a href="<%= ctx %>/dashboard.jsp"      class="nav-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <a href="<%= ctx %>/profile.jsp"      class="nav-item"><i class="fas fa-user-circle"></i> Hồ Sơ</a>
-                <a href="<%= ctx %>/storekeeper"      class="nav-item"><i class="fas fa-chart-bar"></i> Thống kê</a>
-                <a href="<%= ctx %>/numberPart"       class="nav-item"><i class="fas fa-list-ul"></i> Danh sách linh kiện</a>
-                <a href="<%= ctx %>/numberEquipment"  class="nav-item"><i class="fas fa-desktop"></i> Danh sách thiết bị</a>
-                <a href="<%= ctx %>/transactions"     class="nav-item"><i class="fas fa-history"></i> Lịch sử giao dịch</a>
-                <a href="<%= ctx %>/categoryManage"   class="nav-item active"><i class="fas fa-tags"></i> Quản lý danh mục</a>
+                <a href="<%= ctx %>/dashboard.jsp"      class="nav-item"><i class="fas fa-home"></i> Home</a>
+                <a href="<%= ctx %>/profile.jsp"      class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+                <a href="<%= ctx %>/storekeeper"      class="nav-item"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <a href="<%= ctx %>/numberPart"       class="nav-item"><i class="fas fa-list-ul"></i> Parts List</a>
+                <a href="<%= ctx %>/numberEquipment"  class="nav-item"><i class="fas fa-desktop"></i> Equipment List</a>
+                <a href="<%= ctx %>/transactions"     class="nav-item"><i class="fas fa-history"></i> Transaction History</a>
+                <a href="<%= ctx %>/categoryManage"   class="nav-item active"><i class="fas fa-tags"></i> Category Management</a>
             </nav>
             <div class="sidebar-footer">
-                <a href="<%= ctx %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="<%= ctx %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -418,9 +418,9 @@
             <div class="topbar">
                 <div class="page-title">
                     <i class="fas fa-tags"></i>
-                    <h1>Quản lý danh mục</h1>
+                    <h1>Category Management</h1>
                 </div>
-                <div class="user-badge"><i class="fas fa-user-circle"></i> Xin chào <%= currentUser.getUsername() %></div>
+                <div class="user-badge"><i class="fas fa-user-circle"></i> Hello <%= currentUser.getUsername() %></div>
             </div>
 
             <% if (flashSuccess != null) { %><div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= flashSuccess %></div><% } %>
@@ -428,24 +428,24 @@
 
             <div class="cat-grid">
 
-                <!-- LINH KIỆN (PART) -->
+                <!-- PARTS (PART) -->
                 <div class="cat-section">
                     <div class="cat-header">
                         <div class="cat-header-title">
                             <div class="cat-header-icon icon-part"><i class="fas fa-puzzle-piece"></i></div>
-                            Danh mục linh kiện
+                            Parts Categories
                         </div>
                         <span class="cnt-badge"><%= partCats.size() %></span>
                     </div>
                     <div class="cat-body">
                         <% if (partCats.isEmpty()) { %>
-                        <div class="empty-cat">Chưa có danh mục</div>
+                        <div class="empty-cat">No categories yet</div>
                         <% } else { for (Category cat : partCats) { %>
                         <div class="cat-item">
                             <span><span class="cat-item-name"><%= cat.getName() %></span><span class="cat-item-id">#<%= cat.getId() %></span></span>
                             <div class="item-actions">
                                 <button class="btn-edit-sm" onclick="openEdit(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>', '<%= cat.getType() %>')">
-                                    <i class="fas fa-edit"></i> Sửa
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn-delete-sm" onclick="openDelete(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>')">
                                     <i class="fas fa-trash"></i>
@@ -456,29 +456,29 @@
                     </div>
                     <div class="cat-footer">
                         <button class="btn-add-cat" onclick="openCreate('PART')">
-                            <i class="fas fa-plus"></i> Thêm danh mục linh kiện
+                            <i class="fas fa-plus"></i> Add Parts Category
                         </button>
                     </div>
                 </div>
 
-                <!-- THIẾT BỊ (EQUIPMENT) -->
+                <!-- EQUIPMENT -->
                 <div class="cat-section">
                     <div class="cat-header">
                         <div class="cat-header-title">
                             <div class="cat-header-icon icon-equip"><i class="fas fa-desktop"></i></div>
-                            Danh mục thiết bị
+                            Equipment Categories
                         </div>
                         <span class="cnt-badge"><%= eqCats.size() %></span>
                     </div>
                     <div class="cat-body">
                         <% if (eqCats.isEmpty()) { %>
-                        <div class="empty-cat">Chưa có danh mục</div>
+                        <div class="empty-cat">No categories yet</div>
                         <% } else { for (Category cat : eqCats) { %>
                         <div class="cat-item">
                             <span><span class="cat-item-name"><%= cat.getName() %></span><span class="cat-item-id">#<%= cat.getId() %></span></span>
                             <div class="item-actions">
                                 <button class="btn-edit-sm" onclick="openEdit(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>', '<%= cat.getType() %>')">
-                                    <i class="fas fa-edit"></i> Sửa
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn-delete-sm" onclick="openDelete(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>')">
                                     <i class="fas fa-trash"></i>
@@ -489,29 +489,29 @@
                     </div>
                     <div class="cat-footer">
                         <button class="btn-add-cat" onclick="openCreate('EQUIPMENT')">
-                            <i class="fas fa-plus"></i> Thêm danh mục thiết bị
+                            <i class="fas fa-plus"></i> Add Equipment Category
                         </button>
                     </div>
                 </div>
 
-                <!-- DÙNG CHUNG (BOTH) -->
+                <!-- SHARED (BOTH) -->
                 <div class="cat-section">
                     <div class="cat-header">
                         <div class="cat-header-title">
                             <div class="cat-header-icon icon-both"><i class="fas fa-layer-group"></i></div>
-                            Dùng chung
+                            Shared
                         </div>
                         <span class="cnt-badge"><%= bothCats.size() %></span>
                     </div>
                     <div class="cat-body">
                         <% if (bothCats.isEmpty()) { %>
-                        <div class="empty-cat">Chưa có danh mục</div>
+                        <div class="empty-cat">No categories yet</div>
                         <% } else { for (Category cat : bothCats) { %>
                         <div class="cat-item">
                             <span><span class="cat-item-name"><%= cat.getName() %></span><span class="cat-item-id">#<%= cat.getId() %></span></span>
                             <div class="item-actions">
                                 <button class="btn-edit-sm" onclick="openEdit(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>', '<%= cat.getType() %>')">
-                                    <i class="fas fa-edit"></i> Sửa
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn-delete-sm" onclick="openDelete(<%= cat.getId() %>, '<%= cat.getName().replace("'","\\'") %>')">
                                     <i class="fas fa-trash"></i>
@@ -522,7 +522,7 @@
                     </div>
                     <div class="cat-footer">
                         <button class="btn-add-cat" onclick="openCreate('BOTH')">
-                            <i class="fas fa-plus"></i> Thêm danh mục dùng chung
+                            <i class="fas fa-plus"></i> Add Shared Category
                         </button>
                     </div>
                 </div>
@@ -533,24 +533,24 @@
         <!-- CREATE MODAL -->
         <div class="modal-overlay" id="createModal">
             <div class="modal">
-                <h3><i class="fas fa-plus-circle" style="color:#10b981;margin-right:6px"></i> Thêm danh mục mới</h3>
+                <h3><i class="fas fa-plus-circle" style="color:#10b981;margin-right:6px"></i> Add New Category</h3>
                 <form method="post" action="<%= ctx %>/categoryManage">
                     <input type="hidden" name="action" value="create">
                     <div class="form-group">
-                        <label>Tên danh mục *</label>
-                        <input type="text" name="name" required placeholder="Nhập tên danh mục...">
+                        <label>Category Name *</label>
+                        <input type="text" name="name" required placeholder="Enter category name...">
                     </div>
                     <div class="form-group">
-                        <label>Loại</label>
+                        <label>Type</label>
                         <select name="type" id="createType">
-                            <option value="PART">Linh kiện (Part)</option>
-                            <option value="EQUIPMENT">Thiết bị (Equipment)</option>
-                            <option value="BOTH">Dùng chung (Both)</option>
+                            <option value="PART">Part</option>
+                            <option value="EQUIPMENT">Equipment</option>
+                            <option value="BOTH">Shared (Both)</option>
                         </select>
                     </div>
                     <div class="modal-btns">
-                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Lưu</button>
-                        <button type="button" class="btn-cancel" onclick="closeModal('createModal')">Hủy</button>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('createModal')">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -559,25 +559,25 @@
         <!-- EDIT MODAL -->
         <div class="modal-overlay" id="editModal">
             <div class="modal">
-                <h3><i class="fas fa-edit" style="color:#f59e0b;margin-right:6px"></i> Sửa danh mục</h3>
+                <h3><i class="fas fa-edit" style="color:#f59e0b;margin-right:6px"></i> Edit Category</h3>
                 <form method="post" action="<%= ctx %>/categoryManage">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="id" id="editId">
                     <div class="form-group">
-                        <label>Tên danh mục *</label>
+                        <label>Category Name *</label>
                         <input type="text" name="name" id="editName" required>
                     </div>
                     <div class="form-group">
-                        <label>Loại</label>
+                        <label>Type</label>
                         <select name="type" id="editType">
-                            <option value="PART">Linh kiện (Part)</option>
-                            <option value="EQUIPMENT">Thiết bị (Equipment)</option>
-                            <option value="BOTH">Dùng chung (Both)</option>
+                            <option value="PART">Part</option>
+                            <option value="EQUIPMENT">Equipment</option>
+                            <option value="BOTH">Shared (Both)</option>
                         </select>
                     </div>
                     <div class="modal-btns">
-                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Lưu</button>
-                        <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Hủy</button>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -587,18 +587,18 @@
         <div class="modal-overlay" id="deleteModal">
             <div class="modal" style="text-align:center">
                 <div style="font-size:3rem;color:#ef4444;margin-bottom:12px">⚠</div>
-                <h3>Xác nhận xóa</h3>
+                <h3>Confirm Deletion</h3>
                 <p style="color:#64748b;margin:10px 0 20px;font-size:0.9rem">
-                    Bạn có chắc muốn xóa danh mục:<br>
+                    Are you sure you want to delete the category:<br>
                     <strong id="deleteCatName" style="color:#1e293b"></strong>?<br>
-                    <span style="font-size:0.8rem;color:#ef4444">⚠ Các linh kiện/thiết bị thuộc danh mục này có thể bị ảnh hưởng!</span>
+                    <span style="font-size:0.8rem;color:#ef4444">⚠ Parts/equipment belonging to this category may be affected!</span>
                 </p>
                 <form method="post" action="<%= ctx %>/categoryManage">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" id="deleteId">
                     <div class="modal-btns">
-                        <button type="submit" class="btn-danger"><i class="fas fa-trash"></i> Xóa</button>
-                        <button type="button" class="btn-cancel" onclick="closeModal('deleteModal')">Hủy</button>
+                        <button type="submit" class="btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                        <button type="button" class="btn-cancel" onclick="closeModal('deleteModal')">Cancel</button>
                     </div>
                 </form>
             </div>

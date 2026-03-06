@@ -3,12 +3,12 @@
     Integer invoiceId   = (Integer) request.getAttribute("invoiceId");
     String  invoiceCode = (String)  request.getAttribute("invoiceCode");
     String  amount      = (String)  request.getAttribute("amount");
-    // Phân biệt: từ shop (pendingFromShop=true) hay từ invoice page
+    // Distinguish: from shop (pendingFromShop=true) or from invoice page
     Boolean fromShop = (Boolean) session.getAttribute("pendingFromShop");
     boolean isFromShop = Boolean.TRUE.equals(fromShop);
 
     String ctx = request.getContextPath();
-    // Servlet nhận confirm/cancel
+    // Servlet receives confirm/cancel
     String confirmServlet = isFromShop ? (ctx + "/customerShop") : (ctx + "/customerPayment");
     String cancelUrl      = isFromShop
         ? (ctx + "/customerShop?action=cart")
@@ -18,9 +18,9 @@
     String amountFormatted = "0";
     try { amountFormatted = nf.format(new java.math.BigDecimal(amount)); } catch(Exception e){}
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Cổng Thanh Toán VNPay - Giả Lập</title>
+        <title>VNPay Payment Gateway - Simulation</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
             *{
@@ -367,76 +367,76 @@
                 <span class="gw-simulate-badge">🔬 SANDBOX</span>
                 <div class="gw-logo">
                     <div class="gw-logo-icon">VN</div>
-                    <div><div class="gw-logo-name">VNPay</div><div class="gw-logo-sub">Cổng thanh toán điện tử</div></div>
+                    <div><div class="gw-logo-name">VNPay</div><div class="gw-logo-sub">Electronic Payment Gateway</div></div>
                 </div>
                 <div class="gw-order-info">
-                    <div class="gw-order-row"><span class="gw-order-lbl">Mã hóa đơn</span><span style="font-family:monospace;font-weight:600"><%=invoiceCode%></span></div>
-                    <div class="gw-order-row"><span class="gw-order-lbl">Đơn vị</span><span>CRM System</span></div>
-                    <div class="gw-order-row"><span class="gw-order-lbl">Số tiền thanh toán</span><span><%=amountFormatted%> ₫</span></div>
+                    <div class="gw-order-row"><span class="gw-order-lbl">Invoice Code</span><span style="font-family:monospace;font-weight:600"><%=invoiceCode%></span></div>
+                    <div class="gw-order-row"><span class="gw-order-lbl">Merchant</span><span>DRSMS System</span></div>
+                    <div class="gw-order-row"><span class="gw-order-lbl">Amount</span><span><%=amountFormatted%> ₫</span></div>
                 </div>
             </div>
 
             <div class="gw-body">
-                <div class="gw-section-title">Chọn phương thức</div>
+                <div class="gw-section-title">Select Payment Method</div>
                 <div class="payment-methods">
                     <div class="pm-card selected" onclick="selectMethod('atm')" id="pm-atm">
-                        <div class="pm-icon">🏦</div><div class="pm-name">Thẻ ATM / NAPAS</div><div class="pm-sub">Nội địa</div>
+                        <div class="pm-icon">🏦</div><div class="pm-name">ATM Card / NAPAS</div><div class="pm-sub">Domestic</div>
                     </div>
                     <div class="pm-card" onclick="selectMethod('visa')" id="pm-visa">
-                        <div class="pm-icon">💳</div><div class="pm-name">Thẻ Visa / MC</div><div class="pm-sub">Quốc tế</div>
+                        <div class="pm-icon">💳</div><div class="pm-name">Visa / MC Card</div><div class="pm-sub">International</div>
                     </div>
                 </div>
 
                 <div id="form-atm" class="card-form">
-                    <div class="form-group"><label class="form-label">Số thẻ ATM</label>
+                    <div class="form-group"><label class="form-label">ATM Card Number</label>
                         <input class="form-input" type="text" placeholder="9704 xxxx xxxx xxxx" maxlength="19" oninput="formatCardNum(this)" value="9704 1234 5678 9012"></div>
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Tên chủ thẻ</label>
+                        <div class="form-group"><label class="form-label">Cardholder Name</label>
                             <input class="form-input" type="text" value="PHAM THI KHACH HANG" style="text-transform:uppercase"></div>
-                        <div class="form-group"><label class="form-label">Ngày phát hành</label>
+                        <div class="form-group"><label class="form-label">Issue Date</label>
                             <input class="form-input" type="text" placeholder="MM/YY" maxlength="5" value="01/25"></div>
                     </div>
                 </div>
 
                 <div id="form-visa" class="card-form" style="display:none">
-                    <div class="form-group"><label class="form-label">Số thẻ</label>
+                    <div class="form-group"><label class="form-label">Card Number</label>
                         <input class="form-input" type="text" placeholder="4111 xxxx xxxx xxxx" maxlength="19" oninput="formatCardNum(this)" value="4111 1111 1111 1111"></div>
                     <div class="form-row">
-                        <div class="form-group"><label class="form-label">Ngày hết hạn</label>
+                        <div class="form-group"><label class="form-label">Expiry Date</label>
                             <input class="form-input" type="text" placeholder="MM/YY" maxlength="5" value="12/27"></div>
                         <div class="form-group"><label class="form-label">CVV</label>
                             <input class="form-input" type="password" placeholder="***" maxlength="4" value="123"></div>
                     </div>
-                    <div class="form-group"><label class="form-label">Tên chủ thẻ</label>
+                    <div class="form-group"><label class="form-label">Cardholder Name</label>
                         <input class="form-input" type="text" value="PHAM THI KHACH HANG" style="text-transform:uppercase"></div>
                 </div>
 
                 <div class="otp-section" id="otpSection">
-                    <div class="otp-title">🔐 Xác thực OTP</div>
-                    <div class="otp-desc">Mã OTP đã gửi đến SĐT <strong>09***4567</strong> (giả lập: nhập bất kỳ 6 số)</div>
+                    <div class="otp-title">🔐 OTP Verification</div>
+                    <div class="otp-desc">OTP has been sent to phone <strong>09***4567</strong> (simulation: enter any 6 digits)</div>
                     <div class="otp-input-row">
                         <input class="otp-input" id="otpInput" type="text" maxlength="6" placeholder="------" inputmode="numeric">
-                        <button class="btn-get-otp" id="otpBtn" onclick="requestOTP()">Gửi OTP</button>
+                        <button class="btn-get-otp" id="otpBtn" onclick="requestOTP()">Send OTP</button>
                     </div>
                 </div>
 
                 <button class="btn-pay" id="payBtn" onclick="handlePay()">
-                    <i>🔒</i> Thanh toán <%=amountFormatted%> ₫
+                    <i>🔒</i> Pay <%=amountFormatted%> ₫
                 </button>
-                <button class="btn-cancel" onclick="cancelPayment()">Hủy & Quay lại</button>
-                <div class="security-info">🔒 Kết nối bảo mật SSL · Dữ liệu được mã hóa</div>
+                <button class="btn-cancel" onclick="cancelPayment()">Cancel & Go Back</button>
+                <div class="security-info">🔒 SSL Secured Connection · Data is Encrypted</div>
             </div>
         </div>
 
         <div class="processing-overlay" id="procOverlay">
             <div class="processing-box">
                 <div class="proc-spinner"></div>
-                <div class="proc-title">Đang xử lý thanh toán</div>
-                <div class="proc-sub" id="procMsg">Vui lòng không tắt trang này...</div>
+                <div class="proc-title">Processing Payment</div>
+                <div class="proc-sub" id="procMsg">Please do not close this page...</div>
             </div>
         </div>
 
-        <!-- Form confirm: gửi về đúng servlet tùy context -->
+        <!-- Confirm form: posts to the correct servlet based on context -->
         <form method="post" action="<%=confirmServlet%>" id="confirmForm">
             <input type="hidden" name="action"    value="vnpay_confirm">
             <input type="hidden" name="invoiceId" value="<%=invoiceId%>">
@@ -453,7 +453,7 @@
                 document.getElementById('form-visa').style.display = m === 'visa' ? 'block' : 'none';
                 step = 'form';
                 document.getElementById('otpSection').classList.remove('show');
-                document.getElementById('payBtn').innerHTML = '<i>🔒</i> Thanh toán <%=amountFormatted%> ₫';
+                document.getElementById('payBtn').innerHTML = '<i>🔒</i> Pay <%=amountFormatted%> ₫';
             }
 
             function formatCardNum(el) {
@@ -464,14 +464,14 @@
             function handlePay() {
                 if (step === 'form') {
                     document.getElementById('otpSection').classList.add('show');
-                    document.getElementById('payBtn').innerHTML = '<i>✅</i> Xác nhận thanh toán';
+                    document.getElementById('payBtn').innerHTML = '<i>✅</i> Confirm Payment';
                     step = 'otp';
                     requestOTP();
                     document.getElementById('otpSection').scrollIntoView({behavior: 'smooth'});
                 } else if (step === 'otp') {
                     const otp = document.getElementById('otpInput').value.trim();
                     if (otp.length < 6) {
-                        alert('Vui lòng nhập đủ 6 số OTP');
+                        alert('Please enter all 6 OTP digits');
                         return;
                     }
                     step = 'processing';
@@ -479,11 +479,11 @@
                     document.getElementById('payBtn').disabled = true;
                     let t = 2;
                     const iv = setInterval(() => {
-                        document.getElementById('procMsg').textContent = 'Đang xác nhận... (' + t + 's)';
+                        document.getElementById('procMsg').textContent = 'Confirming... (' + t + 's)';
                         t--;
                         if (t < 0) {
                             clearInterval(iv);
-                            document.getElementById('procMsg').textContent = 'Thành công! Đang chuyển hướng...';
+                            document.getElementById('procMsg').textContent = 'Success! Redirecting...';
                             setTimeout(() => document.getElementById('confirmForm').submit(), 800);
                         }
                     }, 1000);
@@ -494,16 +494,16 @@
                 const btn = document.getElementById('otpBtn');
                 btn.disabled = true;
                 let count = 60;
-                btn.textContent = 'Gửi lại (' + count + 's)';
+                btn.textContent = 'Resend (' + count + 's)';
                 if (otpCountdown)
                     clearInterval(otpCountdown);
                 otpCountdown = setInterval(() => {
                     count--;
-                    btn.textContent = 'Gửi lại (' + count + 's)';
+                    btn.textContent = 'Resend (' + count + 's)';
                     if (count <= 0) {
                         clearInterval(otpCountdown);
                         btn.disabled = false;
-                        btn.textContent = 'Gửi OTP';
+                        btn.textContent = 'Send OTP';
                     }
                 }, 1000);
                 setTimeout(() => {
@@ -519,8 +519,8 @@
             }
 
             function cancelPayment() {
-                if (confirm('Bạn có chắc muốn hủy thanh toán?')) {
-                    // POST cancel về đúng servlet
+                if (confirm('Are you sure you want to cancel the payment?')) {
+                    // POST cancel to the correct servlet
                     const f = document.createElement('form');
                     f.method = 'post';
                     f.action = '<%=confirmServlet%>';

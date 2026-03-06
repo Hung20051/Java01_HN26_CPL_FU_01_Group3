@@ -19,9 +19,9 @@
 %><%!
     Object nvl(Object v,Object def){return v!=null?v:def;}
 %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Yêu Cầu Sửa Chữa - CRM</title>
+        <title>Repair Requests - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -464,67 +464,67 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
         <main class="main">
             <div class="pg-hd">
-                <div><h1><i class="fas fa-clipboard-list"></i> Yêu Cầu Sửa Chữa</h1><p>Tạo và theo dõi yêu cầu sửa chữa thiết bị của bạn</p></div>
-                <a href="<%=ctx%>/customerServiceRequests?action=create" class="btn-p"><i class="fas fa-plus"></i> Tạo Yêu Cầu Mới</a>
+                <div><h1><i class="fas fa-clipboard-list"></i> Repair Requests</h1><p>Create and track your equipment repair requests</p></div>
+                <a href="<%=ctx%>/customerServiceRequests?action=create" class="btn-p"><i class="fas fa-plus"></i> Create New Request</a>
             </div>
 
             <%if(flashOk!=null){%><div class="alert-ok"><i class="fas fa-check-circle"></i> <%=flashOk%></div><%}%>
             <%if(flashErr!=null){%><div class="alert-err"><i class="fas fa-exclamation-circle"></i> <%=flashErr%></div><%}%>
 
             <div class="stats">
-                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-list"></i></div><div><div class="sm-val"><%=totalSR%></div><div class="sm-lbl">Tổng yêu cầu</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#fef3c7;color:var(--warning)"><i class="fas fa-clock"></i></div><div><div class="sm-val"><%=pendingCount%></div><div class="sm-lbl">Chờ duyệt</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-spinner"></i></div><div><div class="sm-val"><%=activeCount%></div><div class="sm-lbl">Đang xử lý</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-check-circle"></i></div><div><div class="sm-val"><%=completedCount%></div><div class="sm-lbl">Hoàn thành</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-list"></i></div><div><div class="sm-val"><%=totalSR%></div><div class="sm-lbl">Total Requests</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#fef3c7;color:var(--warning)"><i class="fas fa-clock"></i></div><div><div class="sm-val"><%=pendingCount%></div><div class="sm-lbl">Pending Approval</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#dbeafe;color:var(--info)"><i class="fas fa-spinner"></i></div><div><div class="sm-val"><%=activeCount%></div><div class="sm-lbl">In Progress</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-check-circle"></i></div><div><div class="sm-val"><%=completedCount%></div><div class="sm-lbl">Completed</div></div></div>
             </div>
 
             <div class="filter-card">
                 <form method="get" action="<%=ctx%>/customerServiceRequests">
                     <div class="filter-row">
                         <select class="f-sel" name="status">
-                            <option value="" <%=filterStatus.isEmpty()?"selected":""%>>-- Tất cả trạng thái --</option>
-                            <option value="PENDING"     <%="PENDING".equals(filterStatus)?"selected":""%>>Chờ duyệt</option>
-                            <option value="APPROVED"    <%="APPROVED".equals(filterStatus)?"selected":""%>>Đã duyệt</option>
-                            <option value="REJECTED"    <%="REJECTED".equals(filterStatus)?"selected":""%>>Từ chối</option>
-                            <option value="IN_PROGRESS" <%="IN_PROGRESS".equals(filterStatus)?"selected":""%>>Đang xử lý</option>
-                            <option value="COMPLETED"   <%="COMPLETED".equals(filterStatus)?"selected":""%>>Hoàn thành</option>
-                            <option value="CANCELLED"   <%="CANCELLED".equals(filterStatus)?"selected":""%>>Đã hủy</option>
+                            <option value="" <%=filterStatus.isEmpty()?"selected":""%>>-- All Statuses --</option>
+                            <option value="PENDING"     <%="PENDING".equals(filterStatus)?"selected":""%>>Pending Approval</option>
+                            <option value="APPROVED"    <%="APPROVED".equals(filterStatus)?"selected":""%>>Approved</option>
+                            <option value="REJECTED"    <%="REJECTED".equals(filterStatus)?"selected":""%>>Rejected</option>
+                            <option value="IN_PROGRESS" <%="IN_PROGRESS".equals(filterStatus)?"selected":""%>>In Progress</option>
+                            <option value="COMPLETED"   <%="COMPLETED".equals(filterStatus)?"selected":""%>>Completed</option>
+                            <option value="CANCELLED"   <%="CANCELLED".equals(filterStatus)?"selected":""%>>Cancelled</option>
                         </select>
                         <select class="f-sel" name="priority">
-                            <option value="" <%=filterPriority.isEmpty()?"selected":""%>>-- Tất cả ưu tiên --</option>
-                            <option value="LOW"    <%="LOW".equals(filterPriority)?"selected":""%>>Thấp</option>
-                            <option value="MEDIUM" <%="MEDIUM".equals(filterPriority)?"selected":""%>>Trung bình</option>
-                            <option value="HIGH"   <%="HIGH".equals(filterPriority)?"selected":""%>>Cao</option>
-                            <option value="URGENT" <%="URGENT".equals(filterPriority)?"selected":""%>>Khẩn cấp</option>
+                            <option value="" <%=filterPriority.isEmpty()?"selected":""%>>-- All Priorities --</option>
+                            <option value="LOW"    <%="LOW".equals(filterPriority)?"selected":""%>>Low</option>
+                            <option value="MEDIUM" <%="MEDIUM".equals(filterPriority)?"selected":""%>>Medium</option>
+                            <option value="HIGH"   <%="HIGH".equals(filterPriority)?"selected":""%>>High</option>
+                            <option value="URGENT" <%="URGENT".equals(filterPriority)?"selected":""%>>Urgent</option>
                         </select>
                         <input type="date" class="f-date" name="fromDate" value="<%=filterFrom%>">
                         <input type="date" class="f-date" name="toDate"   value="<%=filterTo%>">
-                        <button type="submit" class="btn-f btn-f-blue"><i class="fas fa-search"></i> Lọc</button>
+                        <button type="submit" class="btn-f btn-f-blue"><i class="fas fa-search"></i> Filter</button>
                         <a href="<%=ctx%>/customerServiceRequests" class="btn-f btn-f-gray" style="text-decoration:none"><i class="fas fa-undo"></i> Reset</a>
                     </div>
                 </form>
@@ -532,12 +532,12 @@
 
             <div class="tbl-card">
                 <%if(list.isEmpty()){%>
-                <div class="empty"><i class="fas fa-clipboard"></i>Chưa có yêu cầu sửa chữa nào.<br>
-                    <a href="<%=ctx%>/customerServiceRequests?action=create" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:7px">+ Tạo yêu cầu đầu tiên</a>
+                <div class="empty"><i class="fas fa-clipboard"></i>No repair requests found.<br>
+                    <a href="<%=ctx%>/customerServiceRequests?action=create" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:7px">+ Create your first request</a>
                 </div>
                 <%}else{%>
                 <table>
-                    <thead><tr><th>Mã YC</th><th>Tiêu đề</th><th>Hợp đồng</th><th>Ưu tiên</th><th>Trạng thái</th><th>Kỹ thuật viên</th><th>Ngày tạo</th><th>Thao tác</th></tr></thead>
+                    <thead><tr><th>Request Code</th><th>Title</th><th>Contract</th><th>Priority</th><th>Status</th><th>Technician</th><th>Created Date</th><th>Actions</th></tr></thead>
                     <tbody>
                         <%for(ServiceRequest sr:list){
                           String sc="b-pending";
@@ -557,7 +557,7 @@
                             <td>
                                 <div style="font-family:monospace;font-size:.8rem;font-weight:700"><%=sr.getContractCode()%></div>
                                 <span class="ct-tag" style="background:<%="WARRANTY".equals(sr.getContractType())?"#d1fae5":"#dbeafe"%>;color:<%="WARRANTY".equals(sr.getContractType())?"#065f46":"#1e40af"%>">
-                                    <%="WARRANTY".equals(sr.getContractType())?"Bảo hành":"Bảo trì"%>
+                                    <%="WARRANTY".equals(sr.getContractType())?"Warranty":"Maintenance"%>
                                 </span>
                             </td>
                             <td><span class="b <%=pc%>"><%=sr.getPriorityLabel()%></span></td>
@@ -566,12 +566,12 @@
                             <td style="font-size:.79rem;color:var(--muted)"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toLocalDate():"—"%></td>
                             <td>
                                 <div style="display:flex;gap:5px;align-items:center">
-                                    <a href="<%=ctx%>/customerServiceRequests?action=detail&id=<%=sr.getId()%>" class="btn-view"><i class="fas fa-eye"></i> Chi tiết</a>
+                                    <a href="<%=ctx%>/customerServiceRequests?action=detail&id=<%=sr.getId()%>" class="btn-view"><i class="fas fa-eye"></i> Detail</a>
                                     <%if("PENDING".equals(sr.getStatus())){%>
-                                    <form method="post" action="<%=ctx%>/customerServiceRequests" style="display:inline" onsubmit="return confirm('Hủy yêu cầu này?')">
+                                    <form method="post" action="<%=ctx%>/customerServiceRequests" style="display:inline" onsubmit="return confirm('Cancel this request?')">
                                         <input type="hidden" name="action" value="cancel">
                                         <input type="hidden" name="id" value="<%=sr.getId()%>">
-                                        <button type="submit" class="btn-cancel"><i class="fas fa-times"></i> Hủy</button>
+                                        <button type="submit" class="btn-cancel"><i class="fas fa-times"></i> Cancel</button>
                                     </form>
                                     <%}%>
                                 </div>

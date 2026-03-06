@@ -17,14 +17,14 @@
     BigDecimal unpaidAmt = inv!=null?(BigDecimal)inv.get("unpaidAmt"):null;
     String ctx = request.getContextPath();
     java.text.NumberFormat nf = java.text.NumberFormat.getNumberInstance(new java.util.Locale("vi","VN"));
-    // Giỏ hàng - thêm vào cuối block này
+    // Cart - added at the end of this block
     Map<?,?> shopCart = (Map<?,?>) session.getAttribute("shopCart");
     int cartCount = shopCart != null ? shopCart.size() : 0;
 %>
 
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Trang Chủ - CRM</title>
+        <title>Home - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -490,33 +490,33 @@
         <aside class="sb">
             <div class="sb-brand">
                 <div class="sb-logo"><i class="fas fa-bolt"></i></div>
-                <div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div>
+                <div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div>
             </div>
             <nav class="sb-nav">
-    <div class="sb-lbl">Tổng quan</div>
-    <a href="<%=ctx%>/customerDashboard"        class="sb-item on"><i class="fas fa-home"></i> Trang chủ</a>
-    <div class="sb-lbl">Dịch vụ</div>
-    <a href="<%=ctx%>/customerServiceRequests"  class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa<%if(pendingSR>0){%><span class="sb-badge"><%=pendingSR%></span><%}%></a>
-    <a href="<%=ctx%>/customerContracts"        class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-    <a href="<%=ctx%>/customerEquipment"        class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-    <div class="sb-lbl">Mua hàng</div>
-    <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-    <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-    <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item">
-        <i class="fas fa-shopping-cart"></i> Giỏ hàng
-        <%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%>
-    </a>
-    <div class="sb-lbl">Tài chính</div>
-    <a href="<%=ctx%>/customerInvoices"         class="sb-item"><i class="fas fa-receipt"></i> Hóa đơn<%if(unpaidInv>0){%><span class="sb-badge"><%=unpaidInv%></span><%}%></a>
-    <div class="sb-lbl">Hỗ trợ</div>
-    <a href="<%=ctx%>/customerChat"             class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ<%if(unreadChat>0){%><span class="sb-badge"><%=unreadChat%></span><%}%></a>
-</nav>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"        class="sb-item on"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests"  class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests<%if(pendingSR>0){%><span class="sb-badge"><%=pendingSR%></span><%}%></a>
+                <a href="<%=ctx%>/customerContracts"        class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"        class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                    <%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%>
+                </a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"         class="sb-item"><i class="fas fa-receipt"></i> Invoices<%if(unpaidInv>0){%><span class="sb-badge"><%=unpaidInv%></span><%}%></a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"             class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat<%if(unreadChat>0){%><span class="sb-badge"><%=unreadChat%></span><%}%></a>
+            </nav>
             <div class="sb-foot">
                 <div class="sb-user">
                     <div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div>
-                    <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div>
+                    <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div>
                 </div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -524,18 +524,18 @@
         <main class="main">
             <div class="topbar">
                 <div>
-                    <div class="topbar-title">Xin chào, <%=me.getFullName()%>! 👋</div>
-                    <div class="topbar-sub">Đây là tổng quan tài khoản dịch vụ của bạn.</div>
+                    <div class="topbar-title">Hello, <%=me.getFullName()%>! 👋</div>
+                    <div class="topbar-sub">Here is an overview of your service account.</div>
                 </div>
-                <a href="<%=ctx%>/customerServiceRequests?action=create" class="btn-cta"><i class="fas fa-plus"></i> Tạo yêu cầu sửa chữa</a>
+                <a href="<%=ctx%>/customerServiceRequests?action=create" class="btn-cta"><i class="fas fa-plus"></i> Create Repair Request</a>
             </div>
 
             <%if(unpaidInv>0){%>
             <div class="alert-warn">
                 <i class="fas fa-exclamation-triangle" style="color:var(--warning);font-size:1.1rem"></i>
-                <div>Bạn có <strong><%=unpaidInv%> hóa đơn chưa thanh toán</strong>
-                    <%if(unpaidAmt!=null&&unpaidAmt.compareTo(BigDecimal.ZERO)>0){%> · Tổng: <strong><%=nf.format(unpaidAmt)%> ₫</strong><%}%>
-                    <a href="<%=ctx%>/customerInvoices?status=UNPAID">Xem ngay →</a>
+                <div>You have <strong><%=unpaidInv%> unpaid invoice(s)</strong>
+                    <%if(unpaidAmt!=null&&unpaidAmt.compareTo(BigDecimal.ZERO)>0){%> · Total: <strong><%=nf.format(unpaidAmt)%> ₫</strong><%}%>
+                    <a href="<%=ctx%>/customerInvoices?status=UNPAID">View now →</a>
                 </div>
             </div>
             <%}%>
@@ -544,41 +544,41 @@
                 <div class="sc i-purple">
                     <div class="sc-icon"><i class="fas fa-file-contract"></i></div>
                     <div class="sc-val"><%=activeContracts%></div>
-                    <div class="sc-lbl">Hợp đồng đang hoạt động</div>
-                    <div class="sc-sub">Tổng <%=totalContracts%> hợp đồng</div>
+                    <div class="sc-lbl">Active Contracts</div>
+                    <div class="sc-sub">Total <%=totalContracts%> contracts</div>
                 </div>
                 <div class="sc i-blue">
                     <div class="sc-icon"><i class="fas fa-clipboard-list"></i></div>
                     <div class="sc-val"><%=totalSR%></div>
-                    <div class="sc-lbl">Tổng yêu cầu sửa chữa</div>
-                    <div class="sc-sub" style="color:var(--warning)"><%=pendingSR%> đang chờ duyệt</div>
+                    <div class="sc-lbl">Total Repair Requests</div>
+                    <div class="sc-sub" style="color:var(--warning)"><%=pendingSR%> pending approval</div>
                 </div>
                 <div class="sc i-green">
                     <div class="sc-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="sc-val"><%=completedSR%></div>
-                    <div class="sc-lbl">Yêu cầu hoàn thành</div>
-                    <div class="sc-sub" style="color:var(--info)"><%=activeSR%> đang xử lý</div>
+                    <div class="sc-lbl">Completed Requests</div>
+                    <div class="sc-sub" style="color:var(--info)"><%=activeSR%> in progress</div>
                 </div>
                 <div class="sc i-<%=unpaidInv>0?"red":"green"%>">
                     <div class="sc-icon"><i class="fas fa-file-invoice-dollar"></i></div>
                     <div class="sc-val"><%=unpaidInv%></div>
-                    <div class="sc-lbl">Hóa đơn chưa thanh toán</div>
-                    <div class="sc-sub"><%=unpaidAmt!=null&&unpaidAmt.compareTo(BigDecimal.ZERO)>0?nf.format(unpaidAmt)+" ₫":"Không có nợ"%></div>
+                    <div class="sc-lbl">Unpaid Invoices</div>
+                    <div class="sc-sub"><%=unpaidAmt!=null&&unpaidAmt.compareTo(BigDecimal.ZERO)>0?nf.format(unpaidAmt)+" ₫":"No outstanding balance"%></div>
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
                     <div class="card-hd">
-                        <div class="card-title"><i class="fas fa-history"></i> Yêu cầu gần đây</div>
-                        <a href="<%=ctx%>/customerServiceRequests" class="card-link">Xem tất cả →</a>
+                        <div class="card-title"><i class="fas fa-history"></i> Recent Requests</div>
+                        <a href="<%=ctx%>/customerServiceRequests" class="card-link">View all →</a>
                     </div>
                     <%if(recent.isEmpty()){%>
-                    <div class="empty"><i class="fas fa-inbox"></i>Chưa có yêu cầu nào.<br>
-                        <a href="<%=ctx%>/customerServiceRequests?action=create" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:6px">+ Tạo yêu cầu đầu tiên</a>
+                    <div class="empty"><i class="fas fa-inbox"></i>No requests yet.<br>
+                        <a href="<%=ctx%>/customerServiceRequests?action=create" style="color:var(--primary);font-weight:600;display:inline-block;margin-top:6px">+ Create your first request</a>
                     </div>
                     <%}else{%>
-                    <table><thead><tr><th>Mã</th><th>Tiêu đề</th><th>HĐ</th><th>Ưu tiên</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead>
+                    <table><thead><tr><th>Code</th><th>Title</th><th>CT</th><th>Priority</th><th>Status</th><th>Created</th></tr></thead>
                         <tbody><%for(ServiceRequest sr:recent){
                           String sc="b-pending";
                           if("APPROVED".equals(sr.getStatus()))sc="b-approved";
@@ -594,7 +594,7 @@
                             <tr>
                                 <td><a href="<%=ctx%>/customerServiceRequests?action=detail&id=<%=sr.getId()%>" style="color:var(--primary);font-weight:700;font-family:monospace;font-size:.8rem"><%=sr.getRequestCode()%></a></td>
                                 <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%=sr.getTitle()%></td>
-                                <td style="font-size:.78rem"><span style="background:<%="WARRANTY".equals(sr.getContractType())?"#d1fae5":"#dbeafe"%>;color:<%="WARRANTY".equals(sr.getContractType())?"#065f46":"#1e40af"%>;padding:2px 7px;border-radius:4px;font-weight:600"><%="WARRANTY".equals(sr.getContractType())?"BH":"BT"%></span></td>
+                                <td style="font-size:.78rem"><span style="background:<%="WARRANTY".equals(sr.getContractType())?"#d1fae5":"#dbeafe"%>;color:<%="WARRANTY".equals(sr.getContractType())?"#065f46":"#1e40af"%>;padding:2px 7px;border-radius:4px;font-weight:600"><%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%></span></td>
                                 <td><span class="b <%=pc%>"><%=sr.getPriorityLabel()%></span></td>
                                 <td><span class="b <%=sc%>"><%=sr.getStatusLabel()%></span></td>
                                 <td style="color:var(--muted);font-size:.78rem"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toLocalDate():"—"%></td>
@@ -603,23 +603,23 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-hd"><div class="card-title"><i class="fas fa-bolt"></i> Thao tác nhanh</div></div>
+                    <div class="card-hd"><div class="card-title"><i class="fas fa-bolt"></i> Quick Actions</div></div>
                     <div class="qa-grid">
                         <a href="<%=ctx%>/customerServiceRequests?action=create" class="qa">
-                            <div class="qa-icon">🔧</div><div class="qa-name">Tạo yêu cầu sửa</div><div class="qa-desc">Báo sự cố thiết bị</div>
+                            <div class="qa-icon">🔧</div><div class="qa-name">Create Repair Request</div><div class="qa-desc">Report an equipment issue</div>
                         </a>
                         <a href="<%=ctx%>/customerContracts" class="qa">
-                            <div class="qa-icon">📄</div><div class="qa-name">Hợp đồng</div><div class="qa-desc">Bảo hành & bảo trì</div>
+                            <div class="qa-icon">📄</div><div class="qa-name">Contracts</div><div class="qa-desc">Warranty & maintenance</div>
                         </a>
                         <a href="<%=ctx%>/customerEquipment" class="qa">
-                            <div class="qa-icon">🖥️</div><div class="qa-name">Thiết bị</div><div class="qa-desc">Thiết bị của tôi</div>
+                            <div class="qa-icon">🖥️</div><div class="qa-name">Equipment</div><div class="qa-desc">My equipment</div>
                         </a>
                         <a href="<%=ctx%>/customerInvoices" class="qa">
-                            <div class="qa-icon">💰</div><div class="qa-name">Hóa đơn</div><div class="qa-desc">Thanh toán & lịch sử</div>
+                            <div class="qa-icon">💰</div><div class="qa-name">Invoices</div><div class="qa-desc">Payments & history</div>
                         </a>
                         <a href="<%=ctx%>/customerChat" class="qa" style="grid-column:span 2">
-                            <div class="qa-icon">💬</div><div class="qa-name">Chat hỗ trợ</div>
-                            <div class="qa-desc"><%=unreadChat>0?"<span style='color:var(--danger);font-weight:700'>"+unreadChat+" tin nhắn mới</span>":"Liên hệ nhân viên hỗ trợ"%></div>
+                            <div class="qa-icon">💬</div><div class="qa-name">Support Chat</div>
+                            <div class="qa-desc"><%=unreadChat>0?"<span style='color:var(--danger);font-weight:700'>"+unreadChat+" new message(s)</span>":"Contact a support agent"%></div>
                         </a>
                     </div>
                 </div>

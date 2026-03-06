@@ -11,10 +11,10 @@
     String ctx       = request.getContextPath();
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Tạo Người Dùng Mới</title>
+        <title>Create New User</title>
         <link rel="stylesheet" href="<%= ctx %>/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -237,20 +237,20 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list" class="active"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
             <div class="page-header">
-                <div class="page-title"><i class="fas fa-user-plus"></i> Tạo Người Dùng Mới</div>
-                <a href="<%= ctx %>/user/list" class="btn-back"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+                <div class="page-title"><i class="fas fa-user-plus"></i> Create New User</div>
+                <a href="<%= ctx %>/user/list" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
             </div>
             <% if (error != null) { %><div class="alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div><% } %>
             <form method="post" action="<%= ctx %>/user/create">
@@ -258,47 +258,47 @@
                 <div class="card">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Tên Đăng Nhập <span class="required">*</span></label>
-                            <input type="text" name="username" required placeholder="Nhập username">
+                            <label><i class="fas fa-user"></i> Username <span class="required">*</span></label>
+                            <input type="text" name="username" required placeholder="Enter username">
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-id-card"></i> Họ Và Tên</label>
-                            <input type="text" name="fullName" placeholder="Nhập họ và tên">
+                            <label><i class="fas fa-id-card"></i> Full Name</label>
+                            <input type="text" name="fullName" placeholder="Enter full name">
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-envelope"></i> Email <span class="required">*</span></label>
-                            <input type="email" name="email" required placeholder="Nhập email">
+                            <input type="email" name="email" required placeholder="Enter email">
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-phone"></i> Số Điện Thoại</label>
-                            <input type="text" name="phone" placeholder="Nhập số điện thoại">
+                            <label><i class="fas fa-phone"></i> Phone Number</label>
+                            <input type="text" name="phone" placeholder="Enter phone number">
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Mật Khẩu <span class="required">*</span></label>
+                            <label><i class="fas fa-lock"></i> Password <span class="required">*</span></label>
                             <div class="pass-wrapper">
-                                <input type="password" name="password" id="pass1" required placeholder="Nhập mật khẩu">
+                                <input type="password" name="password" id="pass1" required placeholder="Enter password">
                                 <button type="button" class="pass-toggle" onclick="togglePass('pass1', this)"><i class="fas fa-eye"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Xác Nhận Mật Khẩu <span class="required">*</span></label>
+                            <label><i class="fas fa-lock"></i> Confirm Password <span class="required">*</span></label>
                             <div class="pass-wrapper">
-                                <input type="password" name="confirmPassword" id="pass2" required placeholder="Nhập lại mật khẩu">
+                                <input type="password" name="confirmPassword" id="pass2" required placeholder="Re-enter password">
                                 <button type="button" class="pass-toggle" onclick="togglePass('pass2', this)"><i class="fas fa-eye"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-toggle-on"></i> Trạng Thái</label>
+                            <label><i class="fas fa-toggle-on"></i> Status</label>
                             <select name="active">
-                                <option value="1">Hoạt Động</option>
-                                <option value="0">Không Hoạt Động</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
                             </select>
-                            <span class="status-note"><b>Hoạt Động:</b> Lưu trực tiếp. <b>Không Hoạt Động:</b> Không thể đăng nhập.</span>
+                            <span class="status-note"><b>Active:</b> Saved directly. <b>Inactive:</b> Cannot log in.</span>
                         </div>
                     </div>
                     <div style="margin-top:20px;">
                         <label style="font-size:0.88rem; font-weight:600; color:#2c3e50; display:flex; align-items:center; gap:6px; margin-bottom:10px;">
-                            <i class="fas fa-user-tag"></i> Vai Trò
+                            <i class="fas fa-user-tag"></i> Role
                         </label>
                         <div class="roles-grid">
                             <% if (roles != null) for (Role r : roles) { %>
@@ -310,8 +310,8 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <a href="<%= ctx %>/user/list" class="btn-cancel">✕ Hủy</a>
-                        <button type="submit" class="btn-submit"><i class="fas fa-user-plus"></i> Tạo Người Dùng</button>
+                        <a href="<%= ctx %>/user/list" class="btn-cancel">✕ Cancel</a>
+                        <button type="submit" class="btn-submit"><i class="fas fa-user-plus"></i> Create User</button>
                     </div>
                 </div>
             </form>

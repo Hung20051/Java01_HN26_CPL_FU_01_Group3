@@ -14,9 +14,9 @@
     BigDecimal unpaidAmt=(BigDecimal)sum.get("unpaidAmt");
     java.text.NumberFormat nf=java.text.NumberFormat.getNumberInstance(new java.util.Locale("vi","VN"));
 %><%! Object nvl(Object v,Object d){return v!=null?v:d;} %>
-<!DOCTYPE html><html lang="vi"><head>
+<!DOCTYPE html><html lang="en"><head>
         <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Hóa Đơn - CRM</title>
+        <title>Invoices - DRSMS</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
@@ -366,62 +366,62 @@
         </style>
     </head><body>
         <aside class="sb">
-            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">CRM System</div><div class="sb-sub">Khách hàng</div></div></div>
+            <div class="sb-brand"><div class="sb-logo"><i class="fas fa-bolt"></i></div><div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer</div></div></div>
             <nav class="sb-nav">
-                <div class="sb-lbl">Tổng quan</div>
-                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Trang chủ</a>
-                <div class="sb-lbl">Dịch vụ</div>
-                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Yêu cầu sửa chữa</a>
-                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Hợp đồng</a>
-                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> Thiết bị của tôi</a>
-                <div class="sb-lbl">Mua hàng</div>
-                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Linh kiện</a>
-                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Thiết bị</a>
-                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Giỏ hàng<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
-                <div class="sb-lbl">Tài chính</div>
-                <a href="<%=ctx%>/customerInvoices"        class="sb-item on"><i class="fas fa-receipt"></i> Hóa đơn</a>
-                <div class="sb-lbl">Hỗ trợ</div>
-                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Chat hỗ trợ</a>
+                <div class="sb-lbl">Overview</div>
+                <a href="<%=ctx%>/customerDashboard"       class="sb-item"><i class="fas fa-home"></i> Home</a>
+                <div class="sb-lbl">Services</div>
+                <a href="<%=ctx%>/customerServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Requests</a>
+                <a href="<%=ctx%>/customerContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+                <a href="<%=ctx%>/customerEquipment"       class="sb-item"><i class="fas fa-desktop"></i> My Equipment</a>
+                <div class="sb-lbl">Shop</div>
+                <a href="<%=ctx%>/customerShop?action=parts"     class="sb-item"><i class="fas fa-puzzle-piece"></i> Parts</a>
+                <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item"><i class="fas fa-server"></i> Equipment</a>
+                <a href="<%=ctx%>/customerShop?action=cart"      class="sb-item"><i class="fas fa-shopping-cart"></i> Cart<%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%></a>
+                <div class="sb-lbl">Finance</div>
+                <a href="<%=ctx%>/customerInvoices"        class="sb-item on"><i class="fas fa-receipt"></i> Invoices</a>
+                <div class="sb-lbl">Support</div>
+                <a href="<%=ctx%>/customerChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Support Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Khách hàng</div></div></div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <div class="sb-user"><div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div><div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer</div></div></div>
+                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
         <main class="main">
             <div class="pg-hd">
-                <h1><i class="fas fa-receipt"></i> Hóa Đơn</h1>
-                <p>Lịch sử thanh toán và hóa đơn chưa thanh toán</p>
+                <h1><i class="fas fa-receipt"></i> Invoices</h1>
+                <p>Payment history and unpaid invoices</p>
             </div>
 
             <%if(unpaid>0&&unpaidAmt!=null&&unpaidAmt.compareTo(BigDecimal.ZERO)>0){%>
             <div class="alert-warn">
                 <i class="fas fa-exclamation-triangle" style="font-size:1.1rem;color:var(--warning)"></i>
-                <div>Bạn có <strong><%=unpaid%> hóa đơn chưa thanh toán</strong> với tổng số tiền <strong><%=nf.format(unpaidAmt)%> ₫</strong>.
-                    Vui lòng liên hệ <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:700">nhân viên hỗ trợ</a> để được hướng dẫn thanh toán.</div>
+                <div>You have <strong><%=unpaid%> unpaid invoice(s)</strong> with a total amount of <strong><%=nf.format(unpaidAmt)%> ₫</strong>.
+                    Please contact <a href="<%=ctx%>/customerChat" style="color:var(--primary);font-weight:700">a support agent</a> for payment assistance.</div>
             </div>
             <%}%>
 
             <div class="stats">
-                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-file-invoice"></i></div><div><div class="sm-val"><%=total%></div><div class="sm-lbl">Tổng hóa đơn</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#fef3c7;color:var(--warning)"><i class="fas fa-clock"></i></div><div><div class="sm-val"><%=unpaid%></div><div class="sm-lbl">Chưa thanh toán</div></div></div>
-                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-check-circle"></i></div><div><div class="sm-val"><%=paid%></div><div class="sm-lbl">Đã thanh toán</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#e0e7ff;color:var(--primary)"><i class="fas fa-file-invoice"></i></div><div><div class="sm-val"><%=total%></div><div class="sm-lbl">Total Invoices</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#fef3c7;color:var(--warning)"><i class="fas fa-clock"></i></div><div><div class="sm-val"><%=unpaid%></div><div class="sm-lbl">Unpaid</div></div></div>
+                <div class="sm"><div class="sm-icon" style="background:#d1fae5;color:var(--success)"><i class="fas fa-check-circle"></i></div><div><div class="sm-val"><%=paid%></div><div class="sm-lbl">Paid</div></div></div>
             </div>
 
             <div class="filter-row">
-                <a href="<%=ctx%>/customerInvoices" class="f-btn <%=filterStatus.isEmpty()?"on":""%>">Tất cả</a>
-                <a href="<%=ctx%>/customerInvoices?status=UNPAID"    class="f-btn <%="UNPAID".equals(filterStatus)?"on":""%>">Chưa thanh toán</a>
-                <a href="<%=ctx%>/customerInvoices?status=PAID"      class="f-btn <%="PAID".equals(filterStatus)?"on":""%>">Đã thanh toán</a>
-                <a href="<%=ctx%>/customerInvoices?status=CANCELLED" class="f-btn <%="CANCELLED".equals(filterStatus)?"on":""%>">Đã hủy</a>
+                <a href="<%=ctx%>/customerInvoices" class="f-btn <%=filterStatus.isEmpty()?"on":""%>">All</a>
+                <a href="<%=ctx%>/customerInvoices?status=UNPAID"    class="f-btn <%="UNPAID".equals(filterStatus)?"on":""%>">Unpaid</a>
+                <a href="<%=ctx%>/customerInvoices?status=PAID"      class="f-btn <%="PAID".equals(filterStatus)?"on":""%>">Paid</a>
+                <a href="<%=ctx%>/customerInvoices?status=CANCELLED" class="f-btn <%="CANCELLED".equals(filterStatus)?"on":""%>">Cancelled</a>
             </div>
 
             <div class="tbl-card">
                 <%if(invoices.isEmpty()){%>
-                <div class="empty"><i class="fas fa-receipt"></i>Chưa có hóa đơn nào.</div>
+                <div class="empty"><i class="fas fa-receipt"></i>No invoices found.</div>
                 <%}else{%>
                 <table>
-                    <thead><tr><th>Mã HĐ</th><th>Loại</th><th>Liên kết</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày tạo</th><th>Hạn TT</th><th>Thao tác</th></tr></thead>
+                    <thead><tr><th>Invoice #</th><th>Type</th><th>Reference</th><th>Total</th><th>Status</th><th>Created</th><th>Due Date</th><th>Action</th></tr></thead>
                     <tbody>
                         <%for(Invoice inv:invoices){
                           String isc="b-unpaid";
@@ -443,7 +443,7 @@
                             <td><span class="b <%=isc%>"><%=inv.getStatusLabel()%></span></td>
                             <td style="font-size:.79rem;color:var(--muted)"><%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%></td>
                             <td style="font-size:.79rem" class="<%=overdue?"due-overdue":""%>"><%=inv.getDueDate()!=null?inv.getDueDate()+(overdue?" ⚠️":""):"—"%></td>
-                            <td><a href="<%=ctx%>/customerInvoices?action=detail&id=<%=inv.getId()%>" class="btn-view"><i class="fas fa-eye"></i> Chi tiết</a></td>
+                            <td><a href="<%=ctx%>/customerInvoices?action=detail&id=<%=inv.getId()%>" class="btn-view"><i class="fas fa-eye"></i> Details</a></td>
                         </tr>
                         <%}%>
                     </tbody>

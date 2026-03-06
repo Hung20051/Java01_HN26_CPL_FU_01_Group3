@@ -11,10 +11,10 @@
     String ctx       = request.getContextPath();
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Quản Lý Vai Trò</title>
+        <title>Role Management</title>
         <link rel="stylesheet" href="<%= ctx %>/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -218,26 +218,26 @@
     </head>
     <body>
         <div class="sidebar">
-            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin CRM</div>
+            <div class="sidebar-brand"><i class="fas fa-cog"></i> Admin DRSMS</div>
             <div class="sidebar-menu">
                 <a href="<%= ctx %>/admin.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Người Dùng</a>
-                <a href="<%= ctx %>/role/list" class="active"><i class="fas fa-user-tag"></i> Vai Trò</a>
+                <a href="<%= ctx %>/user/list"><i class="fas fa-users"></i> Users</a>
+                <a href="<%= ctx %>/role/list" class="active"><i class="fas fa-user-tag"></i> Roles</a>
             </div>
             <div class="sidebar-logout">
-                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                <a href="<%= ctx %>/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         <div class="main">
             <div class="page-header">
-                <div class="page-title"><i class="fas fa-user-tag"></i> Quản Lý Vai Trò</div>
+                <div class="page-title"><i class="fas fa-user-tag"></i> Role Management</div>
             </div>
-            <% if ("updated".equals(success)) { %><div class="alert-success">Cập nhật vai trò thành công!</div><% } %>
-            <% if ("deleted".equals(success)) { %><div class="alert-success">Xóa vai trò thành công! Người dùng đã được chuyển về Customer.</div><% } %>
+            <% if ("updated".equals(success)) { %><div class="alert-success">Role updated successfully!</div><% } %>
+            <% if ("deleted".equals(success)) { %><div class="alert-success">Role deleted successfully! Users have been reassigned to Customer.</div><% } %>
             <div class="table-card">
                 <table>
                     <thead>
-                        <tr><th># ID</th><th>Tên Vai Trò</th><th>Thao Tác</th></tr>
+                        <tr><th># ID</th><th>Role Name</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                         <% if (roles != null) for (Role r : roles) { %>
@@ -246,10 +246,10 @@
                             <td><span class="role-badge role-<%= r.getName() %>"><%= r.getName().replace("_"," ") %></span></td>
                             <td>
                                 <div class="action-btns">
-                                    <a href="<%= ctx %>/role/edit?action=edit&id=<%= r.getId() %>" class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></a>
+                                    <a href="<%= ctx %>/role/edit?action=edit&id=<%= r.getId() %>" class="btn-icon btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
                                     <a href="<%= ctx %>/role/delete?action=delete&id=<%= r.getId() %>"
-                                       class="btn-icon btn-delete" title="Xóa"
-                                       onclick="return confirm('Bạn có chắc muốn xóa vai trò này? Người dùng sẽ tự động chuyển về Customer.')">
+                                       class="btn-icon btn-delete" title="Delete"
+                                       onclick="return confirm('Are you sure you want to delete this role? Users will be automatically reassigned to Customer.')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
