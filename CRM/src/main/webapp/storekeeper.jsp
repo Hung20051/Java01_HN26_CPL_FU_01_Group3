@@ -355,7 +355,7 @@
                 <a href="<%= ctx %>/numberPart"      class="nav-item"><i class="fas fa-list-ul"></i> Parts List</a>
                 <a href="<%= ctx %>/numberEquipment" class="nav-item"><i class="fas fa-desktop"></i> Equipment List</a>
                 <a href="<%= ctx %>/transactions"    class="nav-item"><i class="fas fa-history"></i> Transaction History</a>
-               
+
             </nav>
             <div class="sidebar-footer">
                 <a href="<%= ctx %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>

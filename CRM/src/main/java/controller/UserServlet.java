@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class UserServlet extends HttpServlet {
+
     private final UserDAO userDAO = new UserDAO();
     private final RoleDAO roleDAO = new RoleDAO();
     private static final int PAGE_SIZE = 10;
@@ -19,15 +20,25 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-         System.out.println(">>> doGet called, action=" + action + ", URI=" + req.getRequestURI());
-        if (action == null) action = "list";
+        System.out.println(">>> doGet called, action=" + action + ", URI=" + req.getRequestURI());
+        if (action == null) {
+            action = "list";
+        }
 
         try {
             switch (action) {
-                case "edit":   showEdit(req, resp);   break;
-                case "create": showCreate(req, resp); break;
-                case "delete": handleDelete(req, resp);   break;
-                default:       showList(req, resp);   break;
+                case "edit":
+                    showEdit(req, resp);
+                    break;
+                case "create":
+                    showCreate(req, resp);
+                    break;
+                case "delete":
+                    handleDelete(req, resp);
+                    break;
+                default:
+                    showList(req, resp);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,14 +51,23 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) {
+            action = "";
+        }
 
         try {
             switch (action) {
-                case "create":         doCreate(req, resp);         break;
-                case "update":         doUpdate(req, resp);         break;
-                case "changePassword": doChangePassword(req, resp); break;
-                default: resp.sendRedirect(req.getContextPath() + "/user/list");
+                case "create":
+                    doCreate(req, resp);
+                    break;
+                case "update":
+                    doUpdate(req, resp);
+                    break;
+                case "changePassword":
+                    doChangePassword(req, resp);
+                    break;
+                default:
+                    resp.sendRedirect(req.getContextPath() + "/user/list");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,8 +78,8 @@ public class UserServlet extends HttpServlet {
     private void showList(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         String keyword = req.getParameter("keyword");
-        String status  = req.getParameter("status");
-        String role    = req.getParameter("role");
+        String status = req.getParameter("status");
+        String role = req.getParameter("role");
         String pageStr = req.getParameter("page");
         int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
 
@@ -75,8 +95,8 @@ public class UserServlet extends HttpServlet {
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("keyword", keyword != null ? keyword : "");
-req.setAttribute("status", status != null ? status : "");
-req.setAttribute("role", role != null ? role : "");
+        req.setAttribute("status", status != null ? status : "");
+        req.setAttribute("role", role != null ? role : "");
         req.getRequestDispatcher("/admin-users.jsp").forward(req, resp);
     }
 
@@ -89,6 +109,7 @@ req.setAttribute("role", role != null ? role : "");
         req.setAttribute("roles", roles);
         req.getRequestDispatcher("/user-edit.jsp").forward(req, resp);
     }
+
     private void showCreate(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         List<Role> roles = roleDAO.findAll();
@@ -100,25 +121,28 @@ req.setAttribute("role", role != null ? role : "");
             throws Exception {
         String username = req.getParameter("username");
         String fullName = req.getParameter("fullName");
-        String email    = req.getParameter("email");
-        String phone    = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
         String password = req.getParameter("password");
-        String confirm  = req.getParameter("confirmPassword");
-        int roleId      = Integer.parseInt(req.getParameter("roleId"));
-        boolean active  = "1".equals(req.getParameter("active"));
+        String confirm = req.getParameter("confirmPassword");
+        int roleId = Integer.parseInt(req.getParameter("roleId"));
+        boolean active = "1".equals(req.getParameter("active"));
 
         // Validate
         if (!password.equals(confirm)) {
             req.setAttribute("error", "Mật khẩu xác nhận không khớp!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
         if (userDAO.existsUsername(username)) {
             req.setAttribute("error", "Username đã tồn tại!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
         if (email != null && !email.isEmpty() && userDAO.existsEmail(email)) {
             req.setAttribute("error", "Email đã tồn tại!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
 
         User u = new User();
@@ -137,12 +161,12 @@ req.setAttribute("role", role != null ? role : "");
 
     private void doUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        int id      = Integer.parseInt(req.getParameter("id"));
+        int id = Integer.parseInt(req.getParameter("id"));
         String fullName = req.getParameter("fullName");
-        String email    = req.getParameter("email");
-        String phone    = req.getParameter("phone");
-        int roleId      = Integer.parseInt(req.getParameter("roleId"));
-        boolean active  = "1".equals(req.getParameter("active"));
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+        int roleId = Integer.parseInt(req.getParameter("roleId"));
+        boolean active = "1".equals(req.getParameter("active"));
 
         User u = userDAO.findById(id);
         u.setFullName(fullName);
@@ -157,7 +181,7 @@ req.setAttribute("role", role != null ? role : "");
 
     private void doChangePassword(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        int id         = Integer.parseInt(req.getParameter("id"));
+        int id = Integer.parseInt(req.getParameter("id"));
         String newPass = req.getParameter("newPassword");
         String confirm = req.getParameter("confirmPassword");
 
@@ -169,13 +193,13 @@ req.setAttribute("role", role != null ? role : "");
         resp.sendRedirect(req.getContextPath() + "/user/edit?action=edit&id=" + id + "&success=password_changed");
     }
 
-   private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
-        throws Exception {
-    String idStr = req.getParameter("id");
-    if (idStr != null && !idStr.isEmpty()) {
-        int id = Integer.parseInt(idStr);
-        userDAO.delete(id);
+    private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        String idStr = req.getParameter("id");
+        if (idStr != null && !idStr.isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            userDAO.delete(id);
+        }
+        resp.sendRedirect(req.getContextPath() + "/user/list?success=deleted");
     }
-    resp.sendRedirect(req.getContextPath() + "/user/list?success=deleted");
-}
 }

@@ -8,13 +8,13 @@ import java.util.*;
 public class PaymentDAO {
 
     /**
-     * Tạo payment mới, đồng thời cập nhật trạng thái invoice nếu SUCCESS.
-     * Dùng transaction để đảm bảo tính nhất quán.
+     * Tạo payment mới, đồng thời cập nhật trạng thái invoice nếu SUCCESS. Dùng
+     * transaction để đảm bảo tính nhất quán.
      */
     public Payment createPayment(int invoiceId, int customerId,
-                                  java.math.BigDecimal amount,
-                                  String method, String status,
-                                  String transactionRef, String note) throws Exception {
+            java.math.BigDecimal amount,
+            String method, String status,
+            String transactionRef, String note) throws Exception {
         Connection con = null;
         try {
             con = DBConnection.getConnection();
@@ -40,7 +40,9 @@ public class PaymentDAO {
                 ps.setString(8, note);
                 ps.executeUpdate();
                 try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (!keys.next()) throw new Exception("Cannot get generated key");
+                    if (!keys.next()) {
+                        throw new Exception("Cannot get generated key");
+                    }
                     newId = keys.getInt(1);
                 }
             }
@@ -70,16 +72,23 @@ public class PaymentDAO {
             return p;
 
         } catch (Exception e) {
-            if (con != null) try { con.rollback(); } catch (SQLException ignored) {}
+            if (con != null) try {
+                con.rollback();
+            } catch (SQLException ignored) {
+            }
             throw e;
         } finally {
-            if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException ignored) {}
+            if (con != null) try {
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     /**
-     * Cập nhật trạng thái payment (dùng khi VNPay callback).
-     * Nếu chuyển sang SUCCESS thì đồng thời update invoice.
+     * Cập nhật trạng thái payment (dùng khi VNPay callback). Nếu chuyển sang
+     * SUCCESS thì đồng thời update invoice.
      */
     public void updateStatus(int paymentId, String status, String transactionRef) throws Exception {
         Connection con = null;
@@ -93,7 +102,9 @@ public class PaymentDAO {
                     "SELECT invoice_id FROM payments WHERE id=?")) {
                 ps.setInt(1, paymentId);
                 try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) invoiceId = rs.getInt("invoice_id");
+                    if (rs.next()) {
+                        invoiceId = rs.getInt("invoice_id");
+                    }
                 }
             }
 
@@ -117,14 +128,23 @@ public class PaymentDAO {
 
             con.commit();
         } catch (Exception e) {
-            if (con != null) try { con.rollback(); } catch (SQLException ignored) {}
+            if (con != null) try {
+                con.rollback();
+            } catch (SQLException ignored) {
+            }
             throw e;
         } finally {
-            if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException ignored) {}
+            if (con != null) try {
+                con.setAutoCommit(true);
+                con.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 
-    /** Lấy payment theo ID */
+    /**
+     * Lấy payment theo ID
+     */
     public Payment getById(int id) throws Exception {
         String sql = """
             SELECT p.*, inv.invoice_code, u.full_name AS customer_name
@@ -133,17 +153,20 @@ public class PaymentDAO {
             JOIN users u      ON u.id  = p.customer_id
             WHERE p.id = ?
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return map(rs);
+                if (rs.next()) {
+                    return map(rs);
+                }
             }
         }
         return null;
     }
 
-    /** Lấy danh sách payment theo invoice */
+    /**
+     * Lấy danh sách payment theo invoice
+     */
     public List<Payment> getByInvoiceId(int invoiceId) throws Exception {
         List<Payment> list = new ArrayList<>();
         String sql = """
@@ -154,17 +177,20 @@ public class PaymentDAO {
             WHERE p.invoice_id = ?
             ORDER BY p.created_at DESC
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, invoiceId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
             }
         }
         return list;
     }
 
-    /** Lấy payment PENDING mới nhất theo invoice (dùng cho VNPay callback) */
+    /**
+     * Lấy payment PENDING mới nhất theo invoice (dùng cho VNPay callback)
+     */
     public Payment getPendingByInvoice(int invoiceId) throws Exception {
         String sql = """
             SELECT p.*, inv.invoice_code, u.full_name AS customer_name
@@ -174,18 +200,18 @@ public class PaymentDAO {
             WHERE p.invoice_id = ? AND p.status = 'PENDING'
             ORDER BY p.created_at DESC LIMIT 1
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, invoiceId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return map(rs);
+                if (rs.next()) {
+                    return map(rs);
+                }
             }
         }
         return null;
     }
 
     // ── private helpers ──
-
     private String generateCode(Connection con) throws SQLException {
         int year = java.time.LocalDate.now().getYear();
         String prefix = "PAY" + year + "-";
@@ -213,9 +239,13 @@ public class PaymentDAO {
         p.setTransactionRef(rs.getString("transaction_ref"));
         p.setNote(rs.getString("note"));
         Timestamp cat = rs.getTimestamp("created_at");
-        if (cat != null) p.setCreatedAt(cat.toLocalDateTime());
+        if (cat != null) {
+            p.setCreatedAt(cat.toLocalDateTime());
+        }
         Timestamp uat = rs.getTimestamp("updated_at");
-        if (uat != null) p.setUpdatedAt(uat.toLocalDateTime());
+        if (uat != null) {
+            p.setUpdatedAt(uat.toLocalDateTime());
+        }
         return p;
     }
 }

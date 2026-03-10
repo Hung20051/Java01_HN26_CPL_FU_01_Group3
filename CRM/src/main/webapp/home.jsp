@@ -113,7 +113,7 @@
             <div class="feature-card">
                 <i class="fas fa-envelope"></i>
                 <h3>Email</h3>
-                <p>support@crmsystem.vn<br>sales@crmsystem.vn</p>
+                <p>support@drsmsystem.vn<br>sales@drsmsystem.vn</p>
             </div>
         </div>
     </section>

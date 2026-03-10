@@ -2,6 +2,7 @@ package model;
 
 // ── ServiceRequestEquipment ──────────────────────────────────────
 public class ServiceRequestEquipment {
+
     private int id;
     private int serviceRequestId;
     private int customerEquipmentId;
@@ -11,24 +12,59 @@ public class ServiceRequestEquipment {
     private String displaySerial;
     private String source;
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public int getServiceRequestId() { return serviceRequestId; }
-    public void setServiceRequestId(int serviceRequestId) { this.serviceRequestId = serviceRequestId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getCustomerEquipmentId() { return customerEquipmentId; }
-    public void setCustomerEquipmentId(int customerEquipmentId) { this.customerEquipmentId = customerEquipmentId; }
+    public int getServiceRequestId() {
+        return serviceRequestId;
+    }
 
-    public String getIssueDescription() { return issueDescription; }
-    public void setIssueDescription(String issueDescription) { this.issueDescription = issueDescription; }
+    public void setServiceRequestId(int serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
 
-    public String getDisplayName() { return displayName; }
-    public void setDisplayName(String displayName) { this.displayName = displayName; }
+    public int getCustomerEquipmentId() {
+        return customerEquipmentId;
+    }
 
-    public String getDisplaySerial() { return displaySerial; }
-    public void setDisplaySerial(String displaySerial) { this.displaySerial = displaySerial; }
+    public void setCustomerEquipmentId(int customerEquipmentId) {
+        this.customerEquipmentId = customerEquipmentId;
+    }
 
-    public String getSource() { return source; }
-    public void setSource(String source) { this.source = source; }
+    public String getIssueDescription() {
+        return issueDescription;
+    }
+
+    public void setIssueDescription(String issueDescription) {
+        this.issueDescription = issueDescription;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplaySerial() {
+        return displaySerial;
+    }
+
+    public void setDisplaySerial(String displaySerial) {
+        this.displaySerial = displaySerial;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

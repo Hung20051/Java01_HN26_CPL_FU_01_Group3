@@ -5,6 +5,7 @@ import model.ServiceRequestEquipment;
 import util.DBConnection;
 import java.sql.*;
 import java.util.*;
+import model.Contract;
 
 public class ServiceRequestDAO {
 
@@ -26,25 +27,42 @@ public class ServiceRequestDAO {
     }
 
     public List<ServiceRequest> getFiltered(int customerId, String status, String priority,
-                                             String fromDate, String toDate) throws Exception {
+            String fromDate, String toDate) throws Exception {
         List<ServiceRequest> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(BASE + " WHERE sr.customer_id = ?");
-        if (status   != null && !status.isEmpty())   sql.append(" AND sr.status = ?");
-        if (priority != null && !priority.isEmpty()) sql.append(" AND sr.priority = ?");
-        if (fromDate != null && !fromDate.isEmpty()) sql.append(" AND DATE(sr.created_at) >= ?");
-        if (toDate   != null && !toDate.isEmpty())   sql.append(" AND DATE(sr.created_at) <= ?");
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND sr.status = ?");
+        }
+        if (priority != null && !priority.isEmpty()) {
+            sql.append(" AND sr.priority = ?");
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            sql.append(" AND DATE(sr.created_at) >= ?");
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            sql.append(" AND DATE(sr.created_at) <= ?");
+        }
         sql.append(" ORDER BY sr.created_at DESC");
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             int idx = 1;
             ps.setInt(idx++, customerId);
-            if (status   != null && !status.isEmpty())   ps.setString(idx++, status);
-            if (priority != null && !priority.isEmpty()) ps.setString(idx++, priority);
-            if (fromDate != null && !fromDate.isEmpty()) ps.setString(idx++, fromDate);
-            if (toDate   != null && !toDate.isEmpty())   ps.setString(idx++, toDate);
+            if (status != null && !status.isEmpty()) {
+                ps.setString(idx++, status);
+            }
+            if (priority != null && !priority.isEmpty()) {
+                ps.setString(idx++, priority);
+            }
+            if (fromDate != null && !fromDate.isEmpty()) {
+                ps.setString(idx++, fromDate);
+            }
+            if (toDate != null && !toDate.isEmpty()) {
+                ps.setString(idx++, toDate);
+            }
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapSR(rs));
+                while (rs.next()) {
+                    list.add(mapSR(rs));
+                }
             }
         }
         return list;
@@ -52,8 +70,7 @@ public class ServiceRequestDAO {
 
     public ServiceRequest getById(int id) throws Exception {
         String sql = BASE + " WHERE sr.id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -66,9 +83,11 @@ public class ServiceRequestDAO {
         return null;
     }
 
-    /** Tạo service request mới với danh sách equipment */
+    /**
+     * Tạo service request mới với danh sách equipment
+     */
     public int create(ServiceRequest sr, List<Integer> customerEquipmentIds,
-                      List<String> issueDescriptions) throws Exception {
+            List<String> issueDescriptions) throws Exception {
         Connection con = DBConnection.getConnection();
         con.setAutoCommit(false);
         try {
@@ -88,7 +107,9 @@ public class ServiceRequestDAO {
                 ps.setString(6, sr.getPriority());
                 ps.executeUpdate();
                 try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (!keys.next()) throw new Exception("Failed to get generated key");
+                    if (!keys.next()) {
+                        throw new Exception("Failed to get generated key");
+                    }
                     newId = keys.getInt(1);
                 }
             }
@@ -100,8 +121,12 @@ public class ServiceRequestDAO {
                     ps.setInt(1, newId);
                     ps.setInt(2, customerEquipmentIds.get(i));
                     String desc = (issueDescriptions != null && i < issueDescriptions.size())
-                                  ? issueDescriptions.get(i) : null;
-                    if (desc != null) ps.setString(3, desc); else ps.setNull(3, Types.VARCHAR);
+                            ? issueDescriptions.get(i) : null;
+                    if (desc != null) {
+                        ps.setString(3, desc);
+                    } else {
+                        ps.setNull(3, Types.VARCHAR);
+                    }
                     ps.addBatch();
                 }
                 ps.executeBatch();
@@ -121,9 +146,9 @@ public class ServiceRequestDAO {
 
     public boolean cancel(int id, int customerId) throws Exception {
         String sql = "UPDATE service_requests SET status='CANCELLED' WHERE id=? AND customer_id=? AND status='PENDING'";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id); ps.setInt(2, customerId);
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.setInt(2, customerId);
             return ps.executeUpdate() > 0;
         }
     }
@@ -131,11 +156,12 @@ public class ServiceRequestDAO {
     public Map<String, Integer> getCountsByStatus(int customerId) throws Exception {
         Map<String, Integer> map = new LinkedHashMap<>();
         String sql = "SELECT status, COUNT(*) cnt FROM service_requests WHERE customer_id=? GROUP BY status";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, customerId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) map.put(rs.getString("status"), rs.getInt("cnt"));
+                while (rs.next()) {
+                    map.put(rs.getString("status"), rs.getInt("cnt"));
+                }
             }
         }
         return map;
@@ -198,21 +224,178 @@ public class ServiceRequestDAO {
         sr.setDescription(rs.getString("description"));
         sr.setPriority(rs.getString("priority"));
         sr.setStatus(rs.getString("status"));
-        int rb = rs.getInt("reviewed_by"); if (!rs.wasNull()) sr.setReviewedBy(rb);
+        int rb = rs.getInt("reviewed_by");
+        if (!rs.wasNull()) {
+            sr.setReviewedBy(rb);
+        }
         sr.setReviewedByName(rs.getString("reviewed_by_name"));
         Timestamp rat = rs.getTimestamp("reviewed_at");
-        if (rat != null) sr.setReviewedAt(rat.toLocalDateTime());
+        if (rat != null) {
+            sr.setReviewedAt(rat.toLocalDateTime());
+        }
         sr.setRejectReason(rs.getString("reject_reason"));
-        int at = rs.getInt("assigned_to"); if (!rs.wasNull()) sr.setAssignedTo(at);
+        int at = rs.getInt("assigned_to");
+        if (!rs.wasNull()) {
+            sr.setAssignedTo(at);
+        }
         sr.setAssignedToName(rs.getString("assigned_to_name"));
         Timestamp aat = rs.getTimestamp("assigned_at");
-        if (aat != null) sr.setAssignedAt(aat.toLocalDateTime());
+        if (aat != null) {
+            sr.setAssignedAt(aat.toLocalDateTime());
+        }
         Timestamp cat2 = rs.getTimestamp("completed_at");
-        if (cat2 != null) sr.setCompletedAt(cat2.toLocalDateTime());
+        if (cat2 != null) {
+            sr.setCompletedAt(cat2.toLocalDateTime());
+        }
         Timestamp cat = rs.getTimestamp("created_at");
-        if (cat != null) sr.setCreatedAt(cat.toLocalDateTime());
+        if (cat != null) {
+            sr.setCreatedAt(cat.toLocalDateTime());
+        }
         Timestamp uat = rs.getTimestamp("updated_at");
-        if (uat != null) sr.setUpdatedAt(uat.toLocalDateTime());
+        if (uat != null) {
+            sr.setUpdatedAt(uat.toLocalDateTime());
+        }
         return sr;
+    }
+
+    public List<ServiceRequest> getAllFiltered(String keyword, String status,
+            String priority, String contractType,
+            int page, int pageSize) throws Exception {
+        List<ServiceRequest> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(BASE + " WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (sr.request_code LIKE ? OR u.full_name LIKE ? OR sr.title LIKE ?)");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw);
+            params.add(kw);
+            params.add(kw);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND sr.status = ?");
+            params.add(status);
+        }
+        if (priority != null && !priority.isEmpty()) {
+            sql.append(" AND sr.priority = ?");
+            params.add(priority);
+        }
+        if (contractType != null && !contractType.isEmpty()) {
+            sql.append(" AND c.contract_type = ?");
+            params.add(contractType);
+        }
+        sql.append(" ORDER BY sr.created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapSR(rs));
+                }
+            }
+        }
+        return list;
+    }
+
+    public int countAllFiltered(String keyword, String status,
+            String priority, String contractType) throws Exception {
+        StringBuilder sql = new StringBuilder("""
+            SELECT COUNT(*)
+            FROM service_requests sr
+            JOIN users     u ON u.id = sr.customer_id
+            JOIN contracts c ON c.id = sr.contract_id
+            WHERE 1=1
+            """);
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (sr.request_code LIKE ? OR u.full_name LIKE ? OR sr.title LIKE ?)");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw);
+            params.add(kw);
+            params.add(kw);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND sr.status = ?");
+            params.add(status);
+        }
+        if (priority != null && !priority.isEmpty()) {
+            sql.append(" AND sr.priority = ?");
+            params.add(priority);
+        }
+        if (contractType != null && !contractType.isEmpty()) {
+            sql.append(" AND c.contract_type = ?");
+            params.add(contractType);
+        }
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        }
+    }
+
+    // ── CS: Get contracts for a customer (for create SR on behalf) ────────
+    public List<Contract> getActiveContractsByCustomer(int customerId) throws Exception {
+        List<Contract> list = new ArrayList<>();
+        String sql = """
+            SELECT c.id, c.contract_code, c.contract_type, c.start_date, c.end_date
+            FROM contracts c
+            WHERE c.customer_id = ? AND c.status = 'ACTIVE'
+            ORDER BY c.created_at DESC
+            """;
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Contract ct = new Contract();
+                    ct.setId(rs.getInt("id"));
+                    ct.setContractCode(rs.getString("contract_code"));
+                    ct.setContractType(rs.getString("contract_type"));
+                    java.sql.Date sd = rs.getDate("start_date");
+                    if (sd != null) {
+                        ct.setStartDate(sd.toLocalDate());
+                    }
+                    java.sql.Date ed = rs.getDate("end_date");
+                    if (ed != null) {
+                        ct.setEndDate(ed.toLocalDate());
+                    }
+                    list.add(ct);
+                }
+            }
+        }
+        return list;
+    }
+
+    // ── Dashboard stats ───────────────────────────────────────────────────
+    public Map<String, Integer> getSRDashboardStats() throws Exception {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        String sql = """
+            SELECT
+              COUNT(*) AS total,
+              SUM(CASE WHEN status='PENDING'     THEN 1 ELSE 0 END) AS pending,
+              SUM(CASE WHEN status='APPROVED'    THEN 1 ELSE 0 END) AS approved,
+              SUM(CASE WHEN status='IN_PROGRESS' THEN 1 ELSE 0 END) AS in_progress,
+              SUM(CASE WHEN status='COMPLETED'   THEN 1 ELSE 0 END) AS completed,
+              SUM(CASE WHEN status='REJECTED'    THEN 1 ELSE 0 END) AS rejected
+            FROM service_requests
+            """;
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                stats.put("total", rs.getInt("total"));
+                stats.put("pending", rs.getInt("pending"));
+                stats.put("approved", rs.getInt("approved"));
+                stats.put("in_progress", rs.getInt("in_progress"));
+                stats.put("completed", rs.getInt("completed"));
+                stats.put("rejected", rs.getInt("rejected"));
+            }
+        }
+        return stats;
     }
 }

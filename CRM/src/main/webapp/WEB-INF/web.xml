@@ -54,7 +54,30 @@
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/role/*</url-pattern>
     </filter-mapping>
-
+    <filter>
+    <filter-name>SupportFilter</filter-name>
+    <filter-class>filter.SupportFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>SupportFilter</filter-name>
+    <url-pattern>/supportDashboard</url-pattern>
+</filter-mapping>
+<filter-mapping>
+    <filter-name>SupportFilter</filter-name>
+    <url-pattern>/supportCustomers</url-pattern>
+</filter-mapping>
+<filter-mapping>
+    <filter-name>SupportFilter</filter-name>
+    <url-pattern>/supportContracts</url-pattern>
+</filter-mapping>
+<filter-mapping>
+    <filter-name>SupportFilter</filter-name>
+    <url-pattern>/supportServiceRequests</url-pattern>
+</filter-mapping>
+<filter-mapping>
+    <filter-name>SupportFilter</filter-name>
+    <url-pattern>/supportChat</url-pattern>
+</filter-mapping>
     <!-- ===== SERVLETS ===== -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -377,6 +400,53 @@
 <servlet-mapping>
     <servlet-name>CustomerShopServlet</servlet-name>
     <url-pattern>/customerShop</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>CustomerSupportChatServlet</servlet-name>
+    <servlet-class>controller.CustomerSupportChatServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>CustomerSupportChatServlet</servlet-name>
+    <url-pattern>/supportChat</url-pattern>
+</servlet-mapping>
+<!-- Support Dashboard -->
+<servlet>
+    <servlet-name>SupportDashboardServlet</servlet-name>
+    <servlet-class>controller.SupportDashboardServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SupportDashboardServlet</servlet-name>
+    <url-pattern>/supportDashboard</url-pattern>
+</servlet-mapping>
+
+<!-- Support Customers -->
+<servlet>
+    <servlet-name>SupportCustomerServlet</servlet-name>
+    <servlet-class>controller.SupportCustomerServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SupportCustomerServlet</servlet-name>
+    <url-pattern>/supportCustomers</url-pattern>
+</servlet-mapping>
+
+<!-- Support Contracts -->
+<servlet>
+    <servlet-name>SupportContractServlet</servlet-name>
+    <servlet-class>controller.SupportContractServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SupportContractServlet</servlet-name>
+    <url-pattern>/supportContracts</url-pattern>
+</servlet-mapping>
+
+<!-- Support Service Requests -->
+<servlet>
+    <servlet-name>SupportServiceRequestServlet</servlet-name>
+    <servlet-class>controller.SupportServiceRequestServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>SupportServiceRequestServlet</servlet-name>
+    <url-pattern>/supportServiceRequests</url-pattern>
 </servlet-mapping>
 
     <session-config>

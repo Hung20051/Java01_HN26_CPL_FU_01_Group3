@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
+
     private final UserDAO userDAO = new UserDAO();
 
     @Override
@@ -29,13 +30,13 @@ public class LoginServlet extends HttpServlet {
 
         try {
             User user = userDAO.findByUsername(username.trim());
-System.out.println("=== DEBUG ===");
-System.out.println("Username: " + username);
-System.out.println("User found: " + (user != null ? user.getUsername() : "NULL"));
-if (user != null) {
-    System.out.println("Password hash in DB: " + user.getPassword());
-    System.out.println("Check result: " + PasswordUtil.checkPassword(password, user.getPassword()));
-}
+            System.out.println("=== DEBUG ===");
+            System.out.println("Username: " + username);
+            System.out.println("User found: " + (user != null ? user.getUsername() : "NULL"));
+            if (user != null) {
+                System.out.println("Password hash in DB: " + user.getPassword());
+                System.out.println("Check result: " + PasswordUtil.checkPassword(password, user.getPassword()));
+            }
             if (user == null || !PasswordUtil.checkPassword(password, user.getPassword())) {
                 req.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
                 req.getRequestDispatcher("login.jsp").forward(req, resp);
@@ -55,13 +56,26 @@ if (user != null) {
             // Redirect theo role
             String ctx = req.getContextPath();
             switch (user.getRoleName()) {
-                case "ADMIN":             resp.sendRedirect(ctx + "/admin.jsp"); break;
-                case "TECHNICAL_MANAGER": resp.sendRedirect(ctx + "/technical-manager.jsp"); break;
-                case "CUSTOMER_SUPPORT":  resp.sendRedirect(ctx + "/customer-support.jsp"); break;
-                case "TECHNICIAN":        resp.sendRedirect(ctx + "/technician.jsp"); break;
-                case "STOREKEEPER":       resp.sendRedirect(ctx + "/dashboard.jsp"); break;
-                case "CUSTOMER":          resp.sendRedirect(ctx + "/customerDashboard"); break;
-                default:                  resp.sendRedirect(ctx + "/dashboard.jsp");
+                case "ADMIN":
+                    resp.sendRedirect(ctx + "/admin.jsp");
+                    break;
+                case "TECHNICAL_MANAGER":
+                    resp.sendRedirect(ctx + "/technical-manager.jsp");
+                    break;
+                case "CUSTOMER_SUPPORT":
+                    resp.sendRedirect(ctx + "/supportDashboard");
+                    break;
+                case "TECHNICIAN":
+                    resp.sendRedirect(ctx + "/technician.jsp");
+                    break;
+                case "STOREKEEPER":
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
+                    break;
+                case "CUSTOMER":
+                    resp.sendRedirect(ctx + "/customerDashboard");
+                    break;
+                default:
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
             }
 
         } catch (Exception e) {

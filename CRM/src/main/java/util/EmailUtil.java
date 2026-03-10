@@ -10,11 +10,11 @@ import java.util.Random;
 
 public class EmailUtil {
 
-   private static final String SENDER_EMAIL    = AppConfig.getEmailSender();
-private static final String SENDER_PASSWORD = AppConfig.getEmailPassword();
+    private static final String SENDER_EMAIL = AppConfig.getEmailSender();
+    private static final String SENDER_PASSWORD = AppConfig.getEmailPassword();
 
     private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final int    SMTP_PORT = 587;
+    private static final int SMTP_PORT = 587;
 
     /**
      * Tạo mã OTP 6 chữ số
