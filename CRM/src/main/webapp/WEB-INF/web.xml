@@ -452,4 +452,24 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    
+    <!-- ── TECHNICAL MANAGER FILTER ── -->
+    <filter>
+        <filter-name>TechnicalManagerFilter</filter-name>
+        <filter-class>filter.TechnicalManagerFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>TechnicalManagerFilter</filter-name>
+        <url-pattern>/tmServiceRequests</url-pattern>
+    </filter-mapping>
+
+    <!-- ── TECHNICAL MANAGER SERVLET ── -->
+    <servlet>
+        <servlet-name>TechnicalManagerServlet</servlet-name>
+        <servlet-class>controller.TechnicalManagerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TechnicalManagerServlet</servlet-name>
+        <url-pattern>/tmServiceRequests</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
                     resp.sendRedirect(ctx + "/admin.jsp");
                     break;
                 case "TECHNICAL_MANAGER":
-                    resp.sendRedirect(ctx + "/technical-manager.jsp");
+                    resp.sendRedirect(ctx + "/tmServiceRequests.jsp");
                     break;
                 case "CUSTOMER_SUPPORT":
                     resp.sendRedirect(ctx + "/supportDashboard");
