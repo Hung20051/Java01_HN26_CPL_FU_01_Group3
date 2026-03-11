@@ -398,4 +398,71 @@ public class ServiceRequestDAO {
         }
         return stats;
     }
+    // ── TECHNICAL MANAGER: Approve a PENDING request ─────────────────────
+    public boolean approve(int requestId, int reviewedBy) throws Exception {
+        String sql = """
+            UPDATE service_requests
+               SET status      = 'APPROVED',
+                   reviewed_by = ?,
+                   reviewed_at = NOW()
+             WHERE id = ? AND status = 'PENDING'
+            """;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, reviewedBy);
+            ps.setInt(2, requestId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ── TECHNICAL MANAGER: Reject a PENDING request ──────────────────────
+    public boolean reject(int requestId, int reviewedBy, String reason) throws Exception {
+        String sql = """
+            UPDATE service_requests
+               SET status        = 'REJECTED',
+                   reviewed_by   = ?,
+                   reviewed_at   = NOW(),
+                   reject_reason = ?
+             WHERE id = ? AND status = 'PENDING'
+            """;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, reviewedBy);
+            ps.setString(2, reason != null ? reason : "");
+            ps.setInt(3, requestId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ── TECHNICAL MANAGER: Assign technician to APPROVED request ─────────
+    public boolean assignTechnician(int requestId, int technicianId, int managerId) throws Exception {
+        String sql = """
+            UPDATE service_requests
+               SET assigned_to  = ?,
+                   assigned_at  = NOW(),
+                   status       = 'IN_PROGRESS',
+                   reviewed_by  = ?,
+                   reviewed_at  = COALESCE(reviewed_at, NOW())
+             WHERE id = ? AND status = 'APPROVED'
+            """;
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, technicianId);
+            ps.setInt(2, managerId);
+            ps.setInt(3, requestId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ── TECHNICAL MANAGER: Get all requests filtered (with assigned_to filter) ──
+    public List<ServiceRequest> getTMFiltered(String keyword, String status,
+            String priority, String contractType,
+            int page, int pageSize) throws Exception {
+        return getAllFiltered(keyword, status, priority, contractType, page, pageSize);
+    }
+
+    public int countTMFiltered(String keyword, String status,
+            String priority, String contractType) throws Exception {
+        return countAllFiltered(keyword, status, priority, contractType);
+    }
 }
