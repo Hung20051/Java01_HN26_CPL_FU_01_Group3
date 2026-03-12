@@ -29,17 +29,17 @@ public class Contract {
     }
 
     public String getContractTypeLabel() {
-        return "WARRANTY".equals(contractType) ? "Bảo hành" : "Bảo trì";
+        return "WARRANTY".equals(contractType) ? "Warranty" : "Maintenance";
     }
 
     public String getStatusLabel() {
         switch (status == null ? "" : status) {
             case "ACTIVE":
-                return "Đang hoạt động";
+                return "Active";
             case "EXPIRED":
-                return "Đã hết hạn";
+                return "Expired";
             case "CANCELLED":
-                return "Đã hủy";
+                return "Cancelled";
             default:
                 return status;
         }

@@ -48,6 +48,9 @@ public class CustomerShopServlet extends HttpServlet {
                 case "orderSuccess":
                     showOrderSuccess(req, resp);
                     break;
+                case "detail":                          // ← THÊM
+                    showDetail(req, resp);              // ← THÊM
+                    break;   
                 case "vnpay_gateway":
                     Integer invId = (Integer) req.getSession().getAttribute("pendingInvoiceId");
                     String invCode = (String) req.getSession().getAttribute("pendingInvoiceCode");
@@ -184,23 +187,67 @@ public class CustomerShopServlet extends HttpServlet {
         req.getSession().removeAttribute("lastPayMethod");
         req.getRequestDispatcher("/customerOrderSuccess.jsp").forward(req, resp);
     }
+    
+        private void showDetail(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        String itemType = nvl(req.getParameter("itemType")); // "PART" hoặc "EQUIPMENT"
+        int id = parseInt(req.getParameter("id"), 0);
 
-    // ── CART HANDLERS ────────────────────────────────────────────────
-    private void handleAddToCart(HttpServletRequest req, HttpServletResponse resp, User me) throws Exception {
-        String itemType = nvl(req.getParameter("itemType"));
-        int typeId = parseInt(req.getParameter("typeId"), 0);
-        int qty = parseInt(req.getParameter("quantity"), 1);
-        String backAction = "PART".equals(itemType) ? "parts" : "equipment";
-
-        ShopItem si = "PART".equals(itemType) ? shopDAO.getPartById(typeId) : shopDAO.getEquipmentById(typeId);
-        if (si == null || si.availableQty <= 0) {
-            req.getSession().setAttribute("shopFlashError", "Sản phẩm không còn hàng!");
-            resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
+        if (id == 0 || (!itemType.equals("PART") && !itemType.equals("EQUIPMENT"))) {
+            resp.sendRedirect(req.getContextPath() + "/customerShop?action=parts");
             return;
         }
 
-        Map<String, CartItem> cart = getCart(req);
-        String key = itemType + "_" + typeId;
+        ShopItem item = "PART".equals(itemType)
+                ? shopDAO.getPartById(id)
+                : shopDAO.getEquipmentById(id);
+
+        if (item == null) {
+            resp.sendRedirect(req.getContextPath() + "/customerShop?action="
+                    + ("PART".equals(itemType) ? "parts" : "equipment"));
+            return;
+        }
+
+        req.setAttribute("item", item);
+        req.setAttribute("itemType", itemType);
+        req.setAttribute("cartCount", getCartCount(req));
+        req.getRequestDispatcher("/customerShopDetail.jsp").forward(req, resp);
+    }
+    // ── CART HANDLERS ────────────────────────────────────────────────
+   private void handleAddToCart(HttpServletRequest req, HttpServletResponse resp, User me) throws Exception {
+    String itemType = nvl(req.getParameter("itemType"));
+    int typeId = parseInt(req.getParameter("typeId"), 0);
+    int qty = parseInt(req.getParameter("quantity"), 1);
+    
+    // EQUIPMENT chỉ cho phép 1 unit per order
+    if ("EQUIPMENT".equals(itemType)) {
+        qty = 1;
+    }
+    
+    String backAction = "PART".equals(itemType) ? "parts" : "equipment";
+
+    ShopItem si = "PART".equals(itemType) ? shopDAO.getPartById(typeId) : shopDAO.getEquipmentById(typeId);
+    if (si == null || si.availableQty <= 0) {
+        req.getSession().setAttribute("shopFlashError", "Sản phẩm không còn hàng!");
+        resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
+        return;
+    }
+
+    Map<String, CartItem> cart = getCart(req);
+    String key = itemType + "_" + typeId;
+    
+    if ("EQUIPMENT".equals(itemType)) {
+        // Equipment: không cộng dồn, luôn set = 1
+        if (!cart.containsKey(key)) {
+            cart.put(key, new CartItem(typeId, itemType, si.name, si.categoryName,
+                    si.unitPrice, 1, 1));
+        } else {
+            req.getSession().setAttribute("shopFlashError", 
+                "\"" + si.name + "\" đã có trong giỏ hàng!");
+            resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
+            return;
+        }
+    } else {
+        // PART: giữ nguyên logic cũ
         if (cart.containsKey(key)) {
             CartItem ex = cart.get(key);
             ex.setQuantity(Math.min(ex.getQuantity() + qty, si.availableQty));
@@ -209,10 +256,12 @@ public class CustomerShopServlet extends HttpServlet {
             cart.put(key, new CartItem(typeId, itemType, si.name, si.categoryName,
                     si.unitPrice, Math.min(qty, si.availableQty), si.availableQty));
         }
-        saveCart(req, cart);
-        req.getSession().setAttribute("shopFlashSuccess", "Đã thêm \"" + si.name + "\" vào giỏ hàng!");
-        resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
     }
+    
+    saveCart(req, cart);
+    req.getSession().setAttribute("shopFlashSuccess", "Đã thêm \"" + si.name + "\" vào giỏ hàng!");
+    resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
+}
 
     private void handleUpdateCart(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String key = nvl(req.getParameter("key"));
@@ -380,66 +429,59 @@ public class CustomerShopServlet extends HttpServlet {
     }
 
     private void deductInventory(Map<String, CartItem> cart, int customerId, int invoiceId) throws Exception {
-        try (Connection c = util.DBConnection.getConnection()) {
-            c.setAutoCommit(false);
-            try {
-                for (CartItem ci : cart.values()) {
-                    boolean isPart = "PART".equals(ci.getItemType());
-                    String sqlFind = isPart
-                            ? "SELECT id FROM part_units WHERE part_type_id=? AND status='AVAILABLE' LIMIT ?"
-                            : "SELECT id FROM equipment_units WHERE equipment_type_id=? AND status='AVAILABLE' LIMIT 1";
-                    PreparedStatement psF = c.prepareStatement(sqlFind);
-                    psF.setInt(1, ci.getTypeId());
-                    if (isPart) {
-                        psF.setInt(2, ci.getQuantity());
-                    }
-                    ResultSet rs = psF.executeQuery();
+    try (Connection c = util.DBConnection.getConnection()) {
+        c.setAutoCommit(false);
+        try {
+            for (CartItem ci : cart.values()) {
+                boolean isPart = "PART".equals(ci.getItemType());
+                String sqlFind = isPart
+                        ? "SELECT id FROM part_units WHERE part_type_id=? AND status='AVAILABLE' LIMIT ?"
+                        : "SELECT id FROM equipment_units WHERE equipment_type_id=? AND status='AVAILABLE' LIMIT ?"; // fix LIMIT ?
+                PreparedStatement psF = c.prepareStatement(sqlFind);
+                psF.setInt(1, ci.getTypeId());
+                psF.setInt(2, ci.getQuantity()); // cả PART lẫn EQUIPMENT đều dùng quantity
+                ResultSet rs = psF.executeQuery();
 
-                    while (rs.next()) {
-                        int uid = rs.getInt("id");
-                        String tbl = isPart ? "part_units" : "equipment_units";
-                        c.prepareStatement("UPDATE " + tbl + " SET status='INUSE' WHERE id=" + uid).executeUpdate();
+                while (rs.next()) {
+                    int uid = rs.getInt("id");
+                    String tbl = isPart ? "part_units" : "equipment_units";
+                    c.prepareStatement("UPDATE " + tbl + " SET status='INUSE' WHERE id=" + uid).executeUpdate();
 
-                        // Ghi inventory transaction
-                        PreparedStatement psTxn = c.prepareStatement(
-                                "INSERT INTO inventory_transactions "
-                                + "(item_type,item_unit_id,action,transaction_type,performed_by,ref_order_id,note) "
-                                + "VALUES (?,?,'EXPORT_SALE','PURCHASE',?,?,'Bán hàng online')");
-                        psTxn.setString(1, ci.getItemType());
-                        psTxn.setInt(2, uid);
-                        psTxn.setInt(3, customerId);
-                        psTxn.setInt(4, invoiceId);
-                        psTxn.executeUpdate();
+                    PreparedStatement psTxn = c.prepareStatement(
+                            "INSERT INTO inventory_transactions "
+                            + "(item_type,item_unit_id,action,transaction_type,performed_by,ref_order_id,note) "
+                            + "VALUES (?,?,'EXPORT_SALE','PURCHASE',?,?,'Bán hàng online')");
+                    psTxn.setString(1, ci.getItemType());
+                    psTxn.setInt(2, uid);
+                    psTxn.setInt(3, customerId);
+                    psTxn.setInt(4, invoiceId);
+                    psTxn.executeUpdate();
 
-                        // ── THÊM MỚI: Insert customer_equipment nếu là EQUIPMENT ──
-                        if (!isPart) {
-                            // Tính warranty_expires = ngày mua + 12 tháng
-                            java.sql.Date purchasedDate = new java.sql.Date(System.currentTimeMillis());
-                            java.time.LocalDate warrantyExpires = java.time.LocalDate.now().plusMonths(12);
-
-                            PreparedStatement psCe = c.prepareStatement(
-                                    "INSERT INTO customer_equipment "
-                                    + "(customer_id, equipment_unit_id, source, purchased_date, warranty_expires, notes) "
-                                    + "VALUES (?, ?, 'INTERNAL', ?, ?, ?)");
-                            psCe.setInt(1, customerId);
-                            psCe.setInt(2, uid);
-                            psCe.setDate(3, purchasedDate);
-                            psCe.setDate(4, java.sql.Date.valueOf(warrantyExpires));
-                            psCe.setString(5, "Mua qua shop online - Invoice " + invoiceId);
-                            psCe.executeUpdate();
-                        }
-                        // ────────────────────────────────────────────────────────────
+                    if (!isPart) {
+                        java.sql.Date purchasedDate = new java.sql.Date(System.currentTimeMillis());
+                        java.time.LocalDate warrantyExpires = java.time.LocalDate.now().plusMonths(12);
+                        PreparedStatement psCe = c.prepareStatement(
+                                "INSERT INTO customer_equipment "
+                                + "(customer_id, equipment_unit_id, source, purchased_date, warranty_expires, notes) "
+                                + "VALUES (?, ?, 'INTERNAL', ?, ?, ?)");
+                        psCe.setInt(1, customerId);
+                        psCe.setInt(2, uid);
+                        psCe.setDate(3, purchasedDate);
+                        psCe.setDate(4, java.sql.Date.valueOf(warrantyExpires));
+                        psCe.setString(5, "Mua qua shop online - Invoice " + invoiceId);
+                        psCe.executeUpdate();
                     }
                 }
-                c.commit();
-            } catch (Exception e) {
-                c.rollback();
-                throw e;
-            } finally {
-                c.setAutoCommit(true);
             }
+            c.commit();
+        } catch (Exception e) {
+            c.rollback();
+            throw e;
+        } finally {
+            c.setAutoCommit(true);
         }
     }
+}
 
     private void clearVnpaySession(HttpServletRequest req) {
         req.getSession().removeAttribute("pendingPaymentId");

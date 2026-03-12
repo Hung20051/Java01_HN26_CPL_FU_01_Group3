@@ -40,12 +40,12 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Sample data (password = "123456" BCrypt)
 INSERT INTO users (full_name, email, phone, username, password, auth_provider, role_id, active) VALUES
-('System Administrator', 'admin@crm.local',            '0123456789', 'admin',        '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 1, 1),
-('Nguyễn Văn Kỹ Thuật',  'techmanager@crm.local',      '0123456780', 'techmanager',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 4, 1),
-('Trần Thị Hỗ Trợ',      'support@crm.local',          '0123456781', 'supporter',    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 3, 1),
-('Lê Văn Kỹ Thuật Viên', 'technician@crm.local',       '0123456782', 'technician',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 6, 1),
-('Phạm Thị Khách Hàng',  'customer@crm.local',         '0123456783', 'customer',     '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1),
-('Hoàng Văn Kho',        'storekeeper@crm.local',      '0123456784', 'storekeeper',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 5, 1);
+('System Administrator', 'admin@drsms.local',       '0123456789', 'admin',       '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 1, 1),
+('Nguyen Van Technical',  'techmanager@drsms.local', '0123456780', 'techmanager', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 4, 1),
+('Tran Thi Support',      'support@drsms.local',     '0123456781', 'supporter',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 3, 1),
+('Le Van Technician',     'technician@drsms.local',  '0123456782', 'technician',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 6, 1),
+('Pham Thi Customer',     'customer@drsms.local',    '0123456783', 'customer',    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1),
+('Hoang Van Storekeeper', 'storekeeper@drsms.local', '0123456784', 'storekeeper', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 5, 1);
 
 
 -- -----------------------------------------------
@@ -148,16 +148,16 @@ CREATE TABLE IF NOT EXISTS inventory_transactions (
 
 -- Part Types
 INSERT INTO part_types (name, category_id, description, unit_price, updated_by) VALUES
-('Air Filter HEPA',      1, 'High efficiency air filter for HVAC system',      22100000, 5),
-('Compressor Motor',     1, '3HP compressor motor for AC unit',                117000000, 5),
-('Evaporator Coil',      1, 'Copper evaporator coil for cooling',               83200000, 5),
-('Condenser Fan Blade',  1, 'Metal fan blade for condenser unit',               17680000, 5),
-('Thermostat Controller',1, 'Digital thermostat for temperature control',       32500000, 5),
-('Pump Impeller',        2, 'Stainless steel impeller for water pump',          54600000, 5),
-('Mechanical Seal',      2, 'High-pressure mechanical seal for pump',           23140000, 5),
-('Pump Motor Bearing',   2, 'Heavy duty bearing for pump motor',                14560000, 5),
-('Pressure Gauge',       2, 'Digital pressure gauge 0-10 bar',                  11700000, 5),
-('Check Valve',          2, 'Non-return valve for water system',                18720000, 5);
+('Air Filter HEPA',       1, 'High efficiency air filter for HVAC system',         22100000, 5),
+('Compressor Motor',      1, '3HP compressor motor for AC unit',                  117000000, 5),
+('Evaporator Coil',       1, 'Copper evaporator coil for cooling',                 83200000, 5),
+('Condenser Fan Blade',   1, 'Metal fan blade for condenser unit',                 17680000, 5),
+('Thermostat Controller', 1, 'Digital thermostat for temperature control',         32500000, 5),
+('Pump Impeller',         2, 'Stainless steel impeller for water pump',            54600000, 5),
+('Mechanical Seal',       2, 'High-pressure mechanical seal for pump',             23140000, 5),
+('Pump Motor Bearing',    2, 'Heavy duty bearing for pump motor',                  14560000, 5),
+('Pressure Gauge',        2, 'Digital pressure gauge 0-10 bar',                   11700000, 5),
+('Check Valve',           2, 'Non-return valve for water system',                  18720000, 5);
 
 -- Part Units (6 units cho Air Filter HEPA: 5 AVAILABLE, 1 INUSE)
 INSERT INTO part_units (part_type_id, status) VALUES
@@ -184,38 +184,39 @@ INSERT INTO part_units (part_type_id, status) VALUES
 
 -- Equipment Types
 INSERT INTO equipment_types (model, category_id, description, unit_price, updated_by) VALUES
-('Daikin VRV IV',        8,  'Máy lạnh trung tâm - Tầng 1-5',       285000000, 5),
-('Carrier 30XA',         5,  'Hệ thống điều hòa trung tâm chiller',  520000000, 5),
-('BAC Cooling Tower',    5,  'Tháp giải nhiệt 500 RT',               430000000, 5),
-('ABB ACH580',           6,  'Biến tần điều khiển bơm nước',          95000000, 5),
-('APC Symmetra 20KVA',   6,  'Bộ lưu điện tòa nhà',                  175000000, 5),
-('Cummins C150D5',       6,  'Máy phát điện dự phòng 150KVA',        380000000, 5),
-('Grundfos CR32-4',      7,  'Máy bơm nước sinh hoạt tầng 1-10',      87000000, 5),
-('Ebara 3M 32-160',      7,  'Máy bơm chữa cháy',                     92000000, 5),
-('Hochiki Fire Panel',   9,  'Tủ trung tâm báo cháy',                 63000000, 5),
-('Honeywell Pro-Watch',  10, 'Hệ thống kiểm soát ra vào',            145000000, 5);
+('Daikin VRV IV',       8,  'Central air conditioner - Floor 1-5',            285000000, 5),
+('Carrier 30XA',        5,  'Central chiller air conditioning system',        520000000, 5),
+('BAC Cooling Tower',   5,  'Cooling tower 500 RT',                           430000000, 5),
+('ABB ACH580',          6,  'Variable frequency drive for water pump control', 95000000, 5),
+('APC Symmetra 20KVA',  6,  'Building UPS system',                            175000000, 5),
+('Cummins C150D5',      6,  'Backup generator 150KVA',                        380000000, 5),
+('Grundfos CR32-4',     7,  'Domestic water pump for floors 1-10',             87000000, 5),
+('Ebara 3M 32-160',     7,  'Fire fighting pump',                              92000000, 5),
+('Hochiki Fire Panel',  9,  'Central fire alarm panel',                        63000000, 5),
+('Honeywell Pro-Watch', 10, 'Access control system',                          145000000, 5);
 
 -- Equipment Units (có serial number)
 INSERT INTO equipment_units (equipment_type_id, serial_number, status) VALUES
-(1,'DAI-VRV4-001','AVAILABLE'),
-(1,'DAI-VRV4-002','INUSE'),
-(1,'DAI-VRV4-003','AVAILABLE'),
-(2,'CAR-30XA-001','AVAILABLE'),
-(2,'CAR-30XA-002','FAULTY'),
-(3,'BAC-CT-001',  'AVAILABLE'),
-(3,'BAC-CT-002',  'AVAILABLE'),
-(4,'ABB-ACH-001', 'AVAILABLE'),
-(4,'ABB-ACH-002', 'INUSE'),
-(5,'APC-SYM-001', 'AVAILABLE'),
-(6,'CUM-C150-001','AVAILABLE'),
-(6,'CUM-C150-002','RETIRED'),
-(7,'GRU-CR32-001','AVAILABLE'),
-(7,'GRU-CR32-002','INUSE'),
-(8,'EBA-3M-001',  'AVAILABLE'),
-(9,'HOC-FP-001',  'AVAILABLE'),
-(9,'HOC-FP-002',  'AVAILABLE'),
-(10,'HON-PW-001', 'INUSE'),
-(10,'HON-PW-002', 'AVAILABLE');
+(1, 'DAI-VRV4-001', 'AVAILABLE'),
+(1, 'DAI-VRV4-002', 'INUSE'),
+(1, 'DAI-VRV4-003', 'AVAILABLE'),
+(2, 'CAR-30XA-001', 'AVAILABLE'),
+(2, 'CAR-30XA-002', 'FAULTY'),
+(3, 'BAC-CT-001',   'AVAILABLE'),
+(3, 'BAC-CT-002',   'AVAILABLE'),
+(4, 'ABB-ACH-001',  'AVAILABLE'),
+(4, 'ABB-ACH-002',  'INUSE'),
+(5, 'APC-SYM-001',  'AVAILABLE'),
+(6, 'CUM-C150-001', 'AVAILABLE'),
+(6, 'CUM-C150-002', 'RETIRED'),
+(7, 'GRU-CR32-001', 'AVAILABLE'),
+(7, 'GRU-CR32-002', 'INUSE'),
+(8, 'EBA-3M-001',   'AVAILABLE'),
+(9, 'HOC-FP-001',   'AVAILABLE'),
+(9, 'HOC-FP-002',   'AVAILABLE'),
+(10,'HON-PW-001',   'INUSE'),
+(10,'HON-PW-002',   'AVAILABLE');
+
 SET SQL_SAFE_UPDATES = 0;
 -- Thêm cột transaction_type để phân biệt mua / sửa chữa
 ALTER TABLE inventory_transactions
@@ -226,21 +227,21 @@ ALTER TABLE inventory_transactions
 -- Cập nhật data mẫu đã có
 UPDATE inventory_transactions SET transaction_type = 'IMPORT' WHERE action = 'IMPORT';
 
--- Sample transactions - MUA (PURCHASE)
+-- Sample transactions - PURCHASE
 INSERT INTO inventory_transactions (item_type, item_unit_id, action, transaction_type, performed_by, customer_name, order_code, note) VALUES
-('PART',      1,  'EXPORT_SALE', 'PURCHASE', 5, 'Phạm Thị Khách Hàng', 'ORD-2025-001', 'Khách mua Air Filter HEPA'),
-('PART',      7,  'EXPORT_SALE', 'PURCHASE', 5, 'Nguyễn Văn An',        'ORD-2025-002', 'Khách mua Mechanical Seal'),
-('EQUIPMENT', 2,  'EXPORT_SALE', 'PURCHASE', 5, 'Công ty ABC',          'ORD-2025-003', 'Bán Daikin VRV IV'),
-('PART',      13, 'EXPORT_SALE', 'PURCHASE', 5, 'Trần Thị Bích',        'ORD-2025-004', 'Khách mua Evaporator Coil'),
-('EQUIPMENT', 9,  'EXPORT_SALE', 'PURCHASE', 5, 'Công ty XYZ',          'ORD-2025-005', 'Bán ABB ACH580');
+('PART',      1,  'EXPORT_SALE', 'PURCHASE', 5, 'Pham Thi Customer', 'ORD-2025-001', 'Customer purchased Air Filter HEPA'),
+('PART',      7,  'EXPORT_SALE', 'PURCHASE', 5, 'Nguyen Van An',     'ORD-2025-002', 'Customer purchased Mechanical Seal'),
+('EQUIPMENT', 2,  'EXPORT_SALE', 'PURCHASE', 5, 'ABC Company',       'ORD-2025-003', 'Sold Daikin VRV IV'),
+('PART',      13, 'EXPORT_SALE', 'PURCHASE', 5, 'Tran Thi Bich',     'ORD-2025-004', 'Customer purchased Evaporator Coil'),
+('EQUIPMENT', 9,  'EXPORT_SALE', 'PURCHASE', 5, 'XYZ Company',       'ORD-2025-005', 'Sold ABB ACH580');
 
--- Sample transactions - SỬA CHỮA (REPAIR)
+-- Sample transactions - REPAIR
 INSERT INTO inventory_transactions (item_type, item_unit_id, action, transaction_type, performed_by, ref_order_id, note) VALUES
-('PART',      6,  'EXPORT_REPAIR', 'REPAIR', 5, 1, 'Technician lấy Pump Impeller để sửa'),
-('PART',      25, 'EXPORT_REPAIR', 'REPAIR', 5, 1, 'Technician lấy Thermostat sửa đơn #1'),
-('PART',      28, 'EXPORT_REPAIR', 'REPAIR', 5, 2, 'Technician lấy Pump Impeller sửa đơn #2'),
-('PART',      3,  'EXPORT_REPAIR', 'REPAIR', 5, 3, 'Technician lấy Evaporator Coil sửa đơn #3'),
-('EQUIPMENT', 14, 'EXPORT_REPAIR', 'REPAIR', 5, 2, 'Technician lấy Grundfos sửa đơn #2');
+('PART',      6,  'EXPORT_REPAIR', 'REPAIR', 5, 1, 'Technician picked up Pump Impeller for repair'),
+('PART',      25, 'EXPORT_REPAIR', 'REPAIR', 5, 1, 'Technician picked up Thermostat for order #1'),
+('PART',      28, 'EXPORT_REPAIR', 'REPAIR', 5, 2, 'Technician picked up Pump Impeller for order #2'),
+('PART',      3,  'EXPORT_REPAIR', 'REPAIR', 5, 3, 'Technician picked up Evaporator Coil for order #3'),
+('EQUIPMENT', 14, 'EXPORT_REPAIR', 'REPAIR', 5, 2, 'Technician picked up Grundfos for order #2');
 -- --------------------
 
 
@@ -398,50 +399,50 @@ CREATE TABLE IF NOT EXISTS invoice_items (
 -- SAMPLE DATA
 -- ================================================================
 
--- Thêm user mẫu
+-- Additional users
 INSERT IGNORE INTO users (full_name, email, phone, username, password, auth_provider, role_id, active) VALUES
-('Nguyễn Văn Bình',   'customer2@crm.local',   '0901234567', 'customer2',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1),
-('Lê Thị Thu',        'support2@crm.local',    '0923456789', 'supporter2',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 3, 1);
+('Nguyen Van Binh', 'customer2@drsms.local', '0901234567', 'customer2',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1),
+('Le Thi Thu',      'support2@drsms.local',  '0923456789', 'supporter2', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 3, 1);
 
--- Customer equipment (customer id=5 sở hữu các thiết bị)
+-- Customer equipment (customer id=5 owns the following equipment)
 INSERT INTO customer_equipment (customer_id, equipment_unit_id, source, purchased_date, warranty_expires, notes) VALUES
-(5, 2,  'INTERNAL', '2022-01-15', '2024-01-15', 'Daikin VRV IV - đã hết bảo hành'),
-(5, 9,  'INTERNAL', '2022-03-20', '2024-03-20', 'ABB ACH580 - đã hết bảo hành'),
-(5, 13, 'INTERNAL', '2024-06-01', '2026-06-01', 'Grundfos CR32 - còn bảo hành'),
-(5, 16, 'INTERNAL', '2024-09-10', '2026-09-10', 'Hochiki Fire Panel - còn bảo hành');
+(5, 2,  'INTERNAL', '2022-01-15', '2024-01-15', 'Daikin VRV IV - warranty expired'),
+(5, 9,  'INTERNAL', '2022-03-20', '2024-03-20', 'ABB ACH580 - warranty expired'),
+(5, 13, 'INTERNAL', '2024-06-01', '2026-06-01', 'Grundfos CR32 - under warranty'),
+(5, 16, 'INTERNAL', '2024-09-10', '2026-09-10', 'Hochiki Fire Panel - under warranty');
 
--- External equipment (mua bên ngoài)
+-- External equipment (purchased outside the system)
 INSERT INTO customer_equipment (customer_id, equipment_unit_id, source, custom_name, custom_serial, purchased_date, warranty_expires, notes) VALUES
-(5, NULL, 'EXTERNAL', 'Máy lạnh Panasonic 2HP', 'PAN-CS-001', '2021-05-01', '2023-05-01', 'Mua tại siêu thị điện máy');
+(5, NULL, 'EXTERNAL', 'Panasonic 2HP Air Conditioner', 'PAN-CS-001', '2021-05-01', '2023-05-01', 'Purchased at electronics retail store');
 
 -- Contracts
 INSERT INTO contracts (contract_code, customer_id, created_by, contract_type, start_date, end_date, status, notes) VALUES
-('CT2025-001', 5, 3, 'MAINTENANCE', '2025-01-01', '2025-12-31', 'ACTIVE', 'Bảo trì thiết bị đã hết bảo hành'),
-('CT2025-002', 5, 3, 'WARRANTY',    '2025-01-01', '2026-06-01', 'ACTIVE', 'Bảo hành thiết bị còn hạn');
+('CT2025-001', 5, 3, 'MAINTENANCE', '2025-01-01', '2025-12-31', 'ACTIVE', 'Maintenance contract for equipment with expired warranty'),
+('CT2025-002', 5, 3, 'WARRANTY',    '2025-01-01', '2026-06-01', 'ACTIVE', 'Warranty contract for equipment still under warranty');
 
 -- Contract equipment
--- CT2025-001 (MAINTENANCE): Daikin + ABB + Panasonic (đã hết bảo hành)
+-- CT2025-001 (MAINTENANCE): Daikin + ABB + Panasonic (warranty expired)
 INSERT INTO contract_equipment (contract_id, customer_equipment_id) VALUES
 (1, 1),  -- Daikin VRV IV
 (1, 2),  -- ABB ACH580
-(1, 5);  -- Panasonic ngoài
+(1, 5);  -- Panasonic (external)
 
--- CT2025-002 (WARRANTY): Grundfos + Hochiki (còn bảo hành)
+-- CT2025-002 (WARRANTY): Grundfos + Hochiki (still under warranty)
 INSERT INTO contract_equipment (contract_id, customer_equipment_id) VALUES
 (2, 3),  -- Grundfos CR32
 (2, 4);  -- Hochiki Fire Panel
 
 -- Service Requests
 INSERT INTO service_requests (request_code, customer_id, contract_id, title, description, priority, status, reviewed_by, reviewed_at, assigned_to, assigned_at) VALUES
-('SR2025-001', 5, 1, 'Điều hòa Daikin không lạnh', 'Máy điều hòa Daikin VRV IV không hoạt động bình thường, không đạt nhiệt độ cài đặt. Đã kiểm tra điện bình thường.', 'HIGH', 'IN_PROGRESS', 2, '2025-01-16 09:00:00', 4, '2025-01-17 08:00:00'),
-('SR2025-002', 5, 2, 'Máy bơm Grundfos có tiếng kêu', 'Máy bơm phát ra tiếng kêu lạ khi hoạt động, nghi ngờ bearing bị mòn.', 'MEDIUM', 'PENDING', NULL, NULL, NULL, NULL),
-('SR2025-003', 5, 1, 'Bảo trì định kỳ ABB ACH580', 'Yêu cầu bảo trì định kỳ biến tần ABB theo lịch.', 'LOW', 'COMPLETED', 2, '2025-02-01 09:00:00', 4, '2025-02-02 08:00:00');
+('SR2025-001', 5, 1, 'Daikin air conditioner not cooling',     'Daikin VRV IV is not functioning properly and cannot reach the set temperature. Power supply has been checked and is normal.', 'HIGH',   'IN_PROGRESS', 2, '2025-01-16 09:00:00', 4, '2025-01-17 08:00:00'),
+('SR2025-002', 5, 2, 'Grundfos pump making unusual noise',     'The pump emits a strange noise during operation, suspected worn bearing.',                                                       'MEDIUM', 'PENDING',     NULL, NULL, NULL, NULL),
+('SR2025-003', 5, 1, 'Scheduled maintenance for ABB ACH580',   'Request for periodic maintenance of ABB variable frequency drive as per schedule.',                                              'LOW',    'COMPLETED',   2, '2025-02-01 09:00:00', 4, '2025-02-02 08:00:00');
 
 -- Service request equipment
 INSERT INTO service_request_equipment (service_request_id, customer_equipment_id, issue_description) VALUES
-(1, 1, 'Không đạt nhiệt độ, có thể hỏng gas hoặc compressor'),
-(2, 3, 'Tiếng kêu lạ, có thể bearing mòn'),
-(3, 2, 'Bảo trì định kỳ 6 tháng');
+(1, 1, 'Cannot reach target temperature, possible refrigerant leak or compressor failure'),
+(2, 3, 'Unusual noise, possible bearing wear'),
+(3, 2, '6-month scheduled maintenance');
 
 -- Invoices
 INSERT INTO invoices (invoice_code, customer_id, service_request_id, invoice_type, subtotal, tax_percent, tax_amount, total_amount, status, due_date, created_by) VALUES
@@ -449,12 +450,33 @@ INSERT INTO invoices (invoice_code, customer_id, service_request_id, invoice_typ
 ('INV2025-001', 5, 3, 'REPAIR', 2500000, 10.00, 250000, 2750000, 'UNPAID', '2025-03-31', 3);
 
 INSERT INTO invoice_items (invoice_id, item_name, item_type, quantity, unit_price, total_price) VALUES
-(1, 'Bảo trì định kỳ ABB ACH580 - kiểm tra + vệ sinh', 'SERVICE', 1, 1500000, 1500000),
-(1, 'Công kỹ thuật viên (4h)', 'SERVICE', 4, 250000, 1000000);
+(1, 'Scheduled maintenance ABB ACH580 - inspection & cleaning', 'SERVICE', 1, 1500000, 1500000),
+(1, 'Technician labor (4 hours)',                               'SERVICE', 4,  250000, 1000000);
 
--- Chat messages mẫu
+-- Chat messages
 INSERT INTO chat_messages (sender_id, receiver_id, message, is_read) VALUES
-(5, 3, 'Xin chào, tôi cần hỗ trợ đăng ký hợp đồng bảo trì', 1),
-(3, 5, 'Xin chào anh/chị! Em có thể hỗ trợ ngay. Anh/chị đang cần bảo trì thiết bị nào ạ?', 1),
-(5, 3, 'Tôi có máy điều hòa Daikin VRV IV và biến tần ABB, cả 2 đều đã hết bảo hành', 1),
-(3, 5, 'Vậy em sẽ tạo hợp đồng MAINTENANCE cho 2 thiết bị đó. Anh/chị xác nhận serial number: DAI-VRV4-002 và ABB-ACH-002 đúng không ạ?', 0);
+(5, 3, 'Hello, I need assistance with registering a maintenance contract.', 1),
+(3, 5, 'Hello! I can assist you right away. Which equipment do you need maintenance for?', 1),
+(5, 3, 'I have a Daikin VRV IV air conditioner and an ABB variable frequency drive, both have expired warranties.', 1),
+(3, 5, 'I will create a MAINTENANCE contract for those two devices. Please confirm the serial numbers: DAI-VRV4-002 and ABB-ACH-002 are correct?', 0);
+
+
+CREATE TABLE IF NOT EXISTS payments (
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    payment_code     VARCHAR(30)   NOT NULL UNIQUE,         -- PAY2025-001
+    invoice_id       INT           NOT NULL,
+    customer_id      INT           NOT NULL,
+    amount           DECIMAL(15,2) NOT NULL,
+    payment_method   ENUM('CASH','VNPAY') NOT NULL,
+    status           ENUM('PENDING','SUCCESS','FAILED','CANCELLED') NOT NULL DEFAULT 'PENDING',
+    transaction_ref  VARCHAR(100)  DEFAULT NULL,            -- mã giao dịch VNPay (nếu có)
+    note             VARCHAR(255)  DEFAULT NULL,
+    created_at       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (invoice_id)  REFERENCES invoices(id),
+    FOREIGN KEY (customer_id) REFERENCES users(id),
+    INDEX idx_invoice  (invoice_id),
+    INDEX idx_customer (customer_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+

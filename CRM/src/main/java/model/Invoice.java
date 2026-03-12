@@ -28,19 +28,19 @@ public class Invoice {
 
     public String getStatusLabel() {
         if ("UNPAID".equals(status)) {
-            return "Chưa thanh toán";
+            return "Unpaid";
         }
         if ("PAID".equals(status)) {
-            return "Đã thanh toán";
+            return "Paid";
         }
         if ("CANCELLED".equals(status)) {
-            return "Đã hủy";
+            return "Cancelled";
         }
         return status;
     }
 
     public String getInvoiceTypeLabel() {
-        return "REPAIR".equals(invoiceType) ? "Sửa chữa" : "Mua hàng";
+        return "REPAIR".equals(invoiceType) ? "Repair" : "Purchase";
     }
 
     public int getId() {

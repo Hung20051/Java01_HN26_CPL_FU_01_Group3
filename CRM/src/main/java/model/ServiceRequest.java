@@ -36,17 +36,17 @@ public class ServiceRequest {
     public String getStatusLabel() {
         switch (status == null ? "" : status) {
             case "PENDING":
-                return "Chờ duyệt";
+                return "Pending";
             case "APPROVED":
-                return "Đã duyệt";
+                return "Approved";
             case "REJECTED":
-                return "Từ chối";
+                return "Rejected";
             case "IN_PROGRESS":
-                return "Đang xử lý";
+                return "In Progress";
             case "COMPLETED":
-                return "Hoàn thành";
+                return "Completed";
             case "CANCELLED":
-                return "Đã hủy";
+                return "Cancelled";
             default:
                 return status;
         }
@@ -55,13 +55,13 @@ public class ServiceRequest {
     public String getPriorityLabel() {
         switch (priority == null ? "" : priority) {
             case "LOW":
-                return "Thấp";
+                return "Low";
             case "MEDIUM":
-                return "Trung bình";
+                return "Medium";
             case "HIGH":
-                return "Cao";
+                return "High";
             case "URGENT":
-                return "Khẩn cấp";
+                return "Urgent";
             default:
                 return priority;
         }

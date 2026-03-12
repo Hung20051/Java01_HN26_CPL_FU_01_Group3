@@ -590,12 +590,18 @@
                 <a href="<%=ctx%>/supportChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Live Chat</a>
             </nav>
             <div class="sb-foot">
-                <div class="sb-user">
-                    <div class="sb-ava"><%=me.getFullName().substring(0,1).toUpperCase()%></div>
-                    <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer Support</div></div>
-                </div>
-                <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Log out</a>
-            </div>
+    <a href="<%=ctx%>/profile" class="sb-user" style="text-decoration:none;cursor:pointer">
+        <div class="sb-ava" style="overflow:hidden;padding:0">
+            <%if(me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()){%>
+            <img src="<%=ctx%><%=me.getAvatarUrl()%>" style="width:34px;height:34px;object-fit:cover;border-radius:50%">
+            <%}else{%>
+            <%=me.getFullName().substring(0,1).toUpperCase()%>
+            <%}%>
+        </div>
+        <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer Support</div></div>
+    </a>
+    <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
         </aside>
 
         <div class="main">

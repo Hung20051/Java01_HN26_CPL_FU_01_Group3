@@ -448,6 +448,34 @@
     <servlet-name>SupportServiceRequestServlet</servlet-name>
     <url-pattern>/supportServiceRequests</url-pattern>
 </servlet-mapping>
+<servlet>
+    <servlet-name>ProfileServlet</servlet-name>
+    <servlet-class>controller.ProfileServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ProfileServlet</servlet-name>
+    <url-pattern>/profile</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>AvatarServlet</servlet-name>
+    <servlet-class>controller.AvatarServlet</servlet-class>
+    <multipart-config>
+        <max-file-size>2097152</max-file-size>
+    </multipart-config>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AvatarServlet</servlet-name>
+    <url-pattern>/avatar/upload</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>AvatarFileServlet</servlet-name>
+    <servlet-class>controller.AvatarFileServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AvatarFileServlet</servlet-name>
+    <url-pattern>/avatar/file/*</url-pattern>
+</servlet-mapping>
 
     <session-config>
         <session-timeout>30</session-timeout>

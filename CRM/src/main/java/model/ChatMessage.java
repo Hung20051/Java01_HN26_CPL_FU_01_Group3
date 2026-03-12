@@ -14,6 +14,8 @@ public class ChatMessage {
     private String message;
     private boolean read;
     private LocalDateTime createdAt;
+    private boolean recalled;
+    private boolean pinned;
 
     public String getTimeFormatted() {
         if (createdAt == null) {
@@ -87,5 +89,21 @@ public class ChatMessage {
 
     public void setCreatedAt(LocalDateTime v) {
         createdAt = v;
+    }
+
+    public boolean isRecalled() {
+        return recalled;
+    }
+
+    public void setRecalled(boolean v) {
+        recalled = v;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean v) {
+        pinned = v;
     }
 }
