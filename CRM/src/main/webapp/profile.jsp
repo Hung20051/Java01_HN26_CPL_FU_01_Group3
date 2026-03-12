@@ -18,7 +18,8 @@
     if ("CUSTOMER_SUPPORT".equals(me.getRoleName())) { dashLink = "/supportDashboard"; roleLabel = "Customer Support"; roleIcon = "fas fa-headset"; }
     else if ("STOREKEEPER".equals(me.getRoleName()))  { dashLink = "/dashboard.jsp"; roleLabel = "Store Keeper"; roleIcon = "fas fa-store"; }
     else if ("ADMIN".equals(me.getRoleName()))         { dashLink = "/admin.jsp"; roleLabel = "Admin"; roleIcon = "fas fa-crown"; }
-
+    else if ("TECHNICAL_MANAGER".equals(me.getRoleName())) { dashLink = "/tmServiceRequests"; roleLabel = "Technical Manager"; roleIcon = "fas fa-tools"; }
+    
     String avatarLetter = u.getFullName() != null && !u.getFullName().isEmpty()
         ? u.getFullName().substring(0,1).toUpperCase() : "?";
 
