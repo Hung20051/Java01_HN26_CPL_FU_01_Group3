@@ -192,6 +192,8 @@
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .msg-sending{opacity:.55;}
     .msg-error .msg-bubble{background:var(--danger-dim)!important;border-color:rgba(248,113,113,0.25)!important;color:var(--danger)!important;}
+     .emoji-burst-particle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:9999;user-select:none;animation:emojiBurst var(--dur,.9s) ease-out forwards;}
+@keyframes emojiBurst{0%{opacity:1;transform:translate(0,0) scale(1.2) rotate(0deg);}15%{opacity:1;transform:translate(calc(var(--tx)*.15),calc(var(--ty)*.15)) scale(1.5);}60%{opacity:.85;}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.15) rotate(var(--rot));}}
         </style>
     </head>
     <body>
@@ -802,6 +804,7 @@ function addReaction(btn, emoji) {
     const row   = btn.closest('.msg-row');
     const msgId = row ? row.dataset.id : null;
     if (!msgId || msgId.indexOf('temp') !== -1) return;
+    triggerEmojiBurst(emoji, btn);  // ← thêm dòng này
     popup.classList.remove('show');
     _toggleReactionLocal(row, msgId, emoji);
     fetch(CTX + '/supportChat', {
@@ -815,6 +818,7 @@ function toggleReactionChip(chip, emoji, msgId) {
     const row = chip.closest('.msg-row');
     if (!row) return;
     const mid = String(msgId);
+    triggerEmojiBurst(emoji, chip);  // ← thêm dòng này
     _toggleReactionLocal(row, mid, emoji);
     fetch(CTX + '/supportChat', {
         method:'POST',
@@ -855,6 +859,23 @@ document.addEventListener('click', e => {
 });
 
 // ════════════════ EMOJI PICKER ════════════════
+function triggerEmojiBurst(emoji, originEl) {
+    const rect = originEl ? originEl.getBoundingClientRect()
+                          : {left:window.innerWidth/2, top:window.innerHeight/2, width:0, height:0};
+    const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+    for (let i = 0; i < 10; i++) {
+        const el = document.createElement('span');
+        el.className = 'emoji-burst-particle';
+        el.textContent = emoji;
+        const angle = Math.random()*360*(Math.PI/180), dist = 120*(.4+Math.random()*.6);
+        el.style.cssText = 'left:'+cx+'px;top:'+cy+'px;margin:-12px 0 0 -12px;'
+            +'--tx:'+(Math.cos(angle)*dist)+'px;--ty:'+(Math.sin(angle)*dist-25)+'px;'
+            +'--rot:'+((Math.random()-.5)*420)+'deg;--dur:'+(.55+Math.random()*.55)+'s;'
+            +'animation-delay:'+(Math.random()*.12)+'s';
+        document.body.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+    }
+}
 const EMOJI_DATA = {
     'Smileys':  ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿'],
     'Gestures': ['👍','👎','👌','🤌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👋','🤚','🖐️','✋','🖖','👏','🙌','🤲','🤝','🙏','✍️','💅','🤳','💪','🦵','🦶','👂','👃'],
