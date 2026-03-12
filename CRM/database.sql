@@ -480,3 +480,19 @@ CREATE TABLE IF NOT EXISTS payments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+ALTER TABLE part_types      ADD COLUMN image_url VARCHAR(500) DEFAULT NULL;
+ALTER TABLE equipment_types ADD COLUMN image_url VARCHAR(500) DEFAULT NULL;
+ALTER TABLE chat_messages
+    ADD COLUMN is_recalled TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN is_pinned   TINYINT(1) NOT NULL DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS chat_reactions (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    message_id INT NOT NULL,
+    user_id    INT NOT NULL,
+    emoji      VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (message_id) REFERENCES chat_messages(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)    REFERENCES users(id),
+    UNIQUE KEY uk_reaction (message_id, user_id, emoji)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
