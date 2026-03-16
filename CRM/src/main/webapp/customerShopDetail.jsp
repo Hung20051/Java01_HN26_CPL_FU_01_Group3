@@ -52,6 +52,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
     <style>
         :root {
             --navy:        #0b1437;
@@ -432,7 +435,7 @@
                         <i class="fas <%=typeIcon%>"></i> <%=isPart ? "Spare Part" : "Equipment"%>
                     </span>
                     <%if(item.imageUrl != null && !item.imageUrl.isEmpty()){%>
-                    <img src="<%=ctx%><%=item.imageUrl%>" alt="<%=item.name%>" id="mainImg">
+                    <img src="<%=item.imageUrl!=null&&item.imageUrl.startsWith("http")?item.imageUrl:ctx+item.imageUrl%>" alt="<%=item.name%>" id="mainImg">
                     <%}else{%>
                     <span class="emoji-placeholder"><%=defaultEmoji%></span>
                     <%}%>
@@ -440,7 +443,7 @@
                 <div class="img-thumbnails">
                     <div class="thumb active" onclick="setThumb(this, '<%=ctx%><%=item.imageUrl!=null?item.imageUrl:""%>')">
                         <%if(item.imageUrl != null && !item.imageUrl.isEmpty()){%>
-                        <img src="<%=ctx%><%=item.imageUrl%>" alt="main">
+                        <img src="<%=item.imageUrl!=null&&item.imageUrl.startsWith("http")?item.imageUrl:ctx+item.imageUrl%>" alt="main">
                         <%}else{%>
                         <span style="font-size:1.4rem"><%=defaultEmoji%></span>
                         <%}%>
@@ -695,5 +698,6 @@
         if (main && src) main.src = src;
     }
 </script>
+<%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>

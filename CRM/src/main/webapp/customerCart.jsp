@@ -632,5 +632,6 @@
             document.getElementById('updateForm').submit();
         }
     </script>
+    <%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>

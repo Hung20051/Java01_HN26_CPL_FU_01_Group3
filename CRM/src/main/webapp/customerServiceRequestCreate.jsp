@@ -766,5 +766,6 @@
             return true;
         }
     </script>
+    <%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>

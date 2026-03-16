@@ -1,20 +1,18 @@
 package model;
-
 import java.time.LocalDateTime;
 
 public class EquipmentType {
-
     private int id;
     private String model;
     private int categoryId;
     private String categoryName;
     private String description;
     private double unitPrice;
+    private String imageUrl;
     private int updatedBy;
     private String updatedByUsername;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
-
     // Stats
     private int totalUnits;
     private int availableUnits;
@@ -22,126 +20,53 @@ public class EquipmentType {
     private int faultyUnits;
     private int retiredUnits;
 
-    public EquipmentType() {
-    }
+    public EquipmentType() {}
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
-    public String getModel() {
-        return model;
-    }
+    public int getCategoryId() { return categoryId; }
+    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
+    public double getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+    public int getUpdatedBy() { return updatedBy; }
+    public void setUpdatedBy(int updatedBy) { this.updatedBy = updatedBy; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getUpdatedByUsername() { return updatedByUsername; }
+    public void setUpdatedByUsername(String u) { this.updatedByUsername = u; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+    public int getTotalUnits() { return totalUnits; }
+    public void setTotalUnits(int totalUnits) { this.totalUnits = totalUnits; }
 
-    public int getUpdatedBy() {
-        return updatedBy;
-    }
+    public int getAvailableUnits() { return availableUnits; }
+    public void setAvailableUnits(int availableUnits) { this.availableUnits = availableUnits; }
 
-    public void setUpdatedBy(int updatedBy) {
-        this.updatedBy = updatedBy;
-    }
+    public int getInuseUnits() { return inuseUnits; }
+    public void setInuseUnits(int inuseUnits) { this.inuseUnits = inuseUnits; }
 
-    public String getUpdatedByUsername() {
-        return updatedByUsername;
-    }
+    public int getFaultyUnits() { return faultyUnits; }
+    public void setFaultyUnits(int faultyUnits) { this.faultyUnits = faultyUnits; }
 
-    public void setUpdatedByUsername(String u) {
-        this.updatedByUsername = u;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public int getTotalUnits() {
-        return totalUnits;
-    }
-
-    public void setTotalUnits(int totalUnits) {
-        this.totalUnits = totalUnits;
-    }
-
-    public int getAvailableUnits() {
-        return availableUnits;
-    }
-
-    public void setAvailableUnits(int availableUnits) {
-        this.availableUnits = availableUnits;
-    }
-
-    public int getInuseUnits() {
-        return inuseUnits;
-    }
-
-    public void setInuseUnits(int inuseUnits) {
-        this.inuseUnits = inuseUnits;
-    }
-
-    public int getFaultyUnits() {
-        return faultyUnits;
-    }
-
-    public void setFaultyUnits(int faultyUnits) {
-        this.faultyUnits = faultyUnits;
-    }
-
-    public int getRetiredUnits() {
-        return retiredUnits;
-    }
-
-    public void setRetiredUnits(int retiredUnits) {
-        this.retiredUnits = retiredUnits;
-    }
+    public int getRetiredUnits() { return retiredUnits; }
+    public void setRetiredUnits(int retiredUnits) { this.retiredUnits = retiredUnits; }
 }

@@ -78,6 +78,10 @@
     <filter-name>SupportFilter</filter-name>
     <url-pattern>/supportChat</url-pattern>
 </filter-mapping>
+<filter-mapping>
+    <filter-name>CustomerFilter</filter-name>
+    <url-pattern>/customerAIChat</url-pattern>
+</filter-mapping>
     <!-- ===== SERVLETS ===== -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -490,7 +494,7 @@
         <filter-name>TechnicalManagerFilter</filter-name>
         <url-pattern>/tmServiceRequests</url-pattern>
     </filter-mapping>
-
+    
     <!-- ── TECHNICAL MANAGER SERVLET ── -->
     <servlet>
         <servlet-name>TechnicalManagerServlet</servlet-name>
@@ -500,4 +504,13 @@
         <servlet-name>TechnicalManagerServlet</servlet-name>
         <url-pattern>/tmServiceRequests</url-pattern>
     </servlet-mapping>
+    <servlet>
+    <servlet-name>AIChatServlet</servlet-name>
+    <servlet-class>controller.AIChatServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AIChatServlet</servlet-name>
+    <url-pattern>/customerAIChat</url-pattern>
+</servlet-mapping>
+    
 </web-app>

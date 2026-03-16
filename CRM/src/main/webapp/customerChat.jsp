@@ -858,6 +858,6 @@ window.addEventListener('beforeunload', () => {
     clearInterval(pollUpdatesTimer);
 });
 </script>
-
+<%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>

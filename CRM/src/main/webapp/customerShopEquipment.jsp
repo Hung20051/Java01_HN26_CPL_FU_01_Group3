@@ -580,8 +580,10 @@
                     <a href="<%=ctx%>/customerShop?action=detail&itemType=EQUIPMENT&id=<%=item.id%>" style="text-decoration:none;flex-shrink:0">
                     <div class="equip-icon">
     <%if(item.imageUrl != null && !item.imageUrl.isEmpty()){%>
-        <img src="<%=ctx%><%=item.imageUrl%>" alt="<%=item.name%>"
-             style="width:100%;height:100%;object-fit:contain;padding:6px;border-radius:8px">
+      <img src="<%=(item.imageUrl.startsWith("http") ? item.imageUrl : ctx + item.imageUrl)%>" 
+     alt="<%=item.name%>"
+     style="width:100%;height:100%;object-fit:contain;padding:6px;border-radius:8px"
+     onerror="this.style.display='none';this.parentElement.innerHTML='🖥️'">
     <%}else{%>
         🖥️
     <%}%>
@@ -638,6 +640,6 @@
             <%}%>
         </div>
     </main>
-
+<%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>

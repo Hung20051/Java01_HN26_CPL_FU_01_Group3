@@ -1229,5 +1229,6 @@
                 </div>
             </div>
         </main>
+<%@ include file="customerAIBubble.jsp" %>                                    
     </body>
 </html>

@@ -400,6 +400,20 @@
             color: var(--muted); font-size: 0.75rem;
         }
 
+        /* Part thumbnail in table */
+        .part-thumb {
+            width: 38px; height: 38px; border-radius: 8px;
+            object-fit: cover; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+        }
+        .part-thumb-placeholder {
+            width: 38px; height: 38px; border-radius: 8px;
+            border: 1px dashed var(--border);
+            background: rgba(255,255,255,0.02);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.1); font-size: 0.8rem;
+        }
+
         /* Action buttons */
         .action-btns { display: flex; gap: 6px; }
         .ab {
@@ -451,10 +465,13 @@
             background: var(--navy-card);
             border: 1px solid var(--border);
             border-radius: 16px; padding: 28px;
-            width: 480px; max-width: 95vw;
+            width: 520px; max-width: 95vw;
+            max-height: 90vh; overflow-y: auto;
             box-shadow: 0 24px 80px rgba(0,0,0,0.5);
             animation: cardIn 0.25s ease;
         }
+        .modal::-webkit-scrollbar { width: 3px; }
+        .modal::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.3); border-radius: 3px; }
         .modal-icon {
             width: 52px; height: 52px; border-radius: 14px; margin: 0 auto 16px;
             display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
@@ -498,6 +515,127 @@
         .mbtn-del:hover { background: rgba(248,113,113,0.2); }
         .mbtn-cancel { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
         .mbtn-cancel:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+        /* ── IMAGE UPLOAD SECTION ── */
+        .img-section {
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .img-tabs {
+            display: flex; border-bottom: 1px solid var(--border);
+        }
+        .img-tab {
+            flex: 1; padding: 9px; border: none; cursor: pointer;
+            background: transparent; color: var(--muted);
+            font-size: 0.76rem; font-weight: 600; font-family: inherit;
+            transition: all 0.2s; display: flex; align-items: center;
+            justify-content: center; gap: 6px;
+        }
+        .img-tab.active {
+            background: rgba(79,126,248,0.1);
+            color: var(--accent-2);
+            border-bottom: 2px solid var(--accent);
+        }
+        .img-tab:hover:not(.active) { background: rgba(255,255,255,0.03); color: var(--text-2); }
+        .img-tab-content { padding: 14px; display: none; }
+        .img-tab-content.active { display: block; }
+
+        /* Drop zone */
+        .drop-zone {
+            border: 2px dashed rgba(79,126,248,0.3);
+            border-radius: 10px; padding: 20px 14px;
+            text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative;
+        }
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(79,126,248,0.06);
+        }
+        .drop-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0;
+            cursor: pointer; width: 100%; height: 100%;
+        }
+        .drop-zone-icon {
+            font-size: 1.8rem; margin-bottom: 8px;
+            color: rgba(79,126,248,0.5);
+        }
+        .drop-zone-text {
+            font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+        }
+        .drop-zone-text strong { color: var(--accent-2); }
+        .drop-zone-hint {
+            font-size: 0.68rem; color: rgba(255,255,255,0.2);
+            margin-top: 5px;
+        }
+
+        /* Image preview */
+        .img-preview-wrap {
+            margin-top: 12px; display: none;
+            border-radius: 10px; overflow: hidden;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            position: relative;
+        }
+        .img-preview-wrap.show { display: block; }
+        .img-preview-wrap img {
+            width: 100%; max-height: 160px;
+            object-fit: contain; display: block;
+            background: rgba(0,0,0,0.2);
+        }
+        .img-preview-remove {
+            position: absolute; top: 6px; right: 6px;
+            background: rgba(248,113,113,0.85);
+            border: none; border-radius: 6px;
+            color: #fff; width: 26px; height: 26px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 0.7rem;
+            transition: background 0.2s;
+        }
+        .img-preview-remove:hover { background: var(--danger); }
+        .img-preview-name {
+            padding: 6px 10px;
+            font-size: 0.7rem; color: var(--muted);
+            border-top: 1px solid var(--border);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* URL input */
+        .url-input-wrap { position: relative; }
+        .url-input-wrap input {
+            padding-right: 90px;
+        }
+        .btn-load-url {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            padding: 5px 12px; border-radius: 7px; border: none;
+            background: rgba(79,126,248,0.2); color: var(--accent-2);
+            font-size: 0.72rem; font-weight: 700; font-family: inherit;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-load-url:hover { background: rgba(79,126,248,0.35); }
+
+        /* Current image badge (edit modal) */
+        .current-img-badge {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 10px; border-radius: 8px;
+            background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.2);
+            margin-bottom: 10px;
+        }
+        .current-img-badge img {
+            width: 36px; height: 36px; border-radius: 6px;
+            object-fit: cover; border: 1px solid var(--border);
+        }
+        .current-img-badge-info { flex: 1; min-width: 0; }
+        .current-img-badge-label { font-size: 0.65rem; color: var(--green); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        .current-img-badge-url { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-clear-img {
+            padding: 4px 10px; border-radius: 6px; border: none;
+            background: var(--danger-dim); color: var(--danger);
+            font-size: 0.7rem; font-weight: 700; font-family: inherit;
+            cursor: pointer; white-space: nowrap; transition: all 0.2s;
+            border: 1px solid rgba(248,113,113,0.2);
+        }
+        .btn-clear-img:hover { background: rgba(248,113,113,0.2); }
     </style>
 </head>
 <body>
@@ -681,6 +819,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Image</th>
                             <th>Part Name</th>
                             <th>Category</th>
                             <th>Description</th>
@@ -694,7 +833,25 @@
                     <%for(PartType pt:parts){%>
                     <tr>
                         <td class="td-muted">#<%=pt.getId()%></td>
-                        <td class="td-name"><%=pt.getName()%></td>
+                        <td>
+                            <%if(pt.getImageUrl()!=null&&!pt.getImageUrl().isEmpty()){%>
+                            <img class="part-thumb"
+                                 src="<%=pt.getImageUrl().startsWith("http")?pt.getImageUrl():ctx+pt.getImageUrl()%>"
+                                 alt="<%=pt.getName()%>"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="part-thumb-placeholder" style="display:none"><i class="fas fa-image"></i></div>
+                            <%}else{%>
+                            <div class="part-thumb-placeholder"><i class="fas fa-image"></i></div>
+                            <%}%>
+                        </td>
+                       <td class="td-name">
+    <a href="<%=ctx%>/numberPart?action=detailPage&id=<%=pt.getId()%>" 
+       style="color:inherit;text-decoration:none;transition:color 0.2s"
+       onmouseover="this.style.color='var(--accent-2)'" 
+       onmouseout="this.style.color='inherit'">
+        <%=pt.getName()%>
+    </a>
+</td>
                         <td><span class="td-cat"><%=pt.getCategoryName()%></span></td>
                         <td class="td-desc" title="<%=pt.getDescription()!=null?pt.getDescription():""%>">
                             <%=pt.getDescription()!=null?pt.getDescription():"—"%>
@@ -710,7 +867,14 @@
                                     <i class="fas fa-chart-bar"></i> Detail
                                 </a>
                                 <button class="ab ab-edit"
-                                    onclick="openEditModal(<%=pt.getId()%>,'<%=pt.getName().replace("'","\\'")%>',<%=pt.getCategoryId()%>,'<%=pt.getDescription()!=null?pt.getDescription().replace("'","\\'"):""%>',<%=pt.getUnitPrice()%>)">
+                                    onclick="openEditModal(
+                                        <%=pt.getId()%>,
+                                        '<%=pt.getName().replace("'","\\'")%>',
+                                        <%=pt.getCategoryId()%>,
+                                        '<%=pt.getDescription()!=null?pt.getDescription().replace("'","\\'"):""%>',
+                                        <%=pt.getUnitPrice()%>,
+                                        '<%=pt.getImageUrl()!=null?pt.getImageUrl().replace("'","\\'"):""%>'
+                                    )">
                                     <i class="fas fa-pen"></i> Edit
                                 </button>
                                 <button class="ab ab-delete"
@@ -750,8 +914,11 @@
         <div class="modal">
             <div class="modal-icon green"><i class="fas fa-plus"></i></div>
             <h3>New Part Type</h3>
-            <form method="post" action="<%=ctx%>/numberPart">
+            <form method="post" action="<%=ctx%>/numberPart" enctype="multipart/form-data" id="createForm">
                 <input type="hidden" name="action" value="create">
+                <!-- hidden: final resolved image url (if URL tab chosen) -->
+                <input type="hidden" name="imageUrl" id="createImageUrl">
+
                 <div class="form-group">
                     <label>Part Name <span style="color:var(--danger)">*</span> (min 3 chars)</label>
                     <input type="text" name="name" required minlength="3" placeholder="e.g. CPU Intel i7">
@@ -777,8 +944,71 @@
                     <label>Initial Stock Quantity (1–100)</label>
                     <input type="number" name="quantity" required min="1" max="100" value="1">
                 </div>
+
+                <!-- ── IMAGE SECTION ── -->
+                <div class="form-group">
+                    <label><i class="fas fa-image" style="color:var(--accent-2)"></i> Product Image <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+                    <div class="img-section">
+                        <div class="img-tabs">
+                            <button type="button" class="img-tab active" onclick="switchImgTab('create','file',this)">
+                                <i class="fas fa-upload"></i> Upload File
+                            </button>
+                            <button type="button" class="img-tab" onclick="switchImgTab('create','url',this)">
+                                <i class="fas fa-link"></i> Image URL
+                            </button>
+                        </div>
+                        <!-- File upload tab -->
+                        <div class="img-tab-content active" id="create-tab-file">
+                            <div class="drop-zone" id="createDropZone"
+                                 ondragover="handleDragOver(event,this)"
+                                 ondragleave="handleDragLeave(this)"
+                                 ondrop="handleDrop(event,'create')">
+                                <input type="file" name="imageFile" id="createImageFile"
+                                       accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                                       onchange="handleFileSelect(event,'create')">
+                                <div class="drop-zone-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                                <div class="drop-zone-text">
+                                    <strong>Click to browse</strong> or drag & drop
+                                </div>
+                                <div class="drop-zone-hint">JPG, PNG, WEBP, GIF, AVIF · Max 5MB</div>
+                            </div>
+                            <div class="img-preview-wrap" id="createFilePreview">
+                                <img id="createFilePreviewImg" src="" alt="preview">
+                                <button type="button" class="img-preview-remove"
+                                        onclick="removeFilePreview('create')" title="Remove">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                                <div class="img-preview-name" id="createFilePreviewName"></div>
+                            </div>
+                        </div>
+                        <!-- URL tab -->
+                        <div class="img-tab-content" id="create-tab-url">
+                            <div class="url-input-wrap">
+                                <input type="url" id="createUrlInput"
+                                       placeholder="https://example.com/image.jpg"
+                                       oninput="onUrlInput('create')">
+                                <button type="button" class="btn-load-url"
+                                        onclick="loadUrlPreview('create')">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                            </div>
+                            <div class="img-preview-wrap" id="createUrlPreview" style="margin-top:10px">
+                                <img id="createUrlPreviewImg" src="" alt="preview"
+                                     onerror="handleUrlImgError('create')">
+                                <button type="button" class="img-preview-remove"
+                                        onclick="removeUrlPreview('create')" title="Remove">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                                <div class="img-preview-name" id="createUrlPreviewName"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal-btns">
-                    <button type="submit" class="mbtn mbtn-save"><i class="fas fa-save"></i> Save</button>
+                    <button type="submit" class="mbtn mbtn-save" onclick="prepareCreateSubmit()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                     <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('createModal')">Cancel</button>
                 </div>
             </form>
@@ -790,9 +1020,12 @@
         <div class="modal">
             <div class="modal-icon amber"><i class="fas fa-pen"></i></div>
             <h3>Edit Part Type</h3>
-            <form method="post" action="<%=ctx%>/numberPart">
+            <form method="post" action="<%=ctx%>/numberPart" enctype="multipart/form-data" id="editForm">
                 <input type="hidden" name="action" value="edit">
                 <input type="hidden" name="id" id="editId">
+                <input type="hidden" name="imageUrl" id="editImageUrl">
+                <input type="hidden" name="clearImage" id="editClearImage" value="false">
+
                 <div class="form-group">
                     <label>Part Name <span style="color:var(--danger)">*</span></label>
                     <input type="text" name="name" id="editName" required minlength="3">
@@ -813,8 +1046,84 @@
                     <label>Unit Price <span style="color:var(--danger)">*</span></label>
                     <input type="number" name="unitPrice" id="editPrice" required min="0" step="1000">
                 </div>
+
+                <!-- ── IMAGE SECTION ── -->
+                <div class="form-group">
+                    <label><i class="fas fa-image" style="color:var(--accent-2)"></i> Product Image <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+
+                    <!-- Current image badge -->
+                    <div class="current-img-badge" id="editCurrentImgBadge" style="display:none">
+                        <img id="editCurrentImgThumb" src="" alt="current">
+                        <div class="current-img-badge-info">
+                            <div class="current-img-badge-label"><i class="fas fa-circle-check"></i> Current Image</div>
+                            <div class="current-img-badge-url" id="editCurrentImgUrl"></div>
+                        </div>
+                        <button type="button" class="btn-clear-img" onclick="clearCurrentImage()">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+
+                    <div class="img-section">
+                        <div class="img-tabs">
+                            <button type="button" class="img-tab active" onclick="switchImgTab('edit','file',this)">
+                                <i class="fas fa-upload"></i> Upload New File
+                            </button>
+                            <button type="button" class="img-tab" onclick="switchImgTab('edit','url',this)">
+                                <i class="fas fa-link"></i> Image URL
+                            </button>
+                        </div>
+                        <!-- File upload tab -->
+                        <div class="img-tab-content active" id="edit-tab-file">
+                            <div class="drop-zone" id="editDropZone"
+                                 ondragover="handleDragOver(event,this)"
+                                 ondragleave="handleDragLeave(this)"
+                                 ondrop="handleDrop(event,'edit')">
+                                <input type="file" name="imageFile" id="editImageFile"
+                                       accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                                       onchange="handleFileSelect(event,'edit')">
+                                <div class="drop-zone-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                                <div class="drop-zone-text">
+                                    <strong>Click to browse</strong> or drag & drop
+                                </div>
+                                <div class="drop-zone-hint">JPG, PNG, WEBP, GIF, AVIF · Max 5MB</div>
+                            </div>
+                            <div class="img-preview-wrap" id="editFilePreview">
+                                <img id="editFilePreviewImg" src="" alt="preview">
+                                <button type="button" class="img-preview-remove"
+                                        onclick="removeFilePreview('edit')" title="Remove">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                                <div class="img-preview-name" id="editFilePreviewName"></div>
+                            </div>
+                        </div>
+                        <!-- URL tab -->
+                        <div class="img-tab-content" id="edit-tab-url">
+                            <div class="url-input-wrap">
+                                <input type="url" id="editUrlInput"
+                                       placeholder="https://example.com/image.jpg"
+                                       oninput="onUrlInput('edit')">
+                                <button type="button" class="btn-load-url"
+                                        onclick="loadUrlPreview('edit')">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                            </div>
+                            <div class="img-preview-wrap" id="editUrlPreview" style="margin-top:10px">
+                                <img id="editUrlPreviewImg" src="" alt="preview"
+                                     onerror="handleUrlImgError('edit')">
+                                <button type="button" class="img-preview-remove"
+                                        onclick="removeUrlPreview('edit')" title="Remove">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                                <div class="img-preview-name" id="editUrlPreviewName"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal-btns">
-                    <button type="submit" class="mbtn mbtn-save"><i class="fas fa-save"></i> Save</button>
+                    <button type="submit" class="mbtn mbtn-save" onclick="prepareEditSubmit()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                     <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('editModal')">Cancel</button>
                 </div>
             </form>
@@ -844,28 +1153,217 @@
     </div>
 
     <script>
-        function openCreateModal() { document.getElementById('createModal').classList.add('show'); }
-        function openEditModal(id, name, catId, desc, price) {
-            document.getElementById('editId').value       = id;
-            document.getElementById('editName').value     = name;
-            document.getElementById('editCategoryId').value = catId;
-            document.getElementById('editDesc').value     = desc;
-            document.getElementById('editPrice').value    = price;
-            document.getElementById('editModal').classList.add('show');
+    // ── Modal open/close ──
+    function openCreateModal() {
+        resetImgSection('create');
+        document.getElementById('createModal').classList.add('show');
+    }
+    function openEditModal(id, name, catId, desc, price, imgUrl) {
+        document.getElementById('editId').value          = id;
+        document.getElementById('editName').value        = name;
+        document.getElementById('editCategoryId').value  = catId;
+        document.getElementById('editDesc').value        = desc;
+        document.getElementById('editPrice').value       = price;
+        resetImgSection('edit');
+        document.getElementById('editClearImage').value  = 'false';
+
+        if (imgUrl && imgUrl.trim() !== '') {
+            var badge   = document.getElementById('editCurrentImgBadge');
+            var thumb   = document.getElementById('editCurrentImgThumb');
+            var urlDisp = document.getElementById('editCurrentImgUrl');
+            var src     = imgUrl.startsWith('http') ? imgUrl : '<%=ctx%>' + imgUrl;
+            thumb.src   = src;
+            urlDisp.textContent = imgUrl;
+            badge.style.display = 'flex';
+            // store original
+            badge.dataset.original = imgUrl;
         }
-        function confirmDelete(id, name) {
-            document.getElementById('deleteId').value             = id;
-            document.getElementById('deletePartId').textContent   = id;
-            document.getElementById('deletePartName').textContent = name;
-            document.getElementById('deleteModal').classList.add('show');
-        }
-        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-        window.addEventListener('click', function(e) {
-            ['createModal','editModal','deleteModal'].forEach(function(id){
-                var m = document.getElementById(id);
-                if (e.target === m) m.classList.remove('show');
-            });
+        document.getElementById('editModal').classList.add('show');
+    }
+    function confirmDelete(id, name) {
+        document.getElementById('deleteId').value             = id;
+        document.getElementById('deletePartId').textContent   = id;
+        document.getElementById('deletePartName').textContent = name;
+        document.getElementById('deleteModal').classList.add('show');
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('show');
+    }
+    window.addEventListener('click', function(e) {
+        ['createModal','editModal','deleteModal'].forEach(function(id){
+            var m = document.getElementById(id);
+            if (e.target === m) m.classList.remove('show');
         });
+    });
+
+    // ── Image tabs ──
+    function switchImgTab(prefix, tab, btn) {
+        // deactivate all tabs & contents
+        var section = btn.closest('.img-section');
+        section.querySelectorAll('.img-tab').forEach(function(t){ t.classList.remove('active'); });
+        section.querySelectorAll('.img-tab-content').forEach(function(c){ c.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById(prefix + '-tab-' + tab).classList.add('active');
+        // clear the inactive tab's data
+        if (tab === 'file') {
+            removeUrlPreview(prefix);
+        } else {
+            removeFilePreview(prefix);
+        }
+    }
+
+    // ── File upload ──
+    function handleFileSelect(event, prefix) {
+        var file = event.target.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File is too large. Maximum size is 5MB.');
+            event.target.value = '';
+            return;
+        }
+        showFilePreview(prefix, file);
+    }
+    function handleDragOver(event, zone) {
+        event.preventDefault();
+        zone.classList.add('drag-over');
+    }
+    function handleDragLeave(zone) {
+        zone.classList.remove('drag-over');
+    }
+    function handleDrop(event, prefix) {
+        event.preventDefault();
+        var zone = document.getElementById(prefix + 'DropZone');
+        zone.classList.remove('drag-over');
+        var file = event.dataTransfer.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            alert('Please drop an image file.');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File is too large. Maximum size is 5MB.');
+            return;
+        }
+        // Assign to input (create DataTransfer trick)
+        var dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById(prefix + 'ImageFile').files = dt.files;
+        showFilePreview(prefix, file);
+    }
+    function showFilePreview(prefix, file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(prefix + 'FilePreviewImg').src = e.target.result;
+            document.getElementById(prefix + 'FilePreviewName').textContent = file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
+            document.getElementById(prefix + 'FilePreview').classList.add('show');
+        };
+        reader.readAsDataURL(file);
+        // hide current badge for edit
+        if (prefix === 'edit') hideBadge();
+    }
+    function removeFilePreview(prefix) {
+        document.getElementById(prefix + 'FilePreviewImg').src = '';
+        document.getElementById(prefix + 'FilePreview').classList.remove('show');
+        document.getElementById(prefix + 'ImageFile').value = '';
+        if (prefix === 'edit') restoreBadge();
+    }
+
+    // ── URL preview ──
+    function onUrlInput(prefix) {
+        // hide preview until user clicks Preview or pastes complete URL
+        var preview = document.getElementById(prefix + 'UrlPreview');
+        if (!document.getElementById(prefix + 'UrlInput').value.trim()) {
+            preview.classList.remove('show');
+        }
+    }
+    function loadUrlPreview(prefix) {
+        var url = document.getElementById(prefix + 'UrlInput').value.trim();
+        if (!url) return;
+        var img = document.getElementById(prefix + 'UrlPreviewImg');
+        img.src = url;
+        document.getElementById(prefix + 'UrlPreviewName').textContent = url;
+        document.getElementById(prefix + 'UrlPreview').classList.add('show');
+        if (prefix === 'edit') hideBadge();
+    }
+    function handleUrlImgError(prefix) {
+        document.getElementById(prefix + 'UrlPreviewName').textContent = '⚠ Could not load image from this URL';
+        document.getElementById(prefix + 'UrlPreviewImg').style.display = 'none';
+    }
+    function removeUrlPreview(prefix) {
+        var img = document.getElementById(prefix + 'UrlPreviewImg');
+        img.src = '';
+        img.style.display = '';
+        document.getElementById(prefix + 'UrlInput').value = '';
+        document.getElementById(prefix + 'UrlPreviewName').textContent = '';
+        document.getElementById(prefix + 'UrlPreview').classList.remove('show');
+        if (prefix === 'edit') restoreBadge();
+    }
+
+    // ── Edit: current image badge ──
+    function hideBadge() {
+        var badge = document.getElementById('editCurrentImgBadge');
+        if (badge) badge.style.display = 'none';
+    }
+    function restoreBadge() {
+        var badge = document.getElementById('editCurrentImgBadge');
+        if (badge && badge.dataset.original) badge.style.display = 'flex';
+    }
+    function clearCurrentImage() {
+        var badge = document.getElementById('editCurrentImgBadge');
+        badge.style.display = 'none';
+        badge.dataset.original = '';
+        document.getElementById('editClearImage').value = 'true';
+        document.getElementById('editImageUrl').value   = '';
+    }
+
+    // ── Reset entire image section ──
+    function resetImgSection(prefix) {
+        removeFilePreview(prefix);
+        removeUrlPreview(prefix);
+        document.getElementById(prefix + 'ImageUrl').value = '';
+        if (prefix === 'edit') {
+            document.getElementById('editCurrentImgBadge').style.display = 'none';
+            document.getElementById('editCurrentImgBadge').dataset.original = '';
+        }
+        // Reset tabs to File tab
+        var modalId = prefix + 'Modal';
+        var modal   = document.getElementById(modalId);
+        if (!modal) return;
+        modal.querySelectorAll('.img-tab').forEach(function(t, i) {
+            t.classList.toggle('active', i === 0);
+        });
+        modal.querySelectorAll('.img-tab-content').forEach(function(c, i) {
+            c.classList.toggle('active', i === 0);
+        });
+    }
+
+    // ── Pre-submit: set imageUrl hidden field from URL tab if active ──
+    function prepareCreateSubmit() {
+        var activeContent = document.querySelector('#createModal .img-tab-content.active');
+        if (activeContent && activeContent.id === 'create-tab-url') {
+            var url = document.getElementById('createUrlInput').value.trim();
+            document.getElementById('createImageUrl').value = url;
+            // clear file input so server ignores it
+            document.getElementById('createImageFile').value = '';
+        } else {
+            document.getElementById('createImageUrl').value = '';
+        }
+    }
+    function prepareEditSubmit() {
+        var activeContent = document.querySelector('#editModal .img-tab-content.active');
+        if (activeContent && activeContent.id === 'edit-tab-url') {
+            var url = document.getElementById('editUrlInput').value.trim();
+            document.getElementById('editImageUrl').value = url;
+            document.getElementById('editImageFile').value = '';
+        } else {
+            // keep existing hidden value (cleared or not)
+            var badge = document.getElementById('editCurrentImgBadge');
+            var hasNewFile = document.getElementById('editImageFile').files.length > 0;
+            if (!hasNewFile && badge.style.display !== 'none' && badge.dataset.original) {
+                // no new file chosen, current image kept → send original url
+                document.getElementById('editImageUrl').value = badge.dataset.original;
+            }
+        }
+    }
     </script>
 </body>
 </html>
