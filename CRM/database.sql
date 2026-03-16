@@ -496,3 +496,14 @@ CREATE TABLE IF NOT EXISTS chat_reactions (
     FOREIGN KEY (user_id)    REFERENCES users(id),
     UNIQUE KEY uk_reaction (message_id, user_id, emoji)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ai_chat_messages (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT          NOT NULL,
+    role       ENUM('user','assistant') NOT NULL,
+    content    TEXT         NOT NULL,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_time (user_id, created_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ 
