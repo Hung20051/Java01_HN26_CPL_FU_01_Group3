@@ -29,305 +29,239 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --navy:        #0b1437;
-            --accent:      #4f7ef8;
-            --accent-2:    #7c9ffa;
-            --accent-glow: rgba(79,126,248,0.22);
-            --green:       #34d399;
-            --green-dim:   rgba(52,211,153,0.12);
-            --amber:       #fbbf24;
-            --amber-dim:   rgba(251,191,36,0.12);
-            --danger:      #f87171;
-            --danger-dim:  rgba(248,113,113,0.12);
-            --purple:      #a78bfa;
-            --purple-dim:  rgba(167,139,250,0.12);
-            --info:        #38bdf8;
-            --info-dim:    rgba(56,189,248,0.12);
-            --orange:      #fb923c;
-            --orange-dim:  rgba(251,146,60,0.12);
-            --text:        #ffffff;
-            --text-2:      #c8d4f0;
-            --muted:       #7a8ab8;
-            --border:      rgba(255,255,255,0.07);
-            --border-2:    rgba(255,255,255,0.04);
-            --sb-width:    248px;
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Sora', sans-serif;
-            background: var(--navy);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--navy); }
-        ::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.4); border-radius: 4px; }
+            /* Sidebar (dark indigo) */
+            --sb-bg:        #1e1b4b;
+            --sb-border:    rgba(255,255,255,0.08);
+            --sb-text:      rgba(255,255,255,0.45);
+            --sb-accent:    #818cf8;
+            --sb-accent-2:  #a5b4fc;
+            --sb-item-on:   rgba(129,140,248,0.2);
+            --sb-width:     252px;
 
-        /* ════════════════════ SIDEBAR ════════════════════ */
-        .sb {
-            width: var(--sb-width); min-height: 100vh;
-            background: rgba(9,15,40,0.95); backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border);
-            display: flex; flex-direction: column;
-            position: fixed; top: 0; left: 0; z-index: 100;
-        }
-        .sb-brand {
-            padding: 22px 18px 16px;
-            display: flex; align-items: center; gap: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .sb-logo {
-            width: 36px; height: 36px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.88rem;
-            box-shadow: 0 4px 14px var(--accent-glow); flex-shrink: 0;
-        }
-        .sb-name { color: #fff; font-size: 1rem; font-weight: 700; }
-        .sb-role {
-            display: inline-flex; align-items: center;
-            background: rgba(79,126,248,0.15); border: 1px solid rgba(79,126,248,0.25);
-            color: var(--accent-2); font-size: 0.62rem; font-weight: 700;
-            letter-spacing: 1px; text-transform: uppercase;
-            padding: 2px 8px; border-radius: 20px; margin-top: 3px;
-        }
-        .sb-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
-        .sb-lbl {
-            color: rgba(255,255,255,0.22); font-size: 0.62rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.4px;
-            padding: 0 8px; margin: 16px 0 5px;
-        }
-        .sb-item {
-            display: flex; align-items: center; gap: 9px;
-            padding: 9px 10px; border-radius: 9px; margin-bottom: 1px;
-            color: rgba(255,255,255,0.45); text-decoration: none;
-            font-size: 0.83rem; font-weight: 500;
-            transition: all 0.2s; border-left: 2px solid transparent;
-        }
-        .sb-item i {
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; border-radius: 8px;
-            background: rgba(255,255,255,0.05); flex-shrink: 0; transition: all 0.2s;
-        }
-        .sb-item.on {
-            color: #fff;
-            background: linear-gradient(90deg, rgba(52,211,153,0.18), rgba(52,211,153,0.05));
-            border-left: 2px solid var(--green);
-        }
-        .sb-item.on i { background: rgba(52,211,153,0.2); color: var(--green); }
-        .sb-item.si-home:hover       { color:#fff; background:rgba(79,126,248,0.1);  border-left-color:var(--accent); }
-        .sb-item.si-home:hover i     { background:rgba(79,126,248,0.2);  color:var(--accent-2); }
-        .sb-item.si-repair:hover     { color:#fff; background:rgba(251,191,36,0.08); border-left-color:var(--amber); }
-        .sb-item.si-repair:hover i   { background:rgba(251,191,36,0.18); color:var(--amber); }
-        .sb-item.si-contract:hover   { color:#fff; background:rgba(167,139,250,0.08);border-left-color:var(--purple); }
-        .sb-item.si-contract:hover i { background:rgba(167,139,250,0.18);color:var(--purple); }
-        .sb-item.si-equip:hover      { color:#fff; background:rgba(56,189,248,0.08); border-left-color:var(--info); }
-        .sb-item.si-equip:hover i    { background:rgba(56,189,248,0.18); color:var(--info); }
-        .sb-item.si-parts:hover      { color:#fff; background:rgba(52,211,153,0.07); border-left-color:var(--green); }
-        .sb-item.si-parts:hover i    { background:rgba(52,211,153,0.18); color:var(--green); }
-        .sb-item.si-shop:hover       { color:#fff; background:rgba(56,189,248,0.07); border-left-color:var(--info); }
-        .sb-item.si-shop:hover i     { background:rgba(56,189,248,0.18); color:var(--info); }
-        .sb-item.si-cart:hover       { color:#fff; background:rgba(251,146,60,0.08); border-left-color:var(--orange); }
-        .sb-item.si-cart:hover i     { background:rgba(251,146,60,0.18); color:var(--orange); }
-        .sb-item.si-invoice:hover    { color:#fff; background:rgba(52,211,153,0.07); border-left-color:var(--green); }
-        .sb-item.si-invoice:hover i  { background:rgba(52,211,153,0.18); color:var(--green); }
-        .sb-item.si-chat:hover       { color:#fff; background:rgba(251,113,133,0.08);border-left-color:#fb7185; }
-        .sb-item.si-chat:hover i     { background:rgba(251,113,133,0.18);color:#fb7185; }
+            /* Content (light) */
+            --bg:           #f3f4f9;
+            --bg-card:      #ffffff;
+            --bg-topbar:    #ffffff;
+            --border-light: #e8ecf5;
+            --border-light2:#f0f2fb;
+            --text-h:       #1e1b4b;
+            --text-b:       #374151;
+            --text-m:       #6b7280;
+            --text-s:       #9ca3af;
 
-        .sb-badge {
-            margin-left: auto; background: var(--danger); color: #fff;
-            font-size: 0.62rem; font-weight: 700;
-            padding: 2px 6px; border-radius: 20px;
-            animation: badgePop 2s ease-in-out infinite;
-        }
-        @keyframes badgePop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+            /* Brand */
+            --primary:      #4f46e5;
+            --primary-2:    #6366f1;
+            --primary-light:#ede9fe;
 
-        .sb-foot { padding: 12px 10px 16px; border-top: 1px solid var(--border); }
-        .sb-user {
-            display: flex; align-items: center; gap: 9px;
-            padding: 10px; border-radius: 10px;
-            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-            margin-bottom: 6px; text-decoration: none; transition: all 0.2s;
+            /* Status colors */
+            --purple:  #7c3aed;
+            --blue:    #2563eb;
+            --teal:    #0d9488;
+            --green:   #16a34a;
+            --red:     #dc2626;
+            --amber:   #d97706;
+            --orange:  #ea580c;
+            --info:    #0284c7;
         }
-        .sb-user:hover { background: rgba(79,126,248,0.1); border-color: rgba(79,126,248,0.25); }
-        .sb-ava {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--purple));
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.88rem; font-weight: 700;
-            flex-shrink: 0; overflow: hidden;
+
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:'Sora',sans-serif;
+            background:var(--bg);
+            color:var(--text-b);
+            min-height:100vh;
+            display:flex;
         }
-        .sb-ava img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }
-        .sb-uname { color: #fff; font-size: 0.82rem; font-weight: 600; }
-        .sb-urole { color: var(--muted); font-size: 0.68rem; margin-top: 1px; }
-        .sb-logout {
-            display: flex; align-items: center; gap: 8px;
-            width: 100%; padding: 8px 10px; border-radius: 8px;
-            color: rgba(255,255,255,0.35); text-decoration: none;
-            font-size: 0.8rem; transition: all 0.2s;
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px}
+
+        /* ═══════════ SIDEBAR ═══════════ */
+        .sb{
+            width:var(--sb-width); min-height:100vh;
+            background:var(--sb-bg);
+            border-right:1px solid rgba(79,70,229,0.2);
+            display:flex; flex-direction:column;
+            position:fixed; top:0; left:0; z-index:100;
+            box-shadow:4px 0 24px rgba(0,0,0,0.15);
         }
-        .sb-logout:hover { color: var(--danger); background: rgba(248,113,113,0.08); }
+        .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border);}
+        .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0;}
+        .sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px}
+        .sb-role{display:inline-flex;align-items:center;background:rgba(129,140,248,0.2);border:1px solid rgba(129,140,248,0.3);color:var(--sb-accent-2);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px;}
+        .sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+        .sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px;}
+        .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;transition:all .18s;border-left:2px solid transparent;}
+        .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s;}
+        .sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent);}
+        .sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2)}
+        .sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06);}
+        .sb-badge{margin-left:auto;background:#ef4444;color:#fff;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px;box-shadow:0 2px 6px rgba(239,68,68,0.5);}
+        .sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border)}
+        .sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);margin-bottom:5px;text-decoration:none;transition:all .18s;}
+        .sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3)}
+        .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+        .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%}
+        .sb-uname{color:#fff;font-size:.8rem;font-weight:600}
+        .sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px}
+        .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s;}
+        .sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1)}
 
-        /* ════════════════════ MAIN ════════════════════ */
-        .main { margin-left: var(--sb-width); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+        /* ═══════════ MAIN (light) ═══════════ */
+        .main{margin-left:var(--sb-width);flex:1;min-height:100vh;display:flex;flex-direction:column}
 
-        .topbar {
-            display: flex; align-items: center;
-            padding: 22px 32px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(11,20,55,0.6); backdrop-filter: blur(16px);
-            position: sticky; top: 0; z-index: 50;
+        .topbar{
+            display:flex;align-items:center;
+            padding:18px 28px;
+            background:var(--bg-topbar);
+            border-bottom:1px solid var(--border-light);
+            position:sticky;top:0;z-index:50;
+            box-shadow:0 1px 6px rgba(0,0,0,0.06);
         }
-        .topbar-title { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
-        .topbar-sub { color: var(--muted); font-size: 0.8rem; margin-top: 2px; font-weight: 300; }
+        .topbar-title{font-size:1.2rem;font-weight:800;color:var(--text-h);letter-spacing:-.3px}
+        .topbar-sub{color:var(--text-s);font-size:.78rem;margin-top:2px}
 
-        .content { padding: 28px 32px; flex: 1; }
+        .content{padding:24px 28px;flex:1}
 
-        @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
         /* ── ALERT WARN ── */
-        .alert-warn {
-            display: flex; align-items: flex-start; gap: 12px;
-            padding: 14px 18px;
-            background: rgba(251,191,36,0.08);
-            border: 1px solid rgba(251,191,36,0.2);
-            border-radius: 13px; margin-bottom: 20px;
-            font-size: 0.84rem; color: var(--amber);
-            animation: cardIn 0.4s ease both;
+        .alert-warn{
+            display:flex;align-items:flex-start;gap:12px;
+            padding:12px 18px;
+            background:#fffbeb;
+            border:1.5px solid #fcd34d;
+            border-radius:13px;margin-bottom:20px;
+            font-size:.82rem;color:#78350f;
+            animation:cardIn .4s ease both;
         }
-        .alert-warn a { color: var(--accent-2); font-weight: 700; }
-        .alert-warn strong { color: var(--text); }
+        .alert-warn a{color:var(--amber);font-weight:700;text-decoration:none}
+        .alert-warn a:hover{color:#92400e}
+        .alert-warn strong{color:var(--text-h)}
 
         /* ── STAT CARDS ── */
-        .stats {
-            display: grid; grid-template-columns: repeat(3,1fr);
-            gap: 14px; margin-bottom: 20px;
+        .stats{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            gap:14px;margin-bottom:20px;
         }
-        .sm {
-            background: rgba(17,26,66,0.7);
-            border: 1px solid var(--border);
-            border-radius: 14px; padding: 18px 20px;
-            display: flex; align-items: center; gap: 14px;
-            backdrop-filter: blur(12px);
-            animation: cardIn 0.5s ease both;
-            position: relative; overflow: hidden;
+        .sm{
+            border-radius:16px;padding:20px;
+            position:relative;overflow:hidden;
+            color:#fff;
+            transition:all .22s;
+            animation:cardIn .45s ease both;
+            display:flex;align-items:center;gap:14px;
         }
-        .sm::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-        }
-        .sm:nth-child(1)::before { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
-        .sm:nth-child(2)::before { background: linear-gradient(90deg, var(--amber), var(--orange)); }
-        .sm:nth-child(3)::before { background: linear-gradient(90deg, var(--green), var(--info)); }
-        .sm-icon {
-            width: 44px; height: 44px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; flex-shrink: 0;
-        }
-        .sm-val { font-size: 1.65rem; font-weight: 800; color: var(--text); line-height: 1; }
-        .sm-lbl { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+        .sm:nth-child(1){animation-delay:.05s}
+        .sm:nth-child(2){animation-delay:.10s}
+        .sm:nth-child(3){animation-delay:.15s}
+        .sm:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.18)}
+
+        .sm-blue {background:var(--info);  box-shadow:0 4px 20px rgba(2,132,199,0.3)}
+        .sm-amber{background:var(--amber); box-shadow:0 4px 20px rgba(217,119,6,0.3)}
+        .sm-green{background:var(--green); box-shadow:0 4px 20px rgba(22,163,74,0.3)}
+
+        /* decorative circles */
+        .sm::after{content:'';position:absolute;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.12);top:-28px;right:-28px;}
+        .sm::before{content:'';position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.07);bottom:-14px;right:28px;}
+
+        .sm-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(255,255,255,0.2);position:relative;z-index:1;}
+        .sm-val{font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-1px;position:relative;z-index:1}
+        .sm-lbl{font-size:.74rem;font-weight:600;opacity:.88;margin-top:4px;position:relative;z-index:1}
 
         /* ── FILTER ROW ── */
-        .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .f-btn {
-            padding: 7px 16px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 600;
-            border: 1.5px solid var(--border);
-            background: rgba(255,255,255,0.04);
-            color: var(--muted); cursor: pointer;
-            text-decoration: none; transition: all 0.2s;
-            font-family: 'Sora', sans-serif;
+        .filter-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+        .f-btn{
+            padding:7px 16px;border-radius:20px;
+            font-size:.79rem;font-weight:600;
+            border:1.5px solid var(--border-light);
+            background:#fff;
+            color:var(--text-m);cursor:pointer;
+            text-decoration:none;transition:all .2s;
+            font-family:'Sora',sans-serif;
         }
-        .f-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-2); border-color: rgba(255,255,255,0.15); }
-        .f-btn.on {
-            background: linear-gradient(135deg, var(--accent), var(--purple));
-            border-color: transparent; color: #fff;
-            box-shadow: 0 3px 12px rgba(79,126,248,0.3);
+        .f-btn:hover{background:var(--primary-light);border-color:rgba(99,102,241,0.3);color:var(--primary-2)}
+        .f-btn.on{
+            background:var(--primary);
+            border-color:transparent;color:#fff;
+            box-shadow:0 3px 10px rgba(79,70,229,0.28);
         }
 
         /* ── TABLE CARD ── */
-        .tbl-card {
-            background: rgba(17,26,66,0.7);
-            border: 1px solid var(--border);
-            border-radius: 16px; overflow: hidden;
-            backdrop-filter: blur(12px);
-            animation: cardIn 0.5s 0.1s ease both;
+        .tbl-card{
+            background:var(--bg-card);
+            border:1px solid var(--border-light);
+            border-radius:16px;overflow:hidden;
+            box-shadow:0 1px 6px rgba(0,0,0,0.05);
+            animation:cardIn .5s .1s ease both;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-        thead tr { background: rgba(255,255,255,0.02); }
-        th {
-            padding: 11px 14px; text-align: left;
-            color: var(--muted); font-weight: 600;
-            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
-            border-bottom: 1px solid var(--border);
+        table{width:100%;border-collapse:collapse;font-size:.81rem}
+        thead tr{background:#fafbff}
+        th{
+            padding:10px 14px;text-align:left;
+            color:var(--text-s);font-weight:700;
+            font-size:.67rem;text-transform:uppercase;letter-spacing:.8px;
+            border-bottom:1px solid var(--border-light2);
         }
-        td {
-            padding: 13px 14px;
-            border-bottom: 1px solid var(--border-2);
-            vertical-align: middle; color: var(--text-2);
+        td{
+            padding:12px 14px;
+            border-bottom:1px solid var(--border-light2);
+            vertical-align:middle;color:var(--text-b);
         }
-        tr:last-child td { border-bottom: none; }
-        tbody tr { transition: background 0.15s; }
-        tbody tr:hover td { background: rgba(79,126,248,0.04); }
+        tr:last-child td{border-bottom:none}
+        tbody tr{transition:background .12s}
+        tbody tr:hover td{background:#f7f8ff}
 
         /* Invoice code link */
-        .inv-code {
-            color: var(--accent-2); font-weight: 700;
-            font-family: monospace; font-size: 0.8rem;
-            text-decoration: none;
+        .inv-code{
+            color:var(--primary-2);font-weight:700;
+            font-family:monospace;font-size:.79rem;
+            text-decoration:none;
         }
-        .inv-code:hover { color: var(--accent); }
+        .inv-code:hover{color:var(--primary);text-decoration:underline}
 
         /* Type badge */
-        .type-badge {
-            padding: 3px 9px; border-radius: 7px;
-            font-size: 0.73rem; font-weight: 700;
-            display: inline-flex; align-items: center; gap: 4px;
+        .type-badge{
+            padding:3px 9px;border-radius:7px;
+            font-size:.72rem;font-weight:700;
+            display:inline-flex;align-items:center;gap:4px;
         }
-        .type-repair { background: var(--purple-dim); color: var(--purple); }
-        .type-shop   { background: var(--amber-dim);  color: var(--amber); }
+        .type-repair{background:var(--primary-light);color:var(--purple)}
+        .type-shop  {background:#fef3c7;color:#92400e}
 
         /* Status badges */
-        .b {
-            display: inline-flex; align-items: center;
-            padding: 3px 10px; border-radius: 20px;
-            font-size: 0.72rem; font-weight: 700;
+        .b{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:700}
+        .b-unpaid   {background:#fef3c7;color:#92400e}
+        .b-paid     {background:#d1fae5;color:#065f46}
+        .b-cancelled{background:#f3f4f6;color:#6b7280}
+
+        .amount{font-weight:700;font-size:.87rem}
+        .amount-unpaid{color:var(--red)}
+        .amount-paid  {color:var(--text-m)}
+
+        .due-overdue{color:var(--red);font-weight:700}
+
+        .ref-link{
+            color:var(--primary-2);font-family:monospace;
+            font-weight:600;font-size:.77rem;text-decoration:none;
         }
-        .b-unpaid    { background: var(--amber-dim);  color: var(--amber); }
-        .b-paid      { background: var(--green-dim);  color: var(--green); }
-        .b-cancelled { background: rgba(255,255,255,0.07); color: var(--muted); }
+        .ref-link:hover{color:var(--primary);text-decoration:underline}
 
-        .amount { font-weight: 700; font-size: 0.88rem; }
-        .amount-unpaid { color: var(--danger); }
-        .amount-paid   { color: var(--text-2); }
-
-        .due-overdue { color: var(--danger); font-weight: 700; }
-
-        .ref-link {
-            color: var(--accent-2); font-family: monospace;
-            font-weight: 600; font-size: 0.78rem; text-decoration: none;
+        .btn-view{
+            padding:5px 13px;border-radius:8px;
+            font-size:.75rem;font-weight:600;
+            background:var(--primary-light);
+            color:var(--primary-2);text-decoration:none;
+            display:inline-flex;align-items:center;gap:5px;
+            border:1px solid rgba(99,102,241,0.2);transition:all .2s;
         }
-        .ref-link:hover { color: var(--accent); }
-
-        .btn-view {
-            padding: 5px 13px; border-radius: 8px;
-            font-size: 0.76rem; font-weight: 600;
-            background: var(--accent-dim, rgba(79,126,248,0.12));
-            color: var(--accent-2); text-decoration: none;
-            display: inline-flex; align-items: center; gap: 5px;
-            border: 1px solid rgba(79,126,248,0.2); transition: all 0.2s;
-        }
-        .btn-view:hover { background: rgba(79,126,248,0.22); color: #fff; }
+        .btn-view:hover{background:var(--primary);color:#fff;border-color:transparent}
 
         /* Empty */
-        .empty {
-            text-align: center; padding: 52px 24px;
-            color: var(--muted); font-size: 0.84rem;
-        }
-        .empty i { font-size: 2.4rem; display: block; margin-bottom: 12px; opacity: 0.2; }
+        .empty{text-align:center;padding:52px 24px;color:var(--text-s);font-size:.83rem}
+        .empty i{font-size:2.4rem;display:block;margin-bottom:12px;opacity:.2;color:var(--text-m)}
     </style>
 </head>
 <body>
@@ -343,38 +277,38 @@
     </div>
     <nav class="sb-nav">
         <div class="sb-lbl">Overview</div>
-        <a href="<%=ctx%>/customerDashboard" class="sb-item si-home">
+        <a href="<%=ctx%>/customerDashboard" class="sb-item">
             <i class="fas fa-home"></i> Dashboard
         </a>
         <div class="sb-lbl">Services</div>
-        <a href="<%=ctx%>/customerServiceRequests" class="sb-item si-repair">
+        <a href="<%=ctx%>/customerServiceRequests" class="sb-item">
             <i class="fas fa-clipboard-list"></i> Repair Requests
             <%if(pendingSR>0){%><span class="sb-badge"><%=pendingSR%></span><%}%>
         </a>
-        <a href="<%=ctx%>/customerContracts" class="sb-item si-contract">
+        <a href="<%=ctx%>/customerContracts" class="sb-item">
             <i class="fas fa-file-contract"></i> Contracts
         </a>
-        <a href="<%=ctx%>/customerEquipment" class="sb-item si-equip">
+        <a href="<%=ctx%>/customerEquipment" class="sb-item">
             <i class="fas fa-desktop"></i> My Equipment
         </a>
         <div class="sb-lbl">Shop</div>
-        <a href="<%=ctx%>/customerShop?action=parts" class="sb-item si-parts">
+        <a href="<%=ctx%>/customerShop?action=parts" class="sb-item">
             <i class="fas fa-puzzle-piece"></i> Parts
         </a>
-        <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item si-shop">
+        <a href="<%=ctx%>/customerShop?action=equipment" class="sb-item">
             <i class="fas fa-server"></i> Equipment
         </a>
-        <a href="<%=ctx%>/customerShop?action=cart" class="sb-item si-cart">
+        <a href="<%=ctx%>/customerShop?action=cart" class="sb-item">
             <i class="fas fa-shopping-cart"></i> Cart
             <%if(cartCount>0){%><span class="sb-badge"><%=cartCount%></span><%}%>
         </a>
         <div class="sb-lbl">Finance</div>
-        <a href="<%=ctx%>/customerInvoices" class="sb-item on si-invoice">
+        <a href="<%=ctx%>/customerInvoices" class="sb-item on">
             <i class="fas fa-receipt"></i> Invoices
             <%if(unpaid>0){%><span class="sb-badge"><%=unpaid%></span><%}%>
         </a>
         <div class="sb-lbl">Support</div>
-        <a href="<%=ctx%>/customerChat" class="sb-item si-chat">
+        <a href="<%=ctx%>/customerChat" class="sb-item">
             <i class="fas fa-comment-dots"></i> Support Chat
             <%if(unreadChat>0){%><span class="sb-badge"><%=unreadChat%></span><%}%>
         </a>
@@ -424,32 +358,26 @@
 
         <%-- Stat cards --%>
         <div class="stats">
-            <div class="sm">
-                <div class="sm-icon" style="background:var(--info-dim);color:var(--info)">
-                    <i class="fas fa-file-invoice"></i>
-                </div>
+            <div class="sm sm-blue">
+                <div class="sm-icon"><i class="fas fa-file-invoice"></i></div>
                 <div><div class="sm-val"><%=total%></div><div class="sm-lbl">Total Invoices</div></div>
             </div>
-            <div class="sm">
-                <div class="sm-icon" style="background:var(--amber-dim);color:var(--amber)">
-                    <i class="fas fa-clock"></i>
-                </div>
+            <div class="sm sm-amber">
+                <div class="sm-icon"><i class="fas fa-clock"></i></div>
                 <div><div class="sm-val"><%=unpaid%></div><div class="sm-lbl">Unpaid</div></div>
             </div>
-            <div class="sm">
-                <div class="sm-icon" style="background:var(--green-dim);color:var(--green)">
-                    <i class="fas fa-check-circle"></i>
-                </div>
+            <div class="sm sm-green">
+                <div class="sm-icon"><i class="fas fa-check-circle"></i></div>
                 <div><div class="sm-val"><%=paid%></div><div class="sm-lbl">Paid</div></div>
             </div>
         </div>
 
         <%-- Filter row --%>
         <div class="filter-row">
-            <a href="<%=ctx%>/customerInvoices"                        class="f-btn <%=filterStatus.isEmpty()?"on":""%>">All</a>
-            <a href="<%=ctx%>/customerInvoices?status=UNPAID"          class="f-btn <%="UNPAID".equals(filterStatus)?"on":""%>">Unpaid</a>
-            <a href="<%=ctx%>/customerInvoices?status=PAID"            class="f-btn <%="PAID".equals(filterStatus)?"on":""%>">Paid</a>
-            <a href="<%=ctx%>/customerInvoices?status=CANCELLED"       class="f-btn <%="CANCELLED".equals(filterStatus)?"on":""%>">Cancelled</a>
+            <a href="<%=ctx%>/customerInvoices"                  class="f-btn <%=filterStatus.isEmpty()?"on":""%>">All</a>
+            <a href="<%=ctx%>/customerInvoices?status=UNPAID"    class="f-btn <%="UNPAID".equals(filterStatus)?"on":""%>">Unpaid</a>
+            <a href="<%=ctx%>/customerInvoices?status=PAID"      class="f-btn <%="PAID".equals(filterStatus)?"on":""%>">Paid</a>
+            <a href="<%=ctx%>/customerInvoices?status=CANCELLED" class="f-btn <%="CANCELLED".equals(filterStatus)?"on":""%>">Cancelled</a>
         </div>
 
         <%-- Table --%>
@@ -473,7 +401,7 @@
                 <tbody>
                     <%for(Invoice inv:invoices){
                         String isc="b-unpaid";
-                        if("PAID".equals(inv.getStatus()))       isc="b-paid";
+                        if("PAID".equals(inv.getStatus()))           isc="b-paid";
                         else if("CANCELLED".equals(inv.getStatus())) isc="b-cancelled";
                         boolean overdue="UNPAID".equals(inv.getStatus())
                             &&inv.getDueDate()!=null
@@ -496,7 +424,7 @@
                             <a href="<%=ctx%>/customerServiceRequests?action=detail&id=<%=inv.getServiceRequestId()%>"
                                class="ref-link"><%=inv.getRequestCode()%></a>
                             <%}else{%>
-                            <span style="color:var(--muted)">—</span>
+                            <span style="color:var(--text-s)">—</span>
                             <%}%>
                         </td>
                         <td>
@@ -505,10 +433,10 @@
                             </span>
                         </td>
                         <td><span class="b <%=isc%>"><%=inv.getStatusLabel()%></span></td>
-                        <td style="font-size:.78rem;color:var(--muted)">
+                        <td style="font-size:.77rem;color:var(--text-s)">
                             <%=inv.getCreatedAt()!=null?inv.getCreatedAt().toLocalDate():"—"%>
                         </td>
-                        <td style="font-size:.78rem" class="<%=overdue?"due-overdue":""%>">
+                        <td style="font-size:.77rem" class="<%=overdue?"due-overdue":""%>">
                             <%=inv.getDueDate()!=null?inv.getDueDate()+(overdue?" ⚠️":""):"—"%>
                         </td>
                         <td>

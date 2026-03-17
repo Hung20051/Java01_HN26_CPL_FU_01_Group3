@@ -26,295 +26,253 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy:        #0b1437;
-            --navy-card:   #111a42;
-            --navy-light:  #162050;
-            --accent:      #4f7ef8;
-            --accent-2:    #7c9ffa;
-            --accent-glow: rgba(79,126,248,0.22);
-            --green:       #34d399;
-            --green-dim:   rgba(52,211,153,0.12);
-            --amber:       #fbbf24;
-            --amber-dim:   rgba(251,191,36,0.15);
-            --danger:      #f87171;
-            --purple:      #a78bfa;
-            --text:        #ffffff;
-            --text-2:      #c8d4f0;
-            --muted:       #7a8ab8;
-            --border:      rgba(255,255,255,0.07);
-            /* VNPay brand */
-            --vnpay:       #e30019;
-            --vnpay-dark:  #b50014;
-            --vnpay-glow:  rgba(227,0,25,0.35);
+            /* Content (light) — synced from Dashboard */
+            --bg:           #f3f4f9;
+            --bg-card:      #ffffff;
+            --border-light: #e8ecf5;
+            --border-light2:#f0f2fb;
+            --text-h:       #1e1b4b;
+            --text-b:       #374151;
+            --text-m:       #6b7280;
+            --text-s:       #9ca3af;
+            --primary:      #4f46e5;
+            --primary-2:    #6366f1;
+            --primary-light:#ede9fe;
+            --purple:       #7c3aed;
+            --green:        #16a34a;
+            --amber:        #d97706;
+            --red:          #dc2626;
+
+            /* VNPay brand — kept unchanged */
+            --vnpay:        #e30019;
+            --vnpay-dark:   #b50014;
+            --vnpay-glow:   rgba(227,0,25,0.35);
         }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Sora', sans-serif;
-            background: var(--navy);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            /* Subtle radial glow behind card */
+
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{
+            font-family:'Sora',sans-serif;
+            background:var(--bg);
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:24px;
             background-image:
-                radial-gradient(ellipse 60% 40% at 50% 30%, rgba(79,126,248,0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 30% at 80% 80%, rgba(167,139,250,0.06) 0%, transparent 60%);
+                radial-gradient(ellipse 60% 40% at 50% 30%,rgba(79,70,229,0.05) 0%,transparent 70%),
+                radial-gradient(ellipse 40% 30% at 80% 80%,rgba(124,58,237,0.04) 0%,transparent 60%);
         }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--navy); }
-        ::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.4); border-radius: 4px; }
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px}
 
-        /* ════════════════════ GATEWAY CARD ════════════════════ */
-        .gateway-card {
-            background: rgba(17,26,66,0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-            width: 100%;
-            max-width: 460px;
-            overflow: hidden;
+        /* ════ GATEWAY CARD — kept dark/branded ════ */
+        .gateway-card{
+            background:#111a42;
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:20px;
+            box-shadow:0 20px 60px rgba(79,70,229,0.15), 0 2px 0 rgba(255,255,255,0.06);
+            width:100%;
+            max-width:460px;
+            overflow:hidden;
         }
 
-        /* ── Header ── */
-        .gw-header {
-            background: linear-gradient(135deg, var(--vnpay), var(--vnpay-dark));
-            padding: 24px 28px;
-            color: #fff;
-            position: relative;
+        /* ── Header (VNPay red — brand kept) ── */
+        .gw-header{
+            background:linear-gradient(135deg,var(--vnpay),var(--vnpay-dark));
+            padding:24px 28px;color:#fff;position:relative;
         }
-        .gw-header::after {
-            content: '';
-            position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        .gw-header::after{
+            content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
         }
-        .gw-simulate-badge {
-            position: absolute; top: 14px; right: 16px;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fff; font-size: 0.62rem; font-weight: 700;
-            padding: 3px 10px; border-radius: 20px;
-            letter-spacing: 0.8px; text-transform: uppercase;
+        .gw-simulate-badge{
+            position:absolute;top:14px;right:16px;
+            background:rgba(255,255,255,0.15);
+            border:1px solid rgba(255,255,255,0.3);
+            color:#fff;font-size:.62rem;font-weight:700;
+            padding:3px 10px;border-radius:20px;
+            letter-spacing:.8px;text-transform:uppercase;
         }
-        .gw-logo {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 18px;
+        .gw-logo{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+        .gw-logo-icon{
+            width:48px;height:48px;
+            background:rgba(255,255,255,0.18);
+            border:2px solid rgba(255,255,255,0.35);
+            border-radius:13px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.2rem;font-weight:900;color:#fff;letter-spacing:-.5px;
         }
-        .gw-logo-icon {
-            width: 48px; height: 48px;
-            background: rgba(255,255,255,0.18);
-            border: 2px solid rgba(255,255,255,0.35);
-            border-radius: 13px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; font-weight: 900; color: #fff;
-            letter-spacing: -0.5px;
-        }
-        .gw-logo-name { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.3px; }
-        .gw-logo-sub  { font-size: 0.7rem; opacity: 0.75; margin-top: 2px; }
+        .gw-logo-name{font-size:1.3rem;font-weight:800;letter-spacing:.3px}
+        .gw-logo-sub {font-size:.7rem;opacity:.75;margin-top:2px}
 
-        .gw-order-info {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 12px;
-            padding: 13px 16px;
+        .gw-order-info{
+            background:rgba(0,0,0,0.2);
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius:12px;padding:13px 16px;
         }
-        .gw-order-row {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.82rem; margin-bottom: 5px;
+        .gw-order-row{
+            display:flex;justify-content:space-between;align-items:center;
+            font-size:.82rem;margin-bottom:5px;color:#fff;
         }
-        .gw-order-row:last-child {
-            margin-bottom: 0;
-            font-size: 1rem; font-weight: 700;
-            margin-top: 10px; padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.15);
+        .gw-order-row:last-child{
+            margin-bottom:0;font-size:1rem;font-weight:700;
+            margin-top:10px;padding-top:10px;
+            border-top:1px solid rgba(255,255,255,0.15);
         }
-        .gw-order-lbl { opacity: 0.72; }
+        .gw-order-lbl{opacity:.72}
 
         /* ── Body ── */
-        .gw-body { padding: 26px 28px; }
+        .gw-body{padding:24px 26px}
 
-        .gw-section-title {
-            font-size: 0.65rem; font-weight: 700;
-            color: var(--muted); text-transform: uppercase;
-            letter-spacing: 1.4px; margin-bottom: 14px;
+        .gw-section-title{
+            font-size:.64rem;font-weight:700;
+            color:#7a8ab8;text-transform:uppercase;
+            letter-spacing:1.4px;margin-bottom:14px;
         }
 
         /* Payment method cards */
-        .payment-methods {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 10px; margin-bottom: 20px;
+        .payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+        .pm-card{
+            border:1.5px solid rgba(255,255,255,0.08);
+            border-radius:13px;padding:14px 10px;
+            cursor:pointer;transition:all .2s;
+            text-align:center;position:relative;
+            background:rgba(255,255,255,0.03);
         }
-        .pm-card {
-            border: 1.5px solid var(--border);
-            border-radius: 13px;
-            padding: 14px 10px;
-            cursor: pointer; transition: all 0.2s;
-            text-align: center; position: relative;
-            background: rgba(255,255,255,0.03);
+        .pm-card:hover{border-color:rgba(227,0,25,0.4);background:rgba(227,0,25,0.06)}
+        .pm-card.selected{
+            border-color:var(--vnpay);
+            background:rgba(227,0,25,0.1);
+            box-shadow:0 0 0 3px rgba(227,0,25,0.12);
         }
-        .pm-card:hover {
-            border-color: rgba(227,0,25,0.4);
-            background: rgba(227,0,25,0.06);
+        .pm-card.selected::after{
+            content:'✓';position:absolute;top:7px;right:10px;
+            color:var(--vnpay);font-size:.78rem;font-weight:700;
         }
-        .pm-card.selected {
-            border-color: var(--vnpay);
-            background: rgba(227,0,25,0.1);
-            box-shadow: 0 0 0 3px rgba(227,0,25,0.12);
-        }
-        .pm-card.selected::after {
-            content: '✓';
-            position: absolute; top: 7px; right: 10px;
-            color: var(--vnpay); font-size: 0.78rem; font-weight: 700;
-        }
-        .pm-icon { font-size: 1.55rem; margin-bottom: 7px; }
-        .pm-name { font-size: 0.77rem; font-weight: 700; color: var(--text); }
-        .pm-sub  { font-size: 0.67rem; color: var(--muted); margin-top: 2px; }
+        .pm-icon{font-size:1.55rem;margin-bottom:7px}
+        .pm-name{font-size:.77rem;font-weight:700;color:#fff}
+        .pm-sub {font-size:.67rem;color:#7a8ab8;margin-top:2px}
 
         /* Card form */
-        .card-form {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 13px;
-            padding: 16px;
-            margin-bottom: 18px;
+        .card-form{
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:13px;padding:16px;margin-bottom:18px;
         }
-        .form-group { margin-bottom: 12px; }
-        .form-group:last-child { margin-bottom: 0; }
-        .form-label {
-            font-size: 0.68rem; font-weight: 700;
-            color: var(--muted); text-transform: uppercase;
-            letter-spacing: 0.6px; margin-bottom: 6px; display: block;
+        .form-group{margin-bottom:12px}
+        .form-group:last-child{margin-bottom:0}
+        .form-label{
+            font-size:.67rem;font-weight:700;
+            color:#7a8ab8;text-transform:uppercase;
+            letter-spacing:.6px;margin-bottom:6px;display:block;
         }
-        .form-input {
-            width: 100%; padding: 10px 13px;
-            background: rgba(255,255,255,0.05);
-            border: 1.5px solid var(--border);
-            border-radius: 9px;
-            font-size: 0.875rem; font-family: 'Sora', sans-serif;
-            color: var(--text); outline: none; transition: all 0.2s;
+        .form-input{
+            width:100%;padding:10px 13px;
+            background:rgba(255,255,255,0.05);
+            border:1.5px solid rgba(255,255,255,0.08);
+            border-radius:9px;
+            font-size:.875rem;font-family:'Sora',sans-serif;
+            color:#fff;outline:none;transition:all .2s;
         }
-        .form-input:focus {
-            border-color: rgba(227,0,25,0.5);
-            background: rgba(227,0,25,0.05);
-            box-shadow: 0 0 0 3px rgba(227,0,25,0.1);
+        .form-input:focus{
+            border-color:rgba(227,0,25,0.5);
+            background:rgba(227,0,25,0.05);
+            box-shadow:0 0 0 3px rgba(227,0,25,0.1);
         }
-        .form-input::placeholder { color: var(--muted); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-input::placeholder{color:#7a8ab8}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
         /* OTP section */
-        .otp-section {
-            background: var(--amber-dim);
-            border: 1px solid rgba(251,191,36,0.25);
-            border-radius: 13px;
-            padding: 15px 16px;
-            margin-bottom: 18px;
-            display: none;
+        .otp-section{
+            background:rgba(217,119,6,0.1);
+            border:1px solid rgba(217,119,6,0.25);
+            border-radius:13px;padding:15px 16px;margin-bottom:18px;display:none;
         }
-        .otp-section.show { display: block; }
-        .otp-title { font-size: 0.82rem; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
-        .otp-desc  { font-size: 0.74rem; color: var(--text-2); margin-bottom: 11px; line-height: 1.5; }
-        .otp-input-row { display: flex; gap: 9px; align-items: center; }
-        .otp-input {
-            flex: 1; padding: 10px 13px;
-            background: rgba(255,255,255,0.06);
-            border: 1.5px solid rgba(251,191,36,0.3);
-            border-radius: 9px;
-            font-size: 1.05rem; font-weight: 700;
-            letter-spacing: 6px; text-align: center;
-            font-family: 'Courier New', monospace;
-            color: var(--amber); outline: none; transition: all 0.2s;
+        .otp-section.show{display:block}
+        .otp-title{font-size:.82rem;font-weight:700;color:#fbbf24;margin-bottom:4px}
+        .otp-desc {font-size:.74rem;color:#c8d4f0;margin-bottom:11px;line-height:1.5}
+        .otp-input-row{display:flex;gap:9px;align-items:center}
+        .otp-input{
+            flex:1;padding:10px 13px;
+            background:rgba(255,255,255,0.06);
+            border:1.5px solid rgba(217,119,6,0.3);
+            border-radius:9px;
+            font-size:1.05rem;font-weight:700;
+            letter-spacing:6px;text-align:center;
+            font-family:'Courier New',monospace;
+            color:#fbbf24;outline:none;transition:all .2s;
         }
-        .otp-input:focus {
-            border-color: var(--amber);
-            box-shadow: 0 0 0 3px rgba(251,191,36,0.12);
+        .otp-input:focus{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,0.12)}
+        .btn-get-otp{
+            padding:10px 14px;
+            background:linear-gradient(135deg,#fbbf24,#d97706);
+            color:#fff;border:none;border-radius:9px;
+            font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;
+            font-family:'Sora',sans-serif;transition:all .2s;
         }
-        .btn-get-otp {
-            padding: 10px 14px;
-            background: linear-gradient(135deg, var(--amber), #d97706);
-            color: #fff; border: none; border-radius: 9px;
-            font-size: 0.75rem; font-weight: 700;
-            cursor: pointer; white-space: nowrap;
-            font-family: 'Sora', sans-serif;
-            transition: all 0.2s;
-        }
-        .btn-get-otp:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(251,191,36,0.35); }
-        .btn-get-otp:disabled {
-            background: rgba(251,191,36,0.15);
-            color: var(--amber); cursor: not-allowed; transform: none; box-shadow: none;
-        }
+        .btn-get-otp:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(251,191,36,0.35)}
+        .btn-get-otp:disabled{background:rgba(251,191,36,0.15);color:#fbbf24;cursor:not-allowed;transform:none;box-shadow:none}
 
-        /* Pay button */
-        .btn-pay {
-            width: 100%; padding: 14px;
-            background: linear-gradient(135deg, var(--vnpay), var(--vnpay-dark));
-            color: #fff; border: none; border-radius: 12px;
-            font-size: 1rem; font-weight: 700;
-            font-family: 'Sora', sans-serif;
-            cursor: pointer; transition: all 0.25s;
-            display: flex; align-items: center; justify-content: center; gap: 9px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 20px var(--vnpay-glow);
+        /* Pay button — VNPay brand kept */
+        .btn-pay{
+            width:100%;padding:14px;
+            background:linear-gradient(135deg,var(--vnpay),var(--vnpay-dark));
+            color:#fff;border:none;border-radius:12px;
+            font-size:1rem;font-weight:700;
+            font-family:'Sora',sans-serif;
+            cursor:pointer;transition:all .25s;
+            display:flex;align-items:center;justify-content:center;gap:9px;
+            margin-bottom:10px;
+            box-shadow:0 4px 20px var(--vnpay-glow);
         }
-        .btn-pay:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(227,0,25,0.45);
-        }
-        .btn-pay:disabled {
-            background: rgba(255,255,255,0.1);
-            box-shadow: none; transform: none; cursor: not-allowed;
-            color: var(--muted);
-        }
+        .btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(227,0,25,0.45)}
+        .btn-pay:disabled{background:rgba(255,255,255,0.1);box-shadow:none;transform:none;cursor:not-allowed;color:#7a8ab8}
 
-        /* Cancel button */
-        .btn-cancel {
-            width: 100%; padding: 11px;
-            background: rgba(255,255,255,0.04);
-            color: var(--muted); border: 1.5px solid var(--border);
-            border-radius: 12px; font-size: 0.875rem; font-weight: 600;
-            font-family: 'Sora', sans-serif;
-            cursor: pointer; transition: all 0.2s;
+        /* Cancel — synced to Dashboard light style */
+        .btn-cancel{
+            width:100%;padding:11px;
+            background:#fff;
+            color:var(--text-m);
+            border:1.5px solid var(--border-light);
+            border-radius:12px;font-size:.875rem;font-weight:600;
+            font-family:'Sora',sans-serif;cursor:pointer;transition:all .2s;
         }
-        .btn-cancel:hover {
-            background: rgba(248,113,113,0.08);
-            border-color: rgba(248,113,113,0.25);
-            color: var(--danger);
-        }
+        .btn-cancel:hover{background:#fee2e2;border-color:#fca5a5;color:var(--red)}
 
         /* Security info */
-        .security-info {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            font-size: 0.68rem; color: var(--muted); margin-top: 14px;
+        .security-info{
+            display:flex;align-items:center;justify-content:center;gap:6px;
+            font-size:.67rem;color:#7a8ab8;margin-top:14px;
         }
 
-        /* ── Processing overlay ── */
-        .processing-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px);
-            align-items: center; justify-content: center;
-            z-index: 999;
+        /* ── Processing overlay — synced to light base ── */
+        .processing-overlay{
+            display:none;position:fixed;inset:0;
+            background:rgba(243,244,249,0.7);
+            backdrop-filter:blur(8px);
+            align-items:center;justify-content:center;z-index:999;
         }
-        .processing-overlay.show { display: flex; }
-        .processing-box {
-            background: rgba(17,26,66,0.95);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 38px 44px;
-            text-align: center; max-width: 300px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+        .processing-overlay.show{display:flex}
+        .processing-box{
+            background:var(--bg-card);
+            border:1px solid var(--border-light);
+            border-radius:20px;
+            padding:38px 44px;
+            text-align:center;max-width:300px;
+            box-shadow:0 12px 40px rgba(79,70,229,0.15);
         }
-        .proc-spinner {
-            width: 52px; height: 52px;
-            border: 3px solid rgba(255,255,255,0.08);
-            border-top: 3px solid var(--vnpay);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-            margin: 0 auto 18px;
+        .proc-spinner{
+            width:52px;height:52px;
+            border:3px solid var(--border-light);
+            border-top:3px solid var(--vnpay);
+            border-radius:50%;
+            animation:spin .9s linear infinite;
+            margin:0 auto 18px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .proc-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 7px; }
-        .proc-sub   { font-size: 0.8rem; color: var(--muted); }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .proc-title{font-size:1rem;font-weight:700;color:var(--text-h);margin-bottom:7px}
+        .proc-sub  {font-size:.8rem;color:var(--text-m)}
     </style>
 </head>
 <body>
@@ -408,7 +366,7 @@
             <%-- OTP --%>
             <div class="otp-section" id="otpSection">
                 <div class="otp-title">🔐 OTP Verification</div>
-                <div class="otp-desc">OTP has been sent to phone <strong style="color:var(--amber)">09***4567</strong> (simulation: enter any 6 digits)</div>
+                <div class="otp-desc">OTP has been sent to phone <strong style="color:#fbbf24">09***4567</strong> (simulation: enter any 6 digits)</div>
                 <div class="otp-input-row">
                     <input class="otp-input" id="otpInput" type="text"
                            maxlength="6" placeholder="——————" inputmode="numeric">

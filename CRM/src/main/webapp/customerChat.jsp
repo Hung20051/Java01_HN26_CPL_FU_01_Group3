@@ -25,36 +25,78 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-:root{--navy:#0b1437;--navy-2:#0f1c4d;--navy-card:#111a42;--accent:#4f7ef8;--accent-2:#7c9ffa;--accent-glow:rgba(79,126,248,0.22);--green:#34d399;--amber:#fbbf24;--danger:#f87171;--danger-dim:rgba(248,113,113,0.12);--purple:#a78bfa;--info:#38bdf8;--text:#ffffff;--text-2:#c8d4f0;--muted:#7a8ab8;--border:rgba(255,255,255,0.07);--sb-width:248px;}
+/* ══════════════════════════════════════════
+   SIDEBAR — synced from customerDashboard
+══════════════════════════════════════════ */
+:root {
+    --sb-bg:       #1e1b4b;
+    --sb-border:   rgba(255,255,255,0.08);
+    --sb-text:     rgba(255,255,255,0.45);
+    --sb-accent:   #818cf8;
+    --sb-accent-2: #a5b4fc;
+    --sb-item-on:  rgba(129,140,248,0.2);
+    --sb-width:    252px;
+
+    /* Chat area — dark theme kept */
+    --navy:        #0b1437;
+    --navy-2:      #0f1c4d;
+    --navy-card:   #111a42;
+    --accent:      #4f7ef8;
+    --accent-2:    #7c9ffa;
+    --accent-glow: rgba(79,126,248,0.22);
+    --green:       #34d399;
+    --amber:       #fbbf24;
+    --danger:      #f87171;
+    --danger-dim:  rgba(248,113,113,0.12);
+    --purple:      #a78bfa;
+    --info:        #38bdf8;
+    --text:        #ffffff;
+    --text-2:      #c8d4f0;
+    --muted:       #7a8ab8;
+    --border:      rgba(255,255,255,0.07);
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;display:flex;}
 ::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:var(--navy);}
-::-webkit-scrollbar-thumb{background:rgba(79,126,248,0.4);border-radius:4px;}
-.sb{width:var(--sb-width);min-height:100vh;background:rgba(9,15,40,0.95);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
-.sb-brand{padding:22px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
-.sb-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;box-shadow:0 4px 14px var(--accent-glow);flex-shrink:0;}
-.sb-name{color:#fff;font-size:1rem;font-weight:700;}
-.sb-role{display:inline-flex;align-items:center;background:rgba(79,126,248,0.15);border:1px solid rgba(79,126,248,0.25);color:var(--accent-2);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px;}
+
+/* ══ SIDEBAR — Dashboard style ══ */
+.sb{
+    width:var(--sb-width);min-height:100vh;
+    background:var(--sb-bg);
+    border-right:1px solid rgba(79,70,229,0.2);
+    display:flex;flex-direction:column;
+    position:fixed;top:0;left:0;z-index:100;
+    box-shadow:4px 0 24px rgba(0,0,0,0.15);
+}
+.sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border);}
+.sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0;}
+.sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px;}
+.sb-role{display:inline-flex;align-items:center;background:rgba(129,140,248,0.2);border:1px solid rgba(129,140,248,0.3);color:var(--sb-accent-2);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px;}
 .sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
-.sb-lbl{color:rgba(255,255,255,0.22);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;padding:0 8px;margin:16px 0 5px;}
-.sb-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;margin-bottom:1px;color:rgba(255,255,255,0.45);text-decoration:none;font-size:.83rem;font-weight:500;transition:all .2s;position:relative;border-left:2px solid transparent;}
-.sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;border-radius:8px;background:rgba(255,255,255,0.05);flex-shrink:0;transition:all .2s;}
-.sb-item.on{color:#fff;background:linear-gradient(90deg,rgba(251,113,133,0.15),rgba(251,113,133,0.04));border-left:2px solid #fb7185;}
-.sb-item.on i{background:rgba(251,113,133,0.2);color:#fb7185;}
-.sb-item:hover:not(.on){color:#fff;background:rgba(79,126,248,0.1);border-left-color:var(--accent);}
-.sb-item:hover:not(.on) i{background:rgba(79,126,248,0.2);color:var(--accent-2);}
-.sb-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:20px;}
-.sb-foot{padding:12px 10px 16px;border-top:1px solid var(--border);}
-.sb-user{display:flex;align-items:center;gap:9px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);margin-bottom:6px;text-decoration:none;transition:all .2s;}
-.sb-user:hover{background:rgba(79,126,248,0.1);border-color:rgba(79,126,248,0.25);}
-.sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+.sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;transition:all .18s;border-left:2px solid transparent;}
+.sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s;}
+.sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent);}
+.sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2);}
+.sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06);}
+.sb-badge{margin-left:auto;background:#ef4444;color:#fff;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px;box-shadow:0 2px 6px rgba(239,68,68,0.5);}
+.sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border);}
+.sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);margin-bottom:5px;text-decoration:none;transition:all .18s;}
+.sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3);}
+.sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
 .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%;}
-.sb-uname{color:#fff;font-size:.82rem;font-weight:600;}
-.sb-urole{color:var(--muted);font-size:.68rem;margin-top:1px;}
-.sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:8px;color:rgba(255,255,255,0.35);text-decoration:none;font-size:.8rem;transition:all .2s;}
-.sb-logout:hover{color:var(--danger);background:rgba(248,113,113,0.08);}
+.sb-uname{color:#fff;font-size:.8rem;font-weight:600;}
+.sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px;}
+.sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s;}
+.sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1);}
+
+/* ══════════════════════════════════════════
+   CHAT AREA — original dark theme kept
+══════════════════════════════════════════ */
 .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 .chat-hd{padding:0 24px;height:64px;display:flex;align-items:center;gap:14px;flex-shrink:0;background:rgba(11,20,55,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
 .chat-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:700;flex-shrink:0;position:relative;}
@@ -154,7 +196,7 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .msg-sending{opacity:.55;}
 .msg-error .msg-bubble{background:var(--danger-dim)!important;border-color:rgba(248,113,113,0.25)!important;color:var(--danger)!important;}
- .emoji-burst-particle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:9999;user-select:none;animation:emojiBurst var(--dur,.9s) ease-out forwards;}
+.emoji-burst-particle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:9999;user-select:none;animation:emojiBurst var(--dur,.9s) ease-out forwards;}
 @keyframes emojiBurst{0%{opacity:1;transform:translate(0,0) scale(1.2) rotate(0deg);}15%{opacity:1;transform:translate(calc(var(--tx)*.15),calc(var(--ty)*.15)) scale(1.5);}60%{opacity:.85;}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.15) rotate(var(--rot));}}
     </style>
 </head>
@@ -223,7 +265,7 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
         </div>
     </div>
 
-    <!-- Pin banner — khởi tạo từ DB -->
+    <!-- Pin banner -->
     <div class="pin-banner <%=pinnedMessage!=null?"show":""%>" id="pinBanner" onclick="scrollToPin()">
         <i class="fas fa-thumbtack pin-icon"></i>
         <span class="pin-label">Pinned</span>
@@ -261,7 +303,6 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
                         <%=m.getMessage().replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\n","<br>")%>
                     <%}%>
                 </div>
-                <!-- Reactions từ DB -->
                 <div class="msg-reactions">
                     <%for(Map<String,Object> rx:msgReactions){
                         boolean rxMine=(Boolean)rx.get("mine");
@@ -345,19 +386,14 @@ const renderedIds = new Set();
 let pinnedMsgEl = null;
 let pinnedMsgId = <%=pinnedMessage!=null?pinnedMessage.getId():0%>;
 
-// ── reactions cache: { "msgId": { "emoji": { count, mine } } } ──
-// Khởi tạo đúng từ server-rendered HTML bằng cách đọc từ data-reactions attribute
-// KHÔNG dùng textContent để parse emoji (sai với multi-codepoint emoji)
 const reactions = {};
 
-// Init renderedIds + pinnedMsgEl
 document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
     const n = parseInt(el.dataset.id);
     if (!isNaN(n) && n > 0) {
         renderedIds.add(n);
         if (el.dataset.pinned === 'true') pinnedMsgEl = el;
     }
-    // Init reactions cache từ chips đã render — đọc data-emoji attribute thay vì textContent
     const mid = el.dataset.id;
     if (mid) {
         reactions[mid] = {};
@@ -370,7 +406,6 @@ document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
     }
 });
 
-// ── Helpers ──
 function scrollDown(smooth) {
     const el = document.getElementById('chatMsgs');
     if (el) el.scrollTo({top: el.scrollHeight, behavior: smooth ? 'smooth' : 'instant'});
@@ -392,7 +427,6 @@ function showToast(msg, duration) {
     setTimeout(() => t.classList.remove('show'), duration || 2000);
 }
 
-// ── Build message row ──
 function buildMsgRow(m, isMine) {
     const row = document.createElement('div');
     row.className = 'msg-row ' + (isMine ? 'mine' : 'other');
@@ -421,7 +455,6 @@ function buildMsgRow(m, isMine) {
         '<button class="act-btn pin-act" title="Pin" onclick="pinMsg(this)"><i class="fas fa-thumbtack"></i></button>' +
         recallBtn + '</div>';
 
-    // Build reactions HTML từ m.reactions array (từ poll)
     let reactHtml = '<div class="msg-reactions">';
     if (m.reactions && Array.isArray(m.reactions)) {
         m.reactions.forEach(rx => {
@@ -459,7 +492,6 @@ function appendMsg(m) {
     return row;
 }
 
-// ── Send ──
 function sendMsg() {
     const inp = document.getElementById('msgInput');
     const btn = document.getElementById('sendBtn');
@@ -486,7 +518,6 @@ function sendMsg() {
     .finally(() => { btn.disabled = false; inp.disabled = false; inp.focus(); });
 }
 
-// ── Poll: nhận tin MỚI (id > lastId) ──
 function poll() {
     fetch(CTX + '/customerChat?action=poll&lastId=' + lastId)
     .then(r => r.json())
@@ -506,7 +537,6 @@ function poll() {
     .catch(() => {});
 }
 
-// ── Poll Updates: sync recall/pin/reactions cho tin ĐÃ CÓ ──
 function pollUpdates() {
     fetch(CTX + '/customerChat?action=pollUpdates')
     .then(r => r.json())
@@ -516,8 +546,6 @@ function pollUpdates() {
             const mid = String(m.id);
             const existingRow = document.querySelector('#chatMsgs .msg-row[data-id="' + mid + '"]');
             if (!existingRow) return;
-
-            // ── Sync recalled ──
             if (m.recalled) {
                 const bubble = existingRow.querySelector('.msg-bubble');
                 if (bubble && !bubble.classList.contains('recalled')) {
@@ -531,8 +559,6 @@ function pollUpdates() {
                     }
                 }
             }
-
-            // ── Sync reactions ──
             if (m.reactions && Array.isArray(m.reactions)) {
                 reactions[mid] = {};
                 m.reactions.forEach(rx => {
@@ -540,18 +566,14 @@ function pollUpdates() {
                 });
                 renderReactions(existingRow, mid);
             }
-
-            // ── Sync pin ──
             if (m.pinned) {
                 if (String(pinnedMsgId) !== mid) {
-                    // Unpin cái cũ nếu có
                     if (pinnedMsgEl) {
                         const oldBtn = pinnedMsgEl.querySelector('.pin-act');
                         if (oldBtn) oldBtn.classList.remove('pinned-active');
                         pinnedMsgEl.removeAttribute('data-pinned');
                     }
-                    pinnedMsgId = mid;
-                    pinnedMsgEl = existingRow;
+                    pinnedMsgId = mid; pinnedMsgEl = existingRow;
                     existingRow.dataset.pinned = 'true';
                     const pinBtn = existingRow.querySelector('.pin-act');
                     if (pinBtn) pinBtn.classList.add('pinned-active');
@@ -560,7 +582,6 @@ function pollUpdates() {
                     document.getElementById('pinBanner').classList.add('show');
                 }
             } else {
-                // Tin này không được pin — nếu đang được track thì xóa
                 if (pinnedMsgEl === existingRow) {
                     pinnedMsgEl = null; pinnedMsgId = 0;
                     existingRow.removeAttribute('data-pinned');
@@ -574,33 +595,22 @@ function pollUpdates() {
     .catch(() => {});
 }
 
-// ════════════════ RECALL ════════════════
 function recallMsg(btn) {
     const row = btn.closest('.msg-row');
     if (!row) return;
     const msgId = row.dataset.id;
     if (!msgId || msgId.indexOf('temp') !== -1) { showToast('Cannot recall unsent message'); return; }
     if (!confirm('Recall this message?')) return;
-
     const bubble = row.querySelector('.msg-bubble');
     bubble.classList.add('recalled');
     bubble.innerHTML = '<i class="fas fa-rotate-left" style="margin-right:5px;font-size:.7rem"></i>Message recalled';
     const acts = row.querySelector('.msg-actions');
     if (acts) acts.style.display = 'none';
-    if (pinnedMsgEl === row) {
-        pinnedMsgEl = null; pinnedMsgId = 0;
-        document.getElementById('pinBanner').classList.remove('show');
-    }
+    if (pinnedMsgEl === row) { pinnedMsgEl = null; pinnedMsgId = 0; document.getElementById('pinBanner').classList.remove('show'); }
     showToast('Message recalled ✓');
-
-    fetch(CTX + '/customerChat', {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-        body: new URLSearchParams({action:'recall', messageId:msgId})
-    }).catch(() => {});
+    fetch(CTX + '/customerChat', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}, body: new URLSearchParams({action:'recall', messageId:msgId}) }).catch(() => {});
 }
 
-// ════════════════ PIN ════════════════
 function pinMsg(btn) {
     const row = btn.closest('.msg-row');
     if (!row) return;
@@ -608,35 +618,22 @@ function pinMsg(btn) {
     if (bubble.classList.contains('recalled')) { showToast('Cannot pin a recalled message'); return; }
     const msgId = row.dataset.id;
     if (!msgId || msgId.indexOf('temp') !== -1) { showToast('Cannot pin unsent message'); return; }
-
     const isAlreadyPinned = (String(pinnedMsgId) === String(msgId));
-
-    if (pinnedMsgEl) {
-        const oldBtn = pinnedMsgEl.querySelector('.pin-act');
-        if (oldBtn) oldBtn.classList.remove('pinned-active');
-        pinnedMsgEl.removeAttribute('data-pinned');
-    }
-
+    if (pinnedMsgEl) { const ob = pinnedMsgEl.querySelector('.pin-act'); if (ob) ob.classList.remove('pinned-active'); pinnedMsgEl.removeAttribute('data-pinned'); }
     if (isAlreadyPinned) {
         pinnedMsgEl = null; pinnedMsgId = 0;
         document.getElementById('pinBanner').classList.remove('show');
         showToast('Pin removed');
     } else {
         pinnedMsgEl = row; pinnedMsgId = msgId;
-        row.dataset.pinned = 'true';
-        btn.classList.add('pinned-active');
+        row.dataset.pinned = 'true'; btn.classList.add('pinned-active');
         document.getElementById('pinText').textContent = bubble.innerText.trim();
         document.getElementById('pinBanner').classList.add('show');
         bubble.style.outline = '2px solid var(--amber)';
         setTimeout(() => bubble.style.outline = '', 1500);
         showToast('Message pinned 📌');
     }
-
-    fetch(CTX + '/customerChat', {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-        body: new URLSearchParams({action:'pin', messageId:msgId})
-    }).catch(() => {});
+    fetch(CTX + '/customerChat', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}, body: new URLSearchParams({action:'pin', messageId:msgId}) }).catch(() => {});
 }
 
 function scrollToPin() {
@@ -647,71 +644,44 @@ function scrollToPin() {
 }
 
 function clearPin() {
-    if (pinnedMsgEl) {
-        const oldBtn = pinnedMsgEl.querySelector('.pin-act');
-        if (oldBtn) oldBtn.classList.remove('pinned-active');
-        pinnedMsgEl.removeAttribute('data-pinned');
-    }
+    if (pinnedMsgEl) { const ob = pinnedMsgEl.querySelector('.pin-act'); if (ob) ob.classList.remove('pinned-active'); pinnedMsgEl.removeAttribute('data-pinned'); }
     const oldId = pinnedMsgId;
     pinnedMsgEl = null; pinnedMsgId = 0;
     document.getElementById('pinBanner').classList.remove('show');
     showToast('Pin removed');
-    if (oldId) {
-        fetch(CTX + '/customerChat', {
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-            body: new URLSearchParams({action:'pin', messageId:oldId})
-        }).catch(() => {});
-    }
+    if (oldId) { fetch(CTX + '/customerChat', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}, body: new URLSearchParams({action:'pin', messageId:oldId}) }).catch(() => {}); }
 }
 
-// ════════════════ REACTIONS ════════════════
 function toggleReactPopup(btn) {
-    document.querySelectorAll('.react-popup.show').forEach(p => {
-        if (p !== btn.nextElementSibling) p.classList.remove('show');
-    });
+    document.querySelectorAll('.react-popup.show').forEach(p => { if (p !== btn.nextElementSibling) p.classList.remove('show'); });
     btn.nextElementSibling.classList.toggle('show');
 }
-
 function addReaction(btn, emoji) {
     const popup = btn.closest('.react-popup');
     const row   = btn.closest('.msg-row');
     const msgId = row ? row.dataset.id : null;
     if (!msgId || msgId.indexOf('temp') !== -1) return;
-    triggerEmojiBurst(emoji, btn); 
+    triggerEmojiBurst(emoji, btn);
     popup.classList.remove('show');
     _toggleReactionLocal(row, msgId, emoji);
-    fetch(CTX + '/customerChat', {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-        body: new URLSearchParams({action:'react', messageId:msgId, emoji:emoji})
-    }).catch(() => {});
+    fetch(CTX + '/customerChat', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}, body: new URLSearchParams({action:'react', messageId:msgId, emoji:emoji}) }).catch(() => {});
 }
-
 function toggleReactionChip(chip, emoji, msgId) {
     const row = chip.closest('.msg-row');
     if (!row) return;
     const mid = String(msgId);
     triggerEmojiBurst(emoji, chip);
     _toggleReactionLocal(row, mid, emoji);
-    fetch(CTX + '/customerChat', {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-        body: new URLSearchParams({action:'react', messageId:mid, emoji:emoji})
-    }).catch(() => {});
+    fetch(CTX + '/customerChat', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}, body: new URLSearchParams({action:'react', messageId:mid, emoji:emoji}) }).catch(() => {});
 }
-
-// Helper: toggle reaction trong cache + re-render
 function _toggleReactionLocal(row, mid, emoji) {
     if (!reactions[mid]) reactions[mid] = {};
     if (!reactions[mid][emoji]) reactions[mid][emoji] = {count:0, mine:false};
     const r = reactions[mid][emoji];
-    r.mine = !r.mine;
-    r.count += r.mine ? 1 : -1;
+    r.mine = !r.mine; r.count += r.mine ? 1 : -1;
     if (r.count <= 0) delete reactions[mid][emoji];
     renderReactions(row, mid);
 }
-
 function renderReactions(row, msgId) {
     const container = row.querySelector('.msg-reactions');
     if (!container) return;
@@ -721,36 +691,32 @@ function renderReactions(row, msgId) {
         if (r.count <= 0) return;
         const chip = document.createElement('div');
         chip.className = 'reaction-chip' + (r.mine ? ' mine' : '');
-        chip.dataset.emoji = emoji;  // QUAN TRỌNG: lưu emoji vào data attribute
+        chip.dataset.emoji = emoji;
         chip.innerHTML = emoji + ' <span class="cnt">' + r.count + '</span>';
         chip.onclick = () => toggleReactionChip(chip, emoji, msgId);
         container.appendChild(chip);
     });
 }
-
 document.addEventListener('click', e => {
     if (!e.target.closest('.act-btn') && !e.target.closest('.react-popup'))
         document.querySelectorAll('.react-popup.show').forEach(p => p.classList.remove('show'));
 });
 
-// ════════════════ EMOJI PICKER ════════════════
 function triggerEmojiBurst(emoji, originEl) {
-    const rect = originEl ? originEl.getBoundingClientRect()
-                          : {left:window.innerWidth/2, top:window.innerHeight/2, width:0, height:0};
+    const rect = originEl ? originEl.getBoundingClientRect() : {left:window.innerWidth/2, top:window.innerHeight/2, width:0, height:0};
     const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
     for (let i = 0; i < 10; i++) {
         const el = document.createElement('span');
-        el.className = 'emoji-burst-particle';
-        el.textContent = emoji;
+        el.className = 'emoji-burst-particle'; el.textContent = emoji;
         const angle = Math.random()*360*(Math.PI/180), dist = 120*(.4+Math.random()*.6);
         el.style.cssText = 'left:'+cx+'px;top:'+cy+'px;margin:-12px 0 0 -12px;'
             +'--tx:'+(Math.cos(angle)*dist)+'px;--ty:'+(Math.sin(angle)*dist-25)+'px;'
-            +'--rot:'+((Math.random()-.5)*420)+'deg;--dur:'+(.55+Math.random()*.55)+'s;'
-            +'animation-delay:'+(Math.random()*.12)+'s';
+            +'--rot:'+((Math.random()-.5)*420)+'deg;--dur:'+(.55+Math.random()*.55)+'s;animation-delay:'+(Math.random()*.12)+'s';
         document.body.appendChild(el);
         el.addEventListener('animationend', () => el.remove());
     }
 }
+
 const EMOJI_DATA = {
     'Smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿'],
     'Gestures': ['👍','👎','👌','🤌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👋','🤚','🖐️','✋','🖖','👏','🙌','🤲','🤝','🙏','✍️','💅','🤳','💪','🦵','🦶','👂','👃'],
@@ -763,8 +729,7 @@ const EMOJI_DATA = {
 let currentCat = 'Smileys';
 
 function initEmojiPicker() {
-    const catsEl = document.getElementById('emojiCats');
-    if (!catsEl) return;
+    const catsEl = document.getElementById('emojiCats'); if (!catsEl) return;
     Object.keys(EMOJI_DATA).forEach(cat => {
         const btn = document.createElement('button');
         btn.className = 'emoji-cat-btn' + (cat === currentCat ? ' active' : '');
@@ -774,89 +739,30 @@ function initEmojiPicker() {
     });
     renderEmojis(EMOJI_DATA[currentCat]);
 }
-function setActiveCat(cat) {
-    document.querySelectorAll('.emoji-cat-btn').forEach(b => b.classList.toggle('active', b.textContent === cat));
-}
+function setActiveCat(cat) { document.querySelectorAll('.emoji-cat-btn').forEach(b => b.classList.toggle('active', b.textContent === cat)); }
 function renderEmojis(list) {
-    const grid = document.getElementById('emojiGrid');
-    if (!grid) return;
+    const grid = document.getElementById('emojiGrid'); if (!grid) return;
     grid.innerHTML = '';
-    list.forEach(e => {
-        const btn = document.createElement('button');
-        btn.className = 'eg-btn'; btn.textContent = e;
-        btn.onclick = () => insertEmoji(e);
-        grid.appendChild(btn);
-    });
+    list.forEach(e => { const btn = document.createElement('button'); btn.className = 'eg-btn'; btn.textContent = e; btn.onclick = () => insertEmoji(e); grid.appendChild(btn); });
 }
-function filterEmojis(q) {
-    if (!q.trim()) { renderEmojis(EMOJI_DATA[currentCat]); return; }
-    renderEmojis(Object.values(EMOJI_DATA).flat().filter(e => e.includes(q)));
-}
-function toggleEmojiPicker() {
-    const picker = document.getElementById('emojiPicker');
-    if (!picker) return;
-    picker.classList.toggle('show');
-    if (picker.classList.contains('show')) document.getElementById('emojiSearch').focus();
-}
-function insertEmoji(e) {
-    const inp = document.getElementById('msgInput');
-    if (!inp) return;
-    const start = inp.selectionStart, end = inp.selectionEnd;
-    inp.value = inp.value.slice(0,start) + e + inp.value.slice(end);
-    inp.selectionStart = inp.selectionEnd = start + e.length;
-    inp.focus(); autoResize(inp);
-}
-document.addEventListener('click', e => {
-    const picker = document.getElementById('emojiPicker');
-    const toggle = document.getElementById('emojiToggleBtn');
-    if (picker && toggle && !picker.contains(e.target) && e.target !== toggle)
-        picker.classList.remove('show');
-});
+function filterEmojis(q) { if (!q.trim()) { renderEmojis(EMOJI_DATA[currentCat]); return; } renderEmojis(Object.values(EMOJI_DATA).flat().filter(e => e.includes(q))); }
+function toggleEmojiPicker() { const picker = document.getElementById('emojiPicker'); if (!picker) return; picker.classList.toggle('show'); if (picker.classList.contains('show')) document.getElementById('emojiSearch').focus(); }
+function insertEmoji(e) { const inp = document.getElementById('msgInput'); if (!inp) return; const start = inp.selectionStart, end = inp.selectionEnd; inp.value = inp.value.slice(0,start) + e + inp.value.slice(end); inp.selectionStart = inp.selectionEnd = start + e.length; inp.focus(); autoResize(inp); }
+document.addEventListener('click', e => { const picker = document.getElementById('emojiPicker'); const toggle = document.getElementById('emojiToggleBtn'); if (picker && toggle && !picker.contains(e.target) && e.target !== toggle) picker.classList.remove('show'); });
 
-// ════════════════ HOVER ACTIONS ════════════════
 const hideTimers = new WeakMap();
-function showActions(row) {
-    if (hideTimers.has(row)) { clearTimeout(hideTimers.get(row)); hideTimers.delete(row); }
-    const a = row.querySelector('.msg-actions');
-    if (a) a.classList.add('visible');
-}
-function scheduleHideActions(row) {
-    const t = setTimeout(() => {
-        const a = row.querySelector('.msg-actions');
-        if (a) a.classList.remove('visible');
-        hideTimers.delete(row);
-    }, 450);
-    hideTimers.set(row, t);
-}
-function bindRowHover(row) {
-    row.addEventListener('mouseenter', () => showActions(row));
-    row.addEventListener('mouseleave', () => scheduleHideActions(row));
-    const actions = row.querySelector('.msg-actions');
-    if (actions) {
-        actions.addEventListener('mouseenter', () => showActions(row));
-        actions.addEventListener('mouseleave', () => scheduleHideActions(row));
-    }
-}
-function bindAllRows() {
-    document.querySelectorAll('#chatMsgs .msg-row').forEach(row => {
-        if (!row.dataset.bound) { bindRowHover(row); row.dataset.bound = '1'; }
-    });
-}
+function showActions(row) { if (hideTimers.has(row)) { clearTimeout(hideTimers.get(row)); hideTimers.delete(row); } const a = row.querySelector('.msg-actions'); if (a) a.classList.add('visible'); }
+function scheduleHideActions(row) { const t = setTimeout(() => { const a = row.querySelector('.msg-actions'); if (a) a.classList.remove('visible'); hideTimers.delete(row); }, 450); hideTimers.set(row, t); }
+function bindRowHover(row) { row.addEventListener('mouseenter', () => showActions(row)); row.addEventListener('mouseleave', () => scheduleHideActions(row)); const actions = row.querySelector('.msg-actions'); if (actions) { actions.addEventListener('mouseenter', () => showActions(row)); actions.addEventListener('mouseleave', () => scheduleHideActions(row)); } }
+function bindAllRows() { document.querySelectorAll('#chatMsgs .msg-row').forEach(row => { if (!row.dataset.bound) { bindRowHover(row); row.dataset.bound = '1'; } }); }
 
-// ════════════════ INIT ════════════════
 document.addEventListener('DOMContentLoaded', () => {
-    scrollDown(false);
-    initEmojiPicker();
-    bindAllRows();
-    pollTimer = setInterval(poll, 3000);           // tin mới: mỗi 3s
-    pollUpdatesTimer = setInterval(pollUpdates, 3000); // sync recall/pin/react: mỗi 3s
-    const inp = document.getElementById('msgInput');
-    if (inp) inp.focus();
+    scrollDown(false); initEmojiPicker(); bindAllRows();
+    pollTimer = setInterval(poll, 3000);
+    pollUpdatesTimer = setInterval(pollUpdates, 3000);
+    const inp = document.getElementById('msgInput'); if (inp) inp.focus();
 });
-window.addEventListener('beforeunload', () => {
-    clearInterval(pollTimer);
-    clearInterval(pollUpdatesTimer);
-});
+window.addEventListener('beforeunload', () => { clearInterval(pollTimer); clearInterval(pollUpdatesTimer); });
 </script>
 <%@ include file="customerAIBubble.jsp" %>
 </body>

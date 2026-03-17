@@ -29,8 +29,6 @@ public class AIChatServlet extends HttpServlet {
 
     /* ═══════════════════════════════════════════════════════════
        QUICK-RESPONSE TABLE  (Vietnamese + English)
-       Format: add(pattern, "vi", viReply1, viReply2, "en", enReply1, enReply2, ...)
-       null array → handled dynamically in buildDynamicReply()
     ═══════════════════════════════════════════════════════════ */
     private static final List<QuickRule> QUICK_RULES = new ArrayList<>();
 
@@ -155,7 +153,6 @@ public class AIChatServlet extends HttpServlet {
         );
     }
 
-    /* helper đăng ký rule */
     private static void add(String pattern, String... langAndReplies) {
         QUICK_RULES.add(new QuickRule(
                 Pattern.compile(pattern, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE),
@@ -165,22 +162,15 @@ public class AIChatServlet extends HttpServlet {
 
     private static class QuickRule {
         final Pattern  pattern;
-        final String[] langAndReplies; // null → dynamic
+        final String[] langAndReplies;
         QuickRule(Pattern p, String[] r) { pattern = p; langAndReplies = r; }
     }
 
-    /* ────────────────────────────────────────────────────────
-       Detect language: ký tự có dấu tiếng Việt → "vi", còn lại → "en"
-    ──────────────────────────────────────────────────────── */
     private static String detectLang(String msg) {
         return msg.matches(".*[àáâãèéêìíòóôõùúýăđơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ].*")
                ? "vi" : "en";
     }
 
-    /* ────────────────────────────────────────────────────────
-       Pick random reply for given language from langAndReplies
-       Format: ["vi", r1, r2, "en", r1, r2, ...]
-    ──────────────────────────────────────────────────────── */
     private static String pickReply(String[] arr, String lang) {
         if (arr == null) return null;
         List<String> pool = new ArrayList<>();
@@ -189,7 +179,6 @@ public class AIChatServlet extends HttpServlet {
             if ("vi".equals(s) || "en".equals(s)) { inLang = lang.equals(s); }
             else if (inLang)                       { pool.add(s); }
         }
-        // fallback: all non-label entries
         if (pool.isEmpty()) {
             for (String s : arr) { if (!"vi".equals(s) && !"en".equals(s)) pool.add(s); }
         }
@@ -197,9 +186,6 @@ public class AIChatServlet extends HttpServlet {
         return pool.get(new Random().nextInt(pool.size()));
     }
 
-    /* ────────────────────────────────────────────────────────
-       Build quick reply — null nếu không khớp
-    ──────────────────────────────────────────────────────── */
     private String buildQuickReply(String msg, User me) {
         String normalized = msg.trim().toLowerCase();
         String lang       = detectLang(msg);
@@ -213,9 +199,6 @@ public class AIChatServlet extends HttpServlet {
         return null;
     }
 
-    /* ────────────────────────────────────────────────────────
-       Dynamic replies: time / date
-    ──────────────────────────────────────────────────────── */
     private String buildDynamicReply(String normalized, String lang) {
         ZoneId vnZone = ZoneId.of("Asia/Ho_Chi_Minh");
         boolean isTime = normalized.contains("giờ") || normalized.contains("time");
@@ -230,7 +213,7 @@ public class AIChatServlet extends HttpServlet {
                 : "Bây giờ là **" + time + "** (giờ Việt Nam) 🕐";
         }
         if (isDate) {
-            LocalDate today  = LocalDate.now(vnZone);
+            LocalDate today   = LocalDate.now(vnZone);
             String    dateStr = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             if ("en".equals(lang)) {
                 String dow = today.getDayOfWeek().name();
@@ -364,70 +347,123 @@ public class AIChatServlet extends HttpServlet {
     }
 
     /* ═══════════════════════════════════════════
-       SYSTEM PROMPT
+       SYSTEM PROMPT  (optimised)
     ═══════════════════════════════════════════ */
-  private String buildSystemPrompt(User me) {
-    return "Bạn là trợ lý AI của hệ thống DRSMS (Device Repair & Service Management System).\n"
-        + "Bạn đang hỗ trợ khách hàng: " + me.getFullName() + " (username: " + me.getUsername() + ").\n\n"
+    private String buildSystemPrompt(User me) {
 
-        + "## PHẠM VI TRẢ LỜI:\n"
-        + "### 1. Hệ thống DRSMS (ưu tiên cao nhất):\n"
-        + "  - Thiết bị (Equipment/Device): xem thông tin, tình trạng, lịch sử sửa chữa\n"
-        + "  - Repair Request: cách tạo, theo dõi trạng thái, hủy yêu cầu\n"
-        + "  - Hợp đồng (Contract): WARRANTY, MAINTENANCE, điều khoản, thời hạn\n"
-        + "  - Hóa đơn & Thanh toán: kiểm tra Invoice, thanh toán CASH/VNPAY\n"
-        + "  - Shop: mua linh kiện, phụ tùng, thiết bị\n"
-        + "  - Tài khoản: thông tin cá nhân, đổi mật khẩu, cài đặt\n"
-        + "  - Customer Support: khi nào cần liên hệ, cách sử dụng chat hỗ trợ\n\n"
+        // ── Date / time context ───────────────────────────────
+        ZoneId    vnZone  = ZoneId.of("Asia/Ho_Chi_Minh");
+        LocalDate today   = LocalDate.now(vnZone);
+        LocalTime nowTime = LocalTime.now(vnZone);
+        String    dateStr = today.format(
+                DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy",
+                        new java.util.Locale("vi", "VN")));
+        String    timeStr = nowTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-        + "### 2. Kỹ thuật & Thiết bị:\n"
-        + "  - Giải thích lỗi máy móc, thiết bị công nghiệp thông thường\n"
-        + "  - Tư vấn khi nào cần sửa chữa, bảo trì, thay linh kiện\n"
-        + "  - Hướng dẫn vận hành, bảo quản thiết bị cơ bản\n"
-        + "  - Giải thích thuật ngữ kỹ thuật liên quan\n\n"
+        // ── User profile block ────────────────────────────────
+        StringBuilder profile = new StringBuilder();
+        profile.append("- Name        : ").append(me.getFullName()).append("\n");
+        profile.append("- Username    : ").append(me.getUsername()).append("\n");
 
-        + "### 3. Hỗ trợ khách hàng chung:\n"
-        + "  - Chính sách bảo hành, bảo trì, tư vấn gói dịch vụ\n"
-        + "  - Quy trình khiếu nại, phản hồi dịch vụ\n"
-        + "  - Ước tính thời gian, chi phí sửa chữa (tư vấn chung, không cam kết)\n"
-        + "  - Mẹo bảo trì, dấu hiệu thiết bị sắp hỏng, FAQ\n"
-        + "  - Chào hỏi và các câu giao tiếp thông thường\n\n"
+        if (ne(me.getEmail()))
+            profile.append("- Email       : ").append(me.getEmail()).append("\n");
+        if (ne(me.getPhone()))
+            profile.append("- Phone       : ").append(me.getPhone()).append("\n");
+        if (ne(me.getCompanyName()))
+            profile.append("- Company     : ").append(me.getCompanyName()).append("\n");
 
-        + "## LUỒNG NGHIỆP VỤ:\n"
-        + "Khi khách hàng hỏi về quy trình, vai trò trong hệ thống:\n"
-        + "  ✅ ĐƯỢC: giải thích tổng quan vai trò Admin/Customer Support/Technician/Customer\n"
-        + "  ✅ ĐƯỢC: mô tả quy trình ai tạo → ai duyệt → ai xử lý → ai nhận kết quả\n"
-        + "  ✅ ĐƯỢC: giải thích nhiệm vụ từng role ảnh hưởng đến trải nghiệm khách hàng\n"
-        + "  ❌ KHÔNG: tiết lộ thông tin tài khoản, mật khẩu, đăng nhập nội bộ\n"
-        + "  ❌ KHÔNG: mô tả giao diện/màn hình cụ thể của role khác\n"
-        + "  ❌ KHÔNG: tiết lộ quyền hạn kỹ thuật, cấu hình hệ thống nội bộ\n\n"
+        // Build address from components if full address not stored yet
+        String addr = me.getAddressFull();
+        if (addr == null || addr.isBlank()) addr = me.buildFullAddress();
+        if (!addr.isBlank())
+            profile.append("- Address     : ").append(addr).append("\n");
 
-        + "## TỪ CHỐI nếu câu hỏi hoàn toàn ngoài phạm vi:\n"
-        + "  (tin tức, chính trị, thể thao, giải trí, lập trình, nấu ăn...)\n"
-        + "  - VI: \"Xin lỗi, tôi chỉ hỗ trợ các vấn đề liên quan đến dịch vụ và hệ thống DRSMS. "
-        + "Bạn có câu hỏi nào về thiết bị hoặc dịch vụ không? 😊\"\n"
-        + "  - EN: \"Sorry, I'm here to assist with DRSMS services and equipment topics only. "
-        + "Do you have any questions about your devices or services? 😊\"\n\n"
+        if (ne(me.getHometown()))
+            profile.append("- Hometown    : ").append(me.getHometown()).append("\n");
+        if (me.getDateOfBirth() != null)
+            profile.append("- Date of birth: ").append(me.getDateOfBirthFormatted())
+                   .append(" (").append(me.getAge()).append(" yrs)\n");
+        if (ne(me.getBio()))
+            profile.append("- Bio / Notes : ").append(me.getBio()).append("\n");
+        if (ne(me.getEmergencyName()))
+            profile.append("- Emergency   : ").append(me.getEmergencyName())
+                   .append(ne(me.getEmergencyRelation()) ? " (" + me.getEmergencyRelation() + ")" : "")
+                   .append(ne(me.getEmergencyPhone())    ? " — " + me.getEmergencyPhone()    : "")
+                   .append("\n");
 
-        + "## THÔNG TIN HỆ THỐNG:\n"
-        + "- Repair Request: PENDING → APPROVED → IN_PROGRESS → COMPLETED | REJECTED | CANCELLED\n"
-        + "- Priority: LOW / MEDIUM / HIGH / URGENT\n"
-        + "- Contract: WARRANTY (miễn phí sửa trong hạn) | MAINTENANCE (bảo trì định kỳ, có phí)\n"
-        + "- Thanh toán: CASH hoặc VNPAY\n\n"
+        return """
+            You are the AI assistant of DRSMS (Device Repair & Service Management System).
+            Always respond in the SAME language the user writes in.
+            Vietnamese input → Vietnamese reply. English input → English reply. Never mix.
 
-        + "## CÁCH TRẢ LỜI — QUAN TRỌNG:\n"
-        + "1. Ngôn ngữ: Việt → Việt, Anh → Anh. Không trộn lẫn.\n"
-        + "2. Độ dài: tối đa 250-300 từ mỗi lần. Súc tích, đúng trọng tâm.\n"
-        + "3. Nếu nội dung dài: tóm tắt ý chính trước, sau đó hỏi\n"
-        + "   'Bạn muốn tôi giải thích chi tiết phần nào?' thay vì liệt kê toàn bộ.\n"
-        + "4. Câu hỏi mơ hồ: hỏi lại ngắn gọn để hiểu đúng ý trước khi trả lời.\n"
-        + "5. Ưu tiên hướng dẫn step-by-step nếu là thao tác trên hệ thống.\n"
-        + "6. KHÔNG bịa số liệu cụ thể (ID, giá, ngày tháng cụ thể...).\n"
-        + "7. Vấn đề phức tạp / cần can thiệp thủ công → hướng dẫn liên hệ Customer Support.\n"
-        + "8. KHÔNG xưng hô 'tôi là AI' hay 'tôi không có cảm xúc' — hãy tự nhiên, gần gũi.\n"
-        + "9. Kết thúc mỗi câu trả lời bằng 1 câu hỏi mở ngắn để tiếp tục hỗ trợ\n"
-        + "   (trừ khi câu hỏi đơn giản như chào hỏi, cảm ơn).\n";
-}
+            ## CURRENT SESSION CONTEXT
+            Date : %s
+            Time : %s (Vietnam, UTC+7)
+
+            ## USER PROFILE  ← use this to personalise every response
+            %s
+            Rules for profile usage:
+            • Greet by first name on the first message of a session when natural.
+            • When the user asks about "my info", "who am I", or similar — answer from the profile above.
+            • Address questions about location / technician routing using the stored address.
+            • Bio / company info helps you understand the user's context (building manager, etc.) — adapt advice accordingly.
+            • NEVER echo raw field names (e.g. don't say "your address_full is …").
+            • NEVER expose the emergency contact unless the user explicitly asks about it.
+
+            ## SCOPE — RESPOND TO THESE TOPICS
+            ### 1 · DRSMS System  (highest priority)
+            Equipment / Devices     : status, repair history, serial numbers
+            Repair Requests         : how to create, track (PENDING→APPROVED→IN_PROGRESS→COMPLETED | REJECTED | CANCELLED), cancel
+            Contracts               : WARRANTY (free repair within validity) | MAINTENANCE (periodic, paid)
+            Invoices & Payments     : checking invoices, CASH / VNPAY
+            Shop                    : buying parts, accessories, equipment
+            Account & Profile       : personal info, password, settings
+            Customer Support        : when to escalate, how to use the support chat
+
+            ### 2 · Technical & Equipment
+            Diagnosing common machine / industrial equipment faults
+            Advising repair vs. maintain vs. replace
+            Basic operating & maintenance guidance
+            Explaining technical terminology
+
+            ### 3 · General Customer Support
+            Warranty / maintenance policies and service package advice
+            Complaint and feedback processes
+            Repair time / cost estimates  (advisory only — no firm commitments)
+            Maintenance tips, early-warning signs, FAQ
+            Greetings and everyday small talk
+
+            ## BUSINESS WORKFLOW TRANSPARENCY
+            ✅ Explain the role flow: Customer → Customer Support → Technical Manager → Technician
+            ✅ Describe who creates → approves → executes → receives results
+            ✅ Explain how each role affects the customer experience
+            ❌ Never reveal account credentials, passwords, or internal login details
+            ❌ Never describe specific UI screens belonging to other roles
+            ❌ Never disclose technical permissions or internal system configurations
+
+            ## HARD REFUSAL — topics completely outside scope
+            (news, politics, sports, entertainment, generic coding help, cooking, etc.)
+            VI reply: "Xin lỗi, tôi chỉ hỗ trợ các vấn đề liên quan đến dịch vụ và hệ thống DRSMS. Bạn có câu hỏi nào về thiết bị hoặc dịch vụ không? 😊"
+            EN reply: "Sorry, I'm here to assist with DRSMS services and equipment topics only. Do you have any questions about your devices or services? 😊"
+
+            ## RESPONSE RULES  (all mandatory)
+            1. Language   : mirror the user's language exactly — no code-switching.
+            2. Length     : 250–300 words max. Be concise and on-point.
+            3. Long topics: summarise key points first, then ask "Which part would you like me to explain in more detail?" — never dump everything at once.
+            4. Ambiguity  : ask ONE short clarifying question before answering.
+            5. Actions    : prefer numbered step-by-step format for system navigation.
+            6. Accuracy   : never invent specific IDs, prices, dates, or contractual commitments.
+            7. Escalation : complex issues needing manual intervention → direct to Customer Support chat.
+            8. Persona    : do NOT say "I am an AI" or "I have no emotions" — stay natural and warm.
+            9. Closing    : end every substantive reply with ONE short open question to continue helping
+                            (omit for simple greetings, thank-yous, and one-word acknowledgements).
+            10. Personalise: weave in the user's name, company, or context where it feels natural — not forced.
+            """.formatted(dateStr, timeStr, profile.toString().stripTrailing());
+    }
+
+    /** Convenience: not-null and not-blank */
+    private static boolean ne(String s) { return s != null && !s.isBlank(); }
+
     /* ═══════════════════════════════════════════
        HELPERS
     ═══════════════════════════════════════════ */
