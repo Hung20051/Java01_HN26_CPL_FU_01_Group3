@@ -27,40 +27,89 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Live Chat - DRSMS</title>
+        <title>Live Chat – DRSMS</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-    :root{--navy:#0b1437;--navy-2:#0f1c4d;--navy-card:#111a42;--accent:#4f7ef8;--accent-2:#7c9ffa;--accent-glow:rgba(79,126,248,0.22);--green:#34d399;--green-dim:rgba(52,211,153,0.12);--amber:#fbbf24;--amber-dim:rgba(251,191,36,0.12);--danger:#f87171;--danger-dim:rgba(248,113,113,0.12);--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.12);--info:#38bdf8;--info-dim:rgba(56,189,248,0.12);--pink:#fb7185;--text:#ffffff;--text-2:#c8d4f0;--muted:#7a8ab8;--border:rgba(255,255,255,0.07);--border-2:rgba(255,255,255,0.04);--sb-width:248px;--conv-width:280px;}
+    /* ── DESIGN TOKENS ── */
+    :root{
+        /* Sidebar (dark indigo — đồng bộ toàn hệ thống) */
+        --sb-bg:        #1e1b4b;
+        --sb-border:    rgba(255,255,255,0.08);
+        --sb-text:      rgba(255,255,255,0.45);
+        --sb-accent:    #818cf8;
+        --sb-accent-2:  #a5b4fc;
+        --sb-item-on:   rgba(129,140,248,0.2);
+        --sb-width:     252px;
+
+        /* Chat dark theme (giữ nguyên convention chat UI) */
+        --navy:         #0b1437;
+        --navy-2:       #0f1c4d;
+        --accent:       #4f7ef8;
+        --accent-2:     #7c9ffa;
+        --accent-glow:  rgba(79,126,248,0.22);
+        --green:        #34d399;
+        --green-dim:    rgba(52,211,153,0.12);
+        --amber:        #fbbf24;
+        --amber-dim:    rgba(251,191,36,0.12);
+        --danger:       #f87171;
+        --danger-dim:   rgba(248,113,113,0.12);
+        --purple:       #a78bfa;
+        --info:         #38bdf8;
+        --pink:         #fb7185;
+        --text:         #ffffff;
+        --text-2:       #c8d4f0;
+        --muted:        #7a8ab8;
+        --border:       rgba(255,255,255,0.07);
+        --border-2:     rgba(255,255,255,0.04);
+        --conv-width:   280px;
+    }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);height:100vh;display:flex;overflow:hidden;}
     ::-webkit-scrollbar{width:4px;}
     ::-webkit-scrollbar-track{background:var(--navy);}
     ::-webkit-scrollbar-thumb{background:rgba(79,126,248,0.4);border-radius:4px;}
-    .sb{width:var(--sb-width);height:100vh;background:rgba(9,15,40,0.95);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
-    .sb-brand{padding:22px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
-    .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;box-shadow:0 4px 14px var(--accent-glow);flex-shrink:0;}
-    .sb-name{color:#fff;font-size:1rem;font-weight:700;}
-    .sb-role{display:inline-flex;align-items:center;background:rgba(79,126,248,0.15);border:1px solid rgba(79,126,248,0.25);color:var(--accent-2);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px;}
+
+    /* ═══════════ SIDEBAR (đồng bộ light indigo) ═══════════ */
+    .sb{
+        width:var(--sb-width);height:100vh;
+        background:var(--sb-bg);
+        border-right:1px solid rgba(79,70,229,0.2);
+        display:flex;flex-direction:column;flex-shrink:0;
+        box-shadow:4px 0 24px rgba(0,0,0,0.15);
+    }
+    .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border);}
+    .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0;}
+    .sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px;}
+    .sb-role{
+        display:inline-flex;align-items:center;
+        background:rgba(129,140,248,0.2);
+        border:1px solid rgba(129,140,248,0.3);
+        color:var(--sb-accent-2);
+        font-size:.6rem;font-weight:700;
+        letter-spacing:1px;text-transform:uppercase;
+        padding:2px 8px;border-radius:20px;margin-top:3px;
+    }
     .sb-nav{flex:1;padding:12px 10px;overflow-y:auto;}
-    .sb-lbl{color:rgba(255,255,255,0.22);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;padding:0 8px;margin:16px 0 5px;}
-    .sb-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;margin-bottom:1px;color:rgba(255,255,255,0.45);text-decoration:none;font-size:.83rem;font-weight:500;transition:all .2s;position:relative;border-left:2px solid transparent;}
-    .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;border-radius:8px;background:rgba(255,255,255,0.05);flex-shrink:0;transition:all .2s;}
-    .sb-item.on{color:#fff;border-left:2px solid var(--pink);background:linear-gradient(90deg,rgba(251,113,133,0.15),rgba(251,113,133,0.04));}
-    .sb-item.on i{background:rgba(251,113,133,0.2);color:var(--pink);}
-    .sb-item:hover:not(.on){color:#fff;background:rgba(79,126,248,0.1);border-left-color:var(--accent);}
-    .sb-item:hover:not(.on) i{background:rgba(79,126,248,0.2);color:var(--accent-2);}
-    .sb-foot{padding:12px 10px 16px;border-top:1px solid var(--border);}
-    .sb-user{display:flex;align-items:center;gap:9px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);margin-bottom:6px;text-decoration:none;transition:all .2s;}
-    .sb-user:hover{background:rgba(79,126,248,0.1);border-color:rgba(79,126,248,0.25);}
-    .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+    .sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px;}
+    .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;transition:all .18s;border-left:2px solid transparent;}
+    .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s;}
+    .sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent);}
+    .sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2);}
+    .sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06);}
+    .sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border);}
+    .sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);margin-bottom:5px;text-decoration:none;transition:all .18s;cursor:pointer;}
+    .sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3);}
+    .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
     .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%;}
-    .sb-uname{color:#fff;font-size:.82rem;font-weight:600;}
-    .sb-urole{color:var(--muted);font-size:.68rem;margin-top:1px;}
-    .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:8px;color:rgba(255,255,255,0.35);text-decoration:none;font-size:.8rem;transition:all .2s;}
-    .sb-logout:hover{color:var(--danger);background:rgba(248,113,113,0.08);}
+    .sb-uname{color:#fff;font-size:.8rem;font-weight:600;}
+    .sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px;}
+    .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s;}
+    .sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1);}
+
+    /* ═══════════ CONVERSATION PANEL ═══════════ */
     .conv-panel{width:var(--conv-width);height:100vh;background:rgba(11,18,47,0.9);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
     .conv-hd{padding:18px 14px 12px;border-bottom:1px solid var(--border);}
     .conv-hd h2{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
@@ -95,6 +144,8 @@
     .ava-5{background:linear-gradient(135deg,#7c3aed,#a78bfa);}
     .ava-6{background:linear-gradient(135deg,#db2777,#ec4899);}
     .ava-7{background:linear-gradient(135deg,#0284c7,#38bdf8);}
+
+    /* ═══════════ CHAT AREA (dark — chat UI convention) ═══════════ */
     .chat-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100vh;}
     .chat-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--muted);}
     .chat-empty i{font-size:3rem;opacity:.12;}
@@ -192,8 +243,8 @@
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     .msg-sending{opacity:.55;}
     .msg-error .msg-bubble{background:var(--danger-dim)!important;border-color:rgba(248,113,113,0.25)!important;color:var(--danger)!important;}
-     .emoji-burst-particle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:9999;user-select:none;animation:emojiBurst var(--dur,.9s) ease-out forwards;}
-@keyframes emojiBurst{0%{opacity:1;transform:translate(0,0) scale(1.2) rotate(0deg);}15%{opacity:1;transform:translate(calc(var(--tx)*.15),calc(var(--ty)*.15)) scale(1.5);}60%{opacity:.85;}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.15) rotate(var(--rot));}}
+    .emoji-burst-particle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:9999;user-select:none;animation:emojiBurst var(--dur,.9s) ease-out forwards;}
+    @keyframes emojiBurst{0%{opacity:1;transform:translate(0,0) scale(1.2) rotate(0deg);}15%{opacity:1;transform:translate(calc(var(--tx)*.15),calc(var(--ty)*.15)) scale(1.5);}60%{opacity:.85;}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.15) rotate(var(--rot));}}
         </style>
     </head>
     <body>
@@ -202,19 +253,17 @@
     <aside class="sb">
         <div class="sb-brand">
             <div class="sb-logo"><i class="fas fa-bolt"></i></div>
-            <div><div class="sb-name">DRSMS</div><div class="sb-role">Support</div></div>
+            <div><div class="sb-name">DRSMS</div><div class="sb-role">Customer Support</div></div>
         </div>
         <nav class="sb-nav">
             <div class="sb-lbl">Overview</div>
-            <a href="<%=ctx%>/supportDashboard" class="sb-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="<%=ctx%>/supportDashboard"      class="sb-item"><i class="fas fa-home"></i> Dashboard</a>
             <div class="sb-lbl">Management</div>
-            <a href="<%=ctx%>/supportCustomers" class="sb-item"><i class="fas fa-users"></i> Customers</a>
-            <a href="<%=ctx%>/supportContracts" class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+            <a href="<%=ctx%>/supportCustomers"       class="sb-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="<%=ctx%>/supportContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
             <a href="<%=ctx%>/supportServiceRequests" class="sb-item"><i class="fas fa-clipboard-list"></i> Service Requests</a>
-            <div class="sb-lbl">Finance</div>
-            <a href="<%=ctx%>/supportInvoices" class="sb-item"><i class="fas fa-receipt"></i> Invoices</a>
             <div class="sb-lbl">Support</div>
-            <a href="<%=ctx%>/supportChat" class="sb-item on"><i class="fas fa-comment-dots"></i> Live Chat</a>
+            <a href="<%=ctx%>/supportChat"            class="sb-item on"><i class="fas fa-comment-dots"></i> Live Chat</a>
         </nav>
         <div class="sb-foot">
             <a href="<%=ctx%>/profile" class="sb-user">
@@ -294,7 +343,6 @@
             String selInit = selName != null && !selName.isEmpty() ? selName.substring(0,1).toUpperCase() : "?";
             int selColor   = selCid % 8;
         %>
-        <!-- Chat header -->
         <div class="chat-hd">
             <div class="chat-ava ava-<%=selColor%>"><%=selInit%><span class="online-dot"></span></div>
             <div class="chat-hd-info">
@@ -306,7 +354,6 @@
             </div>
         </div>
 
-        <!-- Pin banner — hiển thị từ DB nếu có tin nhắn được pin -->
         <div class="pin-banner <%=pinnedMessage!=null?"show":""%>" id="pinBanner" onclick="scrollToPin()">
             <i class="fas fa-thumbtack pin-icon"></i>
             <span class="pin-label">Pinned</span>
@@ -314,7 +361,6 @@
             <button class="pin-close" onclick="event.stopPropagation();clearPin()"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Messages -->
         <div class="chat-msgs" id="chatMsgs">
             <%if(messages.isEmpty()){%>
             <div class="empty-chat" id="emptyChat" style="margin:auto;text-align:center;color:var(--muted);padding:40px 24px;">
@@ -344,7 +390,6 @@
                             <%=m.getMessage().replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\n","<br>")%>
                         <%}%>
                     </div>
-                    <!-- Reactions từ DB -->
                     <div class="msg-reactions">
                         <%for(Map<String,Object> rx : msgReactions){
                             boolean rxMine = (Boolean) rx.get("mine");
@@ -391,7 +436,6 @@
             </div>
         </div>
 
-        <!-- Input area -->
         <div class="chat-input-area">
             <div class="emoji-picker" id="emojiPicker">
                 <div class="emoji-cats" id="emojiCats"></div>
@@ -432,10 +476,8 @@ const renderedIds = new Set();
 let pinnedMsgEl = null;
 let pinnedMsgId = <%=pinnedMessage!=null?pinnedMessage.getId():0%>;
 
-// ── reactions cache: { "msgId": { "emoji": { count, mine } } } ──
 const reactions = {};
 
-// Init renderedIds + pinnedMsgEl + reactions từ server HTML
 document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
     const n = parseInt(el.dataset.id);
     if (!isNaN(n) && n > 0) {
@@ -445,7 +487,6 @@ document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
     const mid = el.dataset.id;
     if (mid) {
         reactions[mid] = {};
-        // Đọc từ data-emoji attribute thay vì parse textContent
         el.querySelectorAll('.reaction-chip[data-emoji]').forEach(chip => {
             const emoji = chip.dataset.emoji;
             const count = parseInt(chip.querySelector('.cnt').textContent) || 0;
@@ -455,7 +496,6 @@ document.querySelectorAll('#chatMsgs .msg-row[data-id]').forEach(el => {
     }
 });
 
-// ── Helpers ──
 function scrollDown(smooth) {
     const el = document.getElementById('chatMsgs');
     if (el) el.scrollTo({top: el.scrollHeight, behavior: smooth ? 'smooth' : 'instant'});
@@ -487,7 +527,6 @@ function filterConv(q) {
     });
 }
 
-// ── Build message row ──
 function buildMsgRow(m, isMine) {
     const row = document.createElement('div');
     row.className = 'msg-row ' + (isMine ? 'mine' : 'other');
@@ -555,7 +594,6 @@ function appendMsg(m) {
     return row;
 }
 
-// ── Send ──
 function sendMsg() {
     if (SEL_CID === 0) return;
     const inp = document.getElementById('msgInput');
@@ -586,7 +624,6 @@ function sendMsg() {
     .finally(() => { btn.disabled = false; inp.disabled = false; inp.focus(); });
 }
 
-// ── Poll: tin MỚI (id > lastId) ──
 function poll() {
     if (SEL_CID === 0) return;
     fetch(CTX + '/supportChat?action=poll&customerId=' + SEL_CID + '&lastId=' + lastId)
@@ -606,7 +643,6 @@ function poll() {
     .catch(() => {});
 }
 
-// ── Poll Updates: sync recall/pin/reactions cho tin ĐÃ CÓ ──
 function pollUpdates() {
     if (SEL_CID === 0) return;
     fetch(CTX + '/supportChat?action=pollUpdates&customerId=' + SEL_CID)
@@ -617,8 +653,6 @@ function pollUpdates() {
             const mid = String(m.id);
             const existingRow = document.querySelector('#chatMsgs .msg-row[data-id="' + mid + '"]');
             if (!existingRow) return;
-
-            // ── Sync recalled ──
             if (m.recalled) {
                 const bubble = existingRow.querySelector('.msg-bubble');
                 if (bubble && !bubble.classList.contains('recalled')) {
@@ -632,8 +666,6 @@ function pollUpdates() {
                     }
                 }
             }
-
-            // ── Sync reactions ──
             if (m.reactions && Array.isArray(m.reactions)) {
                 reactions[mid] = {};
                 m.reactions.forEach(rx => {
@@ -641,8 +673,6 @@ function pollUpdates() {
                 });
                 renderReactions(existingRow, mid);
             }
-
-            // ── Sync pin ──
             if (m.pinned) {
                 if (String(pinnedMsgId) !== mid) {
                     if (pinnedMsgEl) {
@@ -650,8 +680,7 @@ function pollUpdates() {
                         if (oldBtn) oldBtn.classList.remove('pinned-active');
                         pinnedMsgEl.removeAttribute('data-pinned');
                     }
-                    pinnedMsgId = mid;
-                    pinnedMsgEl = existingRow;
+                    pinnedMsgId = mid; pinnedMsgEl = existingRow;
                     existingRow.dataset.pinned = 'true';
                     const pinBtn = existingRow.querySelector('.pin-act');
                     if (pinBtn) pinBtn.classList.add('pinned-active');
@@ -673,7 +702,6 @@ function pollUpdates() {
     .catch(() => {});
 }
 
-// ── Poll Sidebar ──
 function pollSidebar() {
     fetch(CTX + '/supportChat?action=pollSidebar')
     .then(r => r.json())
@@ -698,14 +726,12 @@ function pollSidebar() {
     .catch(() => {});
 }
 
-// ════════════════ RECALL ════════════════
 function recallMsg(btn) {
     const row = btn.closest('.msg-row');
     if (!row) return;
     const msgId = row.dataset.id;
     if (!msgId || msgId.indexOf('temp') !== -1) { showToast('Cannot recall unsent message'); return; }
     if (!confirm('Recall this message?')) return;
-
     const bubble = row.querySelector('.msg-bubble');
     bubble.classList.add('recalled');
     bubble.innerHTML = '<i class="fas fa-rotate-left" style="margin-right:5px;font-size:.7rem"></i>Message recalled';
@@ -716,7 +742,6 @@ function recallMsg(btn) {
         document.getElementById('pinBanner').classList.remove('show');
     }
     showToast('Message recalled ✓');
-
     fetch(CTX + '/supportChat', {
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
@@ -724,7 +749,6 @@ function recallMsg(btn) {
     }).catch(() => {});
 }
 
-// ════════════════ PIN ════════════════
 function pinMsg(btn) {
     const row = btn.closest('.msg-row');
     if (!row) return;
@@ -732,15 +756,12 @@ function pinMsg(btn) {
     if (bubble.classList.contains('recalled')) { showToast('Cannot pin a recalled message'); return; }
     const msgId = row.dataset.id;
     if (!msgId || msgId.indexOf('temp') !== -1) { showToast('Cannot pin unsent message'); return; }
-
     const isAlreadyPinned = (String(pinnedMsgId) === String(msgId));
-
     if (pinnedMsgEl) {
         const oldPinBtn = pinnedMsgEl.querySelector('.pin-act');
         if (oldPinBtn) oldPinBtn.classList.remove('pinned-active');
         pinnedMsgEl.removeAttribute('data-pinned');
     }
-
     if (isAlreadyPinned) {
         pinnedMsgEl = null; pinnedMsgId = 0;
         document.getElementById('pinBanner').classList.remove('show');
@@ -756,7 +777,6 @@ function pinMsg(btn) {
         setTimeout(() => bubble.style.outline = '', 1500);
         showToast('Message pinned 📌');
     }
-
     fetch(CTX + '/supportChat', {
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
@@ -791,7 +811,6 @@ function clearPin() {
     }
 }
 
-// ════════════════ REACTIONS ════════════════
 function toggleReactPopup(btn) {
     document.querySelectorAll('.react-popup.show').forEach(p => {
         if (p !== btn.nextElementSibling) p.classList.remove('show');
@@ -804,7 +823,7 @@ function addReaction(btn, emoji) {
     const row   = btn.closest('.msg-row');
     const msgId = row ? row.dataset.id : null;
     if (!msgId || msgId.indexOf('temp') !== -1) return;
-    triggerEmojiBurst(emoji, btn);  // ← thêm dòng này
+    triggerEmojiBurst(emoji, btn);
     popup.classList.remove('show');
     _toggleReactionLocal(row, msgId, emoji);
     fetch(CTX + '/supportChat', {
@@ -818,7 +837,7 @@ function toggleReactionChip(chip, emoji, msgId) {
     const row = chip.closest('.msg-row');
     if (!row) return;
     const mid = String(msgId);
-    triggerEmojiBurst(emoji, chip);  // ← thêm dòng này
+    triggerEmojiBurst(emoji, chip);
     _toggleReactionLocal(row, mid, emoji);
     fetch(CTX + '/supportChat', {
         method:'POST',
@@ -846,7 +865,7 @@ function renderReactions(row, msgId) {
         if (r.count <= 0) return;
         const chip = document.createElement('div');
         chip.className = 'reaction-chip' + (r.mine ? ' mine' : '');
-        chip.dataset.emoji = emoji;  // QUAN TRỌNG
+        chip.dataset.emoji = emoji;
         chip.innerHTML = emoji + ' <span class="cnt">' + r.count + '</span>';
         chip.onclick = () => toggleReactionChip(chip, emoji, msgId);
         container.appendChild(chip);
@@ -858,7 +877,6 @@ document.addEventListener('click', e => {
         document.querySelectorAll('.react-popup.show').forEach(p => p.classList.remove('show'));
 });
 
-// ════════════════ EMOJI PICKER ════════════════
 function triggerEmojiBurst(emoji, originEl) {
     const rect = originEl ? originEl.getBoundingClientRect()
                           : {left:window.innerWidth/2, top:window.innerHeight/2, width:0, height:0};
@@ -876,6 +894,7 @@ function triggerEmojiBurst(emoji, originEl) {
         el.addEventListener('animationend', () => el.remove());
     }
 }
+
 const EMOJI_DATA = {
     'Smileys':  ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿'],
     'Gestures': ['👍','👎','👌','🤌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👋','🤚','🖐️','✋','🖖','👏','🙌','🤲','🤝','🙏','✍️','💅','🤳','💪','🦵','🦶','👂','👃'],
@@ -939,7 +958,6 @@ document.addEventListener('click', e => {
         picker.classList.remove('show');
 });
 
-// ════════════════ HOVER ACTIONS ════════════════
 const hideTimers = new WeakMap();
 function showActions(row) {
     if (hideTimers.has(row)) { clearTimeout(hideTimers.get(row)); hideTimers.delete(row); }
@@ -969,7 +987,6 @@ function bindAllRows() {
     });
 }
 
-// ════════════════ INIT ════════════════
 document.addEventListener('DOMContentLoaded', () => {
     scrollDown(false);
     initEmojiPicker();
@@ -988,6 +1005,5 @@ window.addEventListener('beforeunload', () => {
     clearInterval(sidebarTimer);
 });
 </script>
-
     </body>
     </html>

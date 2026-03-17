@@ -22,675 +22,507 @@
     String flashErr = (String) session.getAttribute("flash_error");
     session.removeAttribute("flash_success");
     session.removeAttribute("flash_error");
+
+    String initials = me.getFullName() != null && !me.getFullName().isEmpty()
+        ? me.getFullName().substring(0,1).toUpperCase() : "?";
 %>
-<!DOCTYPE html><html lang="en"><head>
-        <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Service Requests - Customer Support</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-       <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-      <style>
-/* ════════════════════ DESIGN SYSTEM ════════════════════ */
-:root {
-    --navy:        #0b1437;
-    --navy-2:      #0f1c4d;
-    --navy-card:   #111a42;
-    --accent:      #4f7ef8;
-    --accent-2:    #7c9ffa;
-    --accent-glow: rgba(79,126,248,0.22);
-    --green:       #34d399;
-    --green-dim:   rgba(52,211,153,0.12);
-    --amber:       #fbbf24;
-    --amber-dim:   rgba(251,191,36,0.12);
-    --danger:      #f87171;
-    --danger-dim:  rgba(248,113,113,0.12);
-    --purple:      #a78bfa;
-    --purple-dim:  rgba(167,139,250,0.12);
-    --info:        #38bdf8;
-    --info-dim:    rgba(56,189,248,0.12);
-    --text:        #ffffff;
-    --text-2:      #c8d4f0;
-    --muted:       #7a8ab8;
-    --border:      rgba(255,255,255,0.07);
-    --border-2:    rgba(255,255,255,0.04);
-    --sb-w:        220px;
-    --primary:     #4f7ef8;
-    --success:     #34d399;
-    --warning:     #fbbf24;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Service Requests – Customer Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sb-bg:        #1e1b4b;
+            --sb-border:    rgba(255,255,255,0.08);
+            --sb-text:      rgba(255,255,255,0.45);
+            --sb-accent:    #818cf8;
+            --sb-accent-2:  #a5b4fc;
+            --sb-item-on:   rgba(129,140,248,0.2);
+            --sb-width:     252px;
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-    font-family: 'Sora', sans-serif;
-    background: var(--navy);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-}
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--navy); }
-::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.4); border-radius: 4px; }
+            --bg:           #f3f4f9;
+            --bg-card:      #ffffff;
+            --bg-topbar:    #ffffff;
+            --border-light: #e8ecf5;
+            --border-light2:#f0f2fb;
+            --text-h:       #1e1b4b;
+            --text-b:       #374151;
+            --text-m:       #6b7280;
+            --text-s:       #9ca3af;
 
-/* ════════════════════ SIDEBAR ════════════════════ */
-.sb {
-    width: var(--sb-w); height: 100vh;
-    background: rgba(9,15,40,0.95);
-    backdrop-filter: blur(20px);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    flex-shrink: 0; position: sticky; top: 0;
-}
-.sb-brand {
-    padding: 22px 18px 16px;
-    display: flex; align-items: center; gap: 10px;
-    border-bottom: 1px solid var(--border);
-}
-.sb-logo {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 0.88rem;
-    box-shadow: 0 4px 14px var(--accent-glow); flex-shrink: 0;
-}
-.sb-name { color: #fff; font-size: 1rem; font-weight: 700; }
-.sb-sub {
-    display: inline-flex; align-items: center;
-    background: rgba(79,126,248,0.15);
-    border: 1px solid rgba(79,126,248,0.25);
-    color: var(--accent-2);
-    font-size: 0.62rem; font-weight: 700;
-    letter-spacing: 1px; text-transform: uppercase;
-    padding: 2px 8px; border-radius: 20px; margin-top: 3px;
-}
-.sb-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
-.sb-lbl {
-    color: rgba(255,255,255,0.22);
-    font-size: 0.62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1.4px;
-    padding: 0 8px; margin: 16px 0 5px;
-}
-.sb-item {
-    display: flex; align-items: center; gap: 9px;
-    padding: 9px 10px; border-radius: 9px; margin-bottom: 1px;
-    color: rgba(255,255,255,0.45); text-decoration: none;
-    font-size: 0.83rem; font-weight: 500;
-    transition: all 0.2s; border-left: 2px solid transparent;
-}
-.sb-item i {
-    width: 28px; height: 28px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; border-radius: 8px;
-    background: rgba(255,255,255,0.05);
-    flex-shrink: 0; transition: all 0.2s;
-}
-/* Active — Service Requests = amber */
-.sb-item.on {
-    color: #fff;
-    background: linear-gradient(90deg, rgba(251,191,36,0.15), rgba(251,191,36,0.04));
-    border-left: 2px solid var(--amber);
-}
-.sb-item.on i { background: rgba(251,191,36,0.2); color: var(--amber); }
+            --primary:      #4f46e5;
+            --primary-2:    #6366f1;
+            --primary-light:#ede9fe;
 
-.sb-item:hover { color: #fff; background: rgba(79,126,248,0.1); border-left-color: var(--accent); }
-.sb-item:hover i { background: rgba(79,126,248,0.2); color: var(--accent-2); }
-.sb-item:nth-of-type(1):hover { background: rgba(79,126,248,0.1);   border-left-color: var(--accent);  }
-.sb-item:nth-of-type(1):hover i { background: rgba(79,126,248,0.2); color: var(--accent-2); }
-.sb-item:nth-of-type(2):hover { background: rgba(52,211,153,0.07);  border-left-color: var(--green);   }
-.sb-item:nth-of-type(2):hover i { background: rgba(52,211,153,0.18); color: var(--green); }
-.sb-item:nth-of-type(3):hover { background: rgba(167,139,250,0.08); border-left-color: var(--purple);  }
-.sb-item:nth-of-type(3):hover i { background: rgba(167,139,250,0.18); color: var(--purple); }
-.sb-item:nth-of-type(4):hover { background: rgba(251,191,36,0.08);  border-left-color: var(--amber);   }
-.sb-item:nth-of-type(4):hover i { background: rgba(251,191,36,0.18); color: var(--amber); }
-.sb-item:nth-of-type(5):hover { background: rgba(251,113,133,0.08); border-left-color: #fb7185;        }
-.sb-item:nth-of-type(5):hover i { background: rgba(251,113,133,0.18); color: #fb7185; }
+            --purple:  #7c3aed;
+            --blue:    #2563eb;
+            --teal:    #0d9488;
+            --green:   #16a34a;
+            --red:     #dc2626;
+            --amber:   #d97706;
+            --orange:  #ea580c;
+            --info:    #0284c7;
+        }
 
-.sb-foot { padding: 12px 10px 16px; border-top: 1px solid var(--border); }
-.sb-user {
-    display: flex; align-items: center; gap: 9px;
-    padding: 10px; border-radius: 10px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    margin-bottom: 6px; text-decoration: none; transition: all 0.2s;
-}
-.sb-user:hover { background: rgba(79,126,248,0.1); border-color: rgba(79,126,248,0.25); }
-.sb-ava {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--purple));
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 0.88rem; font-weight: 700;
-    flex-shrink: 0; overflow: hidden;
-}
-.sb-ava img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }
-.sb-uname { color: #fff; font-size: 0.82rem; font-weight: 600; }
-.sb-urole { color: var(--muted); font-size: 0.68rem; margin-top: 1px; }
-.sb-logout {
-    display: flex; align-items: center; gap: 8px;
-    width: 100%; padding: 8px 10px; border-radius: 8px;
-    color: rgba(255,255,255,0.35); text-decoration: none;
-    font-size: 0.8rem; transition: all 0.2s;
-}
-.sb-logout:hover { color: var(--danger); background: rgba(248,113,113,0.08); }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text-b);min-height:100vh;display:flex;}
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px}
 
-/* ════════════════════ MAIN ════════════════════ */
-.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.topbar {
-    background: rgba(11,20,55,0.7); backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px; height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0; position: sticky; top: 0; z-index: 50;
-}
-.topbar h1 { font-size: 1.05rem; font-weight: 700; color: #fff; }
-.content { padding: 28px 32px; flex: 1; }
+        /* ═══════════ SIDEBAR ═══════════ */
+        .sb{width:var(--sb-width);min-height:100vh;background:var(--sb-bg);border-right:1px solid rgba(79,70,229,0.2);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,0.15);}
+        .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border);}
+        .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0;}
+        .sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px}
+        .sb-role{display:inline-flex;align-items:center;background:rgba(129,140,248,0.2);border:1px solid rgba(129,140,248,0.3);color:var(--sb-accent-2);font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px;}
+        .sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+        .sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px;}
+        .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;transition:all .18s;border-left:2px solid transparent;}
+        .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s;}
+        .sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent);}
+        .sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2)}
+        .sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06);}
+        .sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border)}
+        .sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);margin-bottom:5px;text-decoration:none;transition:all .18s;cursor:pointer;}
+        .sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3)}
+        .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+        .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%}
+        .sb-uname{color:#fff;font-size:.8rem;font-weight:600}
+        .sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px}
+        .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s;}
+        .sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1)}
 
-/* ── TOOLBAR ── */
-.toolbar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
-.search-box { position: relative; flex: 1; min-width: 180px; max-width: 280px; }
-.search-box input {
-    width: 100%; padding: 8px 12px 8px 34px;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid var(--border); border-radius: 9px;
-    font-size: 0.82rem; font-family: inherit;
-    color: var(--text); outline: none; transition: all 0.2s;
-}
-.search-box input::placeholder { color: var(--muted); }
-.search-box input:focus { border-color: rgba(79,126,248,0.5); background: rgba(79,126,248,0.06); box-shadow: 0 0 0 3px rgba(79,126,248,0.1); }
-.search-box i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.78rem; }
+        /* ═══════════ MAIN ═══════════ */
+        .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;min-height:100vh}
+        .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;background:var(--bg-topbar);border-bottom:1px solid var(--border-light);position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+        .topbar-greeting{font-size:1.2rem;font-weight:800;color:var(--text-h);letter-spacing:-.3px;display:flex;align-items:center;gap:8px;}
+        .topbar-greeting i{color:var(--primary-2);font-size:1rem}
+        .topbar-sub{color:var(--text-s);font-size:.78rem;margin-top:2px}
+        .content{padding:24px 28px;flex:1}
 
-select {
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid var(--border); border-radius: 9px;
-    font-size: 0.82rem; font-family: inherit;
-    color: var(--text); outline: none; cursor: pointer; transition: all 0.2s;
-}
-select option { background: #111a42; color: var(--text); }
-select:focus { border-color: rgba(79,126,248,0.5); }
+        /* Alert */
+        @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+        .alert{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;margin-bottom:20px;font-size:.82rem;animation:cardIn .5s ease both;}
+        .alert-success{background:#d1fae5;border:1px solid #a7f3d0;color:#065f46}
+        .alert-success i{color:var(--green)}
+        .alert-error{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}
+        .alert-error i{color:var(--red)}
 
-/* ── BUTTONS ── */
-.btn {
-    padding: 8px 16px; border-radius: 9px; border: none;
-    cursor: pointer; font-size: 0.82rem; font-weight: 600;
-    font-family: inherit; display: inline-flex; align-items: center; gap: 6px;
-    transition: all 0.2s; text-decoration: none;
-}
-.btn-primary {
-    background: linear-gradient(135deg, var(--accent), #6366f1);
-    color: #fff; box-shadow: 0 4px 14px var(--accent-glow);
-}
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,126,248,0.45); }
-.btn-sm { padding: 5px 12px; font-size: 0.75rem; }
-.btn-outline {
-    background: rgba(255,255,255,0.05); color: var(--text-2);
-    border: 1.5px solid var(--border);
-}
-.btn-outline:hover { border-color: rgba(79,126,248,0.4); color: var(--accent-2); background: rgba(79,126,248,0.08); }
+        /* Filter bar */
+        .filter-bar{background:var(--bg-card);border:1px solid var(--border-light);border-radius:14px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,0.04);animation:cardIn .5s .1s ease both;}
+        .filter-bar input,.filter-bar select{padding:9px 13px;border:1.5px solid var(--border-light);border-radius:9px;font-size:.81rem;font-family:'Sora',sans-serif;color:var(--text-b);background:#fff;outline:none;transition:all .2s;}
+        .filter-bar input::placeholder{color:var(--text-s)}
+        .filter-bar input:focus,.filter-bar select:focus{border-color:rgba(79,70,229,0.4);background:#faf9ff;box-shadow:0 0 0 3px rgba(79,70,229,0.07);}
+        .filter-bar select option{background:#fff;color:var(--text-b)}
+        .filter-total{margin-left:auto;font-size:.8rem;color:var(--text-s);font-weight:500}
 
-/* ── CARD & TABLE ── */
-.card {
-    background: rgba(17,26,66,0.7); border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
-    backdrop-filter: blur(12px);
-    animation: cardIn 0.5s ease both;
-}
-@keyframes cardIn {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: rgba(255,255,255,0.02); }
-th {
-    padding: 10px 16px; text-align: left;
-    font-size: 0.68rem; font-weight: 700; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.8px;
-    border-bottom: 1px solid var(--border); background: transparent;
-}
-td {
-    padding: 12px 16px; font-size: 0.8rem; color: var(--text-2);
-    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle;
-}
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(79,126,248,0.05); }
+        /* Buttons */
+        .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;font-size:.81rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;border:none;text-decoration:none;transition:all .2s;}
+        .btn-primary{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(79,70,229,0.28);}
+        .btn-primary:hover{background:#4338ca;transform:translateY(-1px);box-shadow:0 6px 18px rgba(79,70,229,0.4)}
+        .btn-secondary{background:#fff;color:var(--text-m);border:1.5px solid var(--border-light);}
+        .btn-secondary:hover{background:#f3f4f6;border-color:#d1d5db;color:var(--text-b)}
+        .btn-sm{padding:6px 13px;font-size:.75rem;}
 
-/* ── BADGES ── */
-.badge {
-    display: inline-flex; align-items: center;
-    padding: 2px 9px; border-radius: 20px;
-    font-size: 0.7rem; font-weight: 700; white-space: nowrap;
-}
-/* SR status */
-.badge-pending     { background: var(--amber-dim);   color: var(--amber);   border: 1px solid rgba(251,191,36,0.2); }
-.badge-approved    { background: var(--green-dim);   color: var(--green);   border: 1px solid rgba(52,211,153,0.2); }
-.badge-in-progress { background: rgba(79,126,248,0.12); color: var(--accent-2); border: 1px solid rgba(79,126,248,0.2); }
-.badge-completed   { background: var(--purple-dim);  color: var(--purple);  border: 1px solid rgba(167,139,250,0.2); }
-.badge-rejected    { background: var(--danger-dim);  color: var(--danger);  border: 1px solid rgba(248,113,113,0.2); }
-.badge-cancelled   { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
-/* Priority */
-.badge-low    { background: rgba(52,211,153,0.08);  color: #6ee7b7; border: 1px solid rgba(52,211,153,0.15); }
-.badge-medium { background: rgba(251,191,36,0.1);   color: #fcd34d; border: 1px solid rgba(251,191,36,0.2); }
-.badge-high   { background: rgba(251,146,60,0.1);   color: #fb923c; border: 1px solid rgba(251,146,60,0.2); }
-.badge-urgent { background: var(--danger-dim);      color: #fca5a5; border: 1px solid rgba(248,113,113,0.2); }
-/* Contract type */
-.badge-WARRANTY    { background: var(--info-dim);   color: var(--info);  border: 1px solid rgba(56,189,248,0.2); }
-.badge-MAINTENANCE { background: var(--amber-dim);  color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+        /* Table wrap */
+        .table-wrap{background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.05);animation:cardIn .5s .2s ease both;}
+        table{width:100%;border-collapse:collapse;font-size:.8rem}
+        thead tr{background:#fafbff}
+        th{padding:10px 16px;text-align:left;color:var(--text-s);font-weight:700;font-size:.67rem;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border-light2);}
+        td{padding:12px 16px;border-bottom:1px solid var(--border-light2);vertical-align:middle;color:var(--text-b);}
+        tr:last-child td{border-bottom:none}
+        tbody tr{transition:background .12s}
+        tbody tr:hover td{background:#f7f8ff}
+        .td-muted{color:var(--text-s);font-size:.75rem}
+        .td-empty{text-align:center;padding:36px 16px;color:var(--text-s);font-size:.82rem}
 
-a.row-link { color: var(--accent-2); text-decoration: none; font-weight: 600; font-size: 0.77rem; }
-a.row-link:hover { color: #fff; }
+        /* Code link */
+        .code-link{color:var(--primary-2);font-weight:700;font-size:.77rem;font-family:'Courier New',monospace;text-decoration:none;letter-spacing:-.3px;}
+        .code-link:hover{color:var(--primary);text-decoration:underline}
 
-/* ── PAGINATION ── */
-.pagination { display: flex; gap: 6px; margin-top: 18px; justify-content: center; }
-.page-btn {
-    width: 34px; height: 34px; border-radius: 9px;
-    border: 1.5px solid var(--border);
-    background: rgba(255,255,255,0.04);
-    font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
-    text-decoration: none; color: var(--text-2); transition: all 0.15s;
-}
-.page-btn:hover { border-color: rgba(79,126,248,0.4); color: var(--accent-2); background: rgba(79,126,248,0.08); }
-.page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 12px var(--accent-glow); }
+        /* Contract type mini */
+        .ct-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.67rem;font-weight:700;margin-top:3px;}
+        .ct-wr{background:#dbeafe;color:#1e40af}
+        .ct-mt{background:#fef3c7;color:#92400e}
 
-/* ── FLASH ── */
-.flash { padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 0.82rem; font-weight: 500; animation: cardIn 0.3s ease both; }
-.flash-ok  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(52,211,153,0.25); }
-.flash-err { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+        /* Badges */
+        .b{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:700;white-space:nowrap;}
+        .b-pending    {background:#fef3c7;color:#92400e}
+        .b-approved   {background:#d1fae5;color:#065f46}
+        .b-rejected   {background:#fee2e2;color:#991b1b}
+        .b-in-progress,.b-in_progress{background:#dbeafe;color:#1e40af}
+        .b-completed  {background:#ede9fe;color:#5b21b6}
+        .b-cancelled  {background:#f3f4f6;color:#6b7280}
+        .b-low        {background:#dcfce7;color:#166534}
+        .b-medium     {background:#fef3c7;color:#92400e}
+        .b-high       {background:#ffedd5;color:#9a3412}
+        .b-urgent     {background:#fee2e2;color:#991b1b}
 
-/* ── MODAL ── */
-.modal-bg {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
-    z-index: 1000; align-items: center; justify-content: center;
-}
-.modal-bg.open { display: flex; }
-.modal {
-    background: rgba(15,28,77,0.98);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 18px; width: 100%; max-width: 620px;
-    max-height: 92vh; overflow-y: auto; padding: 28px;
-    position: relative;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-    animation: modalIn 0.2s ease both;
-}
-.modal::-webkit-scrollbar { width: 3px; }
-.modal::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.3); border-radius: 4px; }
-@keyframes modalIn {
-    from { opacity: 0; transform: scale(0.94) translateY(10px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-.modal h2 { font-size: 1rem; font-weight: 700; margin-bottom: 20px; color: #fff; }
-.modal-close {
-    position: absolute; top: 16px; right: 18px;
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-    border-radius: 8px; width: 28px; height: 28px;
-    font-size: 0.85rem; cursor: pointer; color: var(--muted);
-    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
-}
-.modal-close:hover { background: var(--danger-dim); color: var(--danger); border-color: rgba(248,113,113,0.3); }
+        /* Pagination */
+        .pagination{display:flex;justify-content:flex-end;align-items:center;gap:5px;padding:13px 16px;border-top:1px solid var(--border-light2);}
+        .pagination a,.pagination span{padding:6px 12px;border-radius:8px;font-size:.77rem;font-weight:500;text-decoration:none;color:var(--text-m);border:1.5px solid var(--border-light);background:#fff;transition:all .15s;}
+        .pagination a:hover{background:var(--primary-light);border-color:rgba(99,102,241,0.3);color:var(--primary-2)}
+        .pagination .active{background:var(--primary);color:#fff;border-color:transparent;box-shadow:0 3px 8px rgba(79,70,229,0.3);}
+        .pagination .disabled{opacity:.4;pointer-events:none}
 
-/* ── FORM ── */
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-2); margin-bottom: 5px; }
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%; padding: 9px 12px;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid var(--border); border-radius: 9px;
-    font-size: 0.82rem; font-family: inherit;
-    color: var(--text); outline: none; transition: all 0.2s;
-}
-.form-group input::placeholder,
-.form-group textarea::placeholder { color: var(--muted); }
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: rgba(79,126,248,0.5);
-    background: rgba(79,126,248,0.06);
-    box-shadow: 0 0 0 3px rgba(79,126,248,0.1);
-}
-.form-group select option { background: #111a42; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.modal-footer {
-    display: flex; gap: 10px; justify-content: flex-end;
-    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
-}
+        /* ════════ MODAL ════════ */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;}
+        .modal-overlay.open{display:flex;}
+        .modal{background:#fff;border:1px solid var(--border-light);border-radius:18px;padding:28px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(79,70,229,0.08);animation:modalIn .25s cubic-bezier(.4,0,.2,1) both;}
+        .modal::-webkit-scrollbar{width:3px}
+        .modal::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.2);border-radius:4px}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal h2{font-size:1rem;font-weight:700;color:var(--text-h);margin-bottom:20px;display:flex;align-items:center;gap:9px;}
+        .modal h2 i{color:var(--primary-2)}
+        .modal-close{position:absolute;top:16px;right:18px;background:#f3f4f6;border:1px solid var(--border-light);border-radius:8px;width:28px;height:28px;font-size:.82rem;cursor:pointer;color:var(--text-m);display:flex;align-items:center;justify-content:center;transition:all .15s;}
+        .modal-close:hover{background:#fee2e2;color:var(--red);border-color:#fca5a5;}
 
-/* ── EQUIPMENT IN MODAL ── */
-.equip-section {
-    border: 1.5px solid var(--border);
-    border-radius: 10px; overflow: hidden;
-}
-.equip-section-hd {
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.04);
-    border-bottom: 1px solid var(--border);
-    font-size: 0.78rem; font-weight: 600; color: var(--text-2);
-}
-.equip-row {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    transition: background 0.15s;
-}
-.equip-row:last-child { border-bottom: none; }
-.equip-row:hover { background: rgba(79,126,248,0.05); }
-.equip-row-info { flex: 1; }
-.equip-row-name { font-size: 0.8rem; font-weight: 600; color: var(--text); }
-.equip-row-serial { font-size: 0.72rem; color: var(--muted); }
-.equip-row-issue { margin-top: 6px; }
-.equip-row-issue input {
-    padding: 6px 10px;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid var(--border); border-radius: 7px;
-    font-size: 0.78rem; width: 100%; font-family: inherit;
-    color: var(--text); outline: none; transition: all 0.2s;
-}
-.equip-row-issue input::placeholder { color: var(--muted); }
-.equip-row-issue input:focus { border-color: rgba(79,126,248,0.5); background: rgba(79,126,248,0.06); }
-.equip-empty { padding: 20px; text-align: center; color: var(--muted); font-size: 0.82rem; }
-.equip-loading { padding: 20px; text-align: center; color: var(--muted); font-size: 0.82rem; }
-</style>
+        /* Form */
+        .form-group{margin-bottom:16px;}
+        .form-group label{display:block;font-size:.72rem;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 13px;border:1.5px solid var(--border-light);border-radius:9px;font-size:.83rem;font-family:'Sora',sans-serif;color:var(--text-b);background:#fff;outline:none;transition:all .2s;}
+        .form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-s)}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(79,70,229,0.4);background:#faf9ff;box-shadow:0 0 0 3px rgba(79,70,229,0.07);}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light);}
 
-    </head><body>
+        /* Equipment in modal */
+        .equip-section{border:1.5px solid var(--border-light);border-radius:10px;overflow:hidden;}
+        .equip-section-hd{padding:10px 14px;background:#fafbff;border-bottom:1px solid var(--border-light2);font-size:.78rem;font-weight:600;color:var(--text-m);}
+        .equip-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-light2);transition:background .15s;}
+        .equip-row:last-child{border-bottom:none}
+        .equip-row:hover{background:#f7f8ff}
+        .equip-row-info{flex:1}
+        .equip-row-name{font-size:.82rem;font-weight:600;color:var(--text-h)}
+        .equip-row-serial{font-size:.72rem;color:var(--text-s)}
+        .equip-row-issue{margin-top:6px;}
+        .equip-row-issue input{padding:7px 10px;border:1.5px solid var(--border-light);border-radius:7px;font-size:.78rem;width:100%;font-family:'Sora',sans-serif;color:var(--text-b);background:#fff;outline:none;transition:all .2s;}
+        .equip-row-issue input::placeholder{color:var(--text-s)}
+        .equip-row-issue input:focus{border-color:rgba(79,70,229,0.4);background:#faf9ff;box-shadow:0 0 0 3px rgba(79,70,229,0.07);}
+        .equip-empty{padding:20px;text-align:center;color:var(--text-s);font-size:.82rem}
+        .equip-loading{padding:20px;text-align:center;color:var(--text-s);font-size:.82rem}
+    </style>
+</head>
+<body>
 
-        <aside class="sb">
-            <div class="sb-brand">
-                <div class="sb-logo"><i class="fas fa-bolt"></i></div>
-                <div><div class="sb-name">DRSMS System</div><div class="sb-sub">Customer Support</div></div>
+    <%-- ═══════════ SIDEBAR ═══════════ --%>
+    <aside class="sb">
+        <div class="sb-brand">
+            <div class="sb-logo"><i class="fas fa-bolt"></i></div>
+            <div>
+                <div class="sb-name">DRSMS</div>
+                <div class="sb-role">Customer Support</div>
             </div>
-            <nav class="sb-nav">
-                <div class="sb-lbl">Overview</div>
-                <a href="<%=ctx%>/supportDashboard"      class="sb-item"><i class="fas fa-home"></i> Dashboard</a>
-                <div class="sb-lbl">Management</div>
-                <a href="<%=ctx%>/supportCustomers"       class="sb-item"><i class="fas fa-users"></i> Customers</a>
-                <a href="<%=ctx%>/supportContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
-                <a href="<%=ctx%>/supportServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Service Requests</a>
-                <div class="sb-lbl">Support</div>
-                <a href="<%=ctx%>/supportChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Live Chat</a>
-            </nav>
-            <div class="sb-foot">
-    <a href="<%=ctx%>/profile" class="sb-user" style="text-decoration:none;cursor:pointer">
-        <div class="sb-ava" style="overflow:hidden;padding:0">
-            <%if(me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()){%>
-            <img src="<%=ctx%><%=me.getAvatarUrl()%>" style="width:34px;height:34px;object-fit:cover;border-radius:50%">
-            <%}else{%>
-            <%=me.getFullName().substring(0,1).toUpperCase()%>
-            <%}%>
         </div>
-        <div><div class="sb-uname"><%=me.getFullName()%></div><div class="sb-urole">Customer Support</div></div>
-    </a>
-    <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-</div>
-        </aside>
-
-        <div class="main">
-            <div class="topbar">
-                <h1><i class="fas fa-clipboard-list" style="color:var(--primary);margin-right:8px"></i>Service Requests</h1>
-                <button class="btn btn-primary" onclick="openCreate()"><i class="fas fa-plus"></i> Create on Behalf</button>
-            </div>
-            <div class="content">
-                <%if(flashOk!=null){%><div class="flash flash-ok"><i class="fas fa-check-circle"></i> <%=flashOk%></div><%}%>
-                <%if(flashErr!=null){%><div class="flash flash-err"><i class="fas fa-exclamation-circle"></i> <%=flashErr%></div><%}%>
-
-                <form method="get" action="<%=ctx%>/supportServiceRequests">
-                    <div class="toolbar">
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" name="keyword" value="<%=keyword%>" placeholder="Code, customer, title...">
-                        </div>
-                        <select name="status">
-                            <option value="">All Status</option>
-                            <option value="PENDING"     <%="PENDING".equals(fStatus)?"selected":""%>>Pending</option>
-                            <option value="APPROVED"    <%="APPROVED".equals(fStatus)?"selected":""%>>Approved</option>
-                            <option value="IN_PROGRESS" <%="IN_PROGRESS".equals(fStatus)?"selected":""%>>In Progress</option>
-                            <option value="COMPLETED"   <%="COMPLETED".equals(fStatus)?"selected":""%>>Completed</option>
-                            <option value="REJECTED"    <%="REJECTED".equals(fStatus)?"selected":""%>>Rejected</option>
-                            <option value="CANCELLED"   <%="CANCELLED".equals(fStatus)?"selected":""%>>Cancelled</option>
-                        </select>
-                        <select name="priority">
-                            <option value="">All Priority</option>
-                            <option value="LOW"    <%="LOW".equals(fPriority)?"selected":""%>>Low</option>
-                            <option value="MEDIUM" <%="MEDIUM".equals(fPriority)?"selected":""%>>Medium</option>
-                            <option value="HIGH"   <%="HIGH".equals(fPriority)?"selected":""%>>High</option>
-                            <option value="URGENT" <%="URGENT".equals(fPriority)?"selected":""%>>Urgent</option>
-                        </select>
-                        <select name="contractType">
-                            <option value="">All Types</option>
-                            <option value="WARRANTY"    <%="WARRANTY".equals(fType)?"selected":""%>>Warranty</option>
-                            <option value="MAINTENANCE" <%="MAINTENANCE".equals(fType)?"selected":""%>>Maintenance</option>
-                        </select>
-                        <button type="submit" class="btn btn-outline"><i class="fas fa-search"></i></button>
-                        <a href="<%=ctx%>/supportServiceRequests" class="btn btn-outline"><i class="fas fa-times"></i></a>
-                        <span style="margin-left:auto;font-size:.8rem;color:var(--muted)"><%=total%> request(s)</span>
-                    </div>
-                </form>
-
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Code</th><th>Customer</th><th>Contract</th><th>Title</th><th>Priority</th><th>Status</th><th>Created</th><th></th></tr></thead>
-                        <tbody>
-                            <%if(requests.isEmpty()){%>
-                            <tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted)">No service requests found</td></tr>
-                            <%}else{for(ServiceRequest sr:requests){
-                                String st  = sr.getStatus()  != null ? sr.getStatus().toLowerCase().replace("_","-")  : "";
-                                String pri = sr.getPriority() != null ? sr.getPriority().toLowerCase() : "medium";
-                            %>
-                            <tr>
-                                <td><a class="row-link" href="<%=ctx%>/supportServiceRequests?action=detail&id=<%=sr.getId()%>"><%=sr.getRequestCode()%></a></td>
-                                <td><%=sr.getCustomerName()%></td>
-                                <td>
-                                    <div style="font-size:.75rem"><%=sr.getContractCode()%></div>
-                                    <span class="badge badge-<%=sr.getContractType()%>" style="font-size:.65rem;margin-top:2px"><%=sr.getContractType()%></span>
-                                </td>
-                                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="<%=sr.getTitle()%>"><%=sr.getTitle()%></td>
-                                <td><span class="badge badge-<%=pri%>"><%=sr.getPriority()%></span></td>
-                                <td><span class="badge badge-<%=st%>"><%=sr.getStatus()%></span></td>
-                                <td style="color:var(--muted);font-size:.75rem"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().substring(0,10):""%></td>
-                                <td><a class="btn btn-sm btn-outline" href="<%=ctx%>/supportServiceRequests?action=detail&id=<%=sr.getId()%>"><i class="fas fa-eye"></i></a></td>
-                            </tr>
-                            <%}}%>
-                        </tbody>
-                    </table>
+        <nav class="sb-nav">
+            <div class="sb-lbl">Overview</div>
+            <a href="<%=ctx%>/supportDashboard"      class="sb-item"><i class="fas fa-home"></i> Dashboard</a>
+            <div class="sb-lbl">Management</div>
+            <a href="<%=ctx%>/supportCustomers"       class="sb-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="<%=ctx%>/supportContracts"       class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
+            <a href="<%=ctx%>/supportServiceRequests" class="sb-item on"><i class="fas fa-clipboard-list"></i> Service Requests</a>
+            <div class="sb-lbl">Support</div>
+            <a href="<%=ctx%>/supportChat"            class="sb-item"><i class="fas fa-comment-dots"></i> Live Chat</a>
+        </nav>
+        <div class="sb-foot">
+            <a href="<%=ctx%>/profile" class="sb-user">
+                <div class="sb-ava">
+                    <%if(me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()){%>
+                    <img src="<%=ctx%><%=me.getAvatarUrl()%>" alt="avatar">
+                    <%}else{%><%=initials%><%}%>
                 </div>
+                <div>
+                    <div class="sb-uname"><%=me.getFullName()%></div>
+                    <div class="sb-urole">Customer Support</div>
+                </div>
+            </a>
+            <a href="<%=ctx%>/logout" class="sb-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+        </div>
+    </aside>
 
-                <%if(totalPages>1){%>
-                <div class="pagination">
-                    <%String qp="?keyword="+keyword+"&status="+fStatus+"&priority="+fPriority+"&contractType="+fType;%>
-                    <a href="<%=ctx%>/supportServiceRequests<%=qp%>&page=<%=currentPage-1%>" class="page-btn" <%=currentPage<=1?"style='pointer-events:none;opacity:.4'":""%>>‹</a>
-                    <%for(int p=Math.max(1,currentPage-2);p<=Math.min(totalPages,currentPage+2);p++){%>
-                    <a href="<%=ctx%>/supportServiceRequests<%=qp%>&page=<%=p%>" class="page-btn <%=p==currentPage?"active":""%>"><%=p%></a>
+    <%-- ═══════════ MAIN ═══════════ --%>
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-greeting">
+                    <i class="fas fa-clipboard-list"></i> Service Requests
+                </div>
+                <div class="topbar-sub">View and create service requests on behalf of customers</div>
+            </div>
+            <button class="btn btn-primary" onclick="openCreate()">
+                <i class="fas fa-plus"></i> Create on Behalf
+            </button>
+        </div>
+
+        <div class="content">
+
+            <%if(flashOk!=null){%>
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%=flashOk%></div>
+            <%}%>
+            <%if(flashErr!=null){%>
+            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%=flashErr%></div>
+            <%}%>
+
+            <%-- Filter bar --%>
+            <form method="get" action="<%=ctx%>/supportServiceRequests">
+            <div class="filter-bar">
+                <input type="text" name="keyword" value="<%=keyword%>"
+                       placeholder="🔍  Code, customer, title..."
+                       style="flex:1;min-width:180px">
+                <select name="status">
+                    <option value="">All Status</option>
+                    <%for(String s:new String[]{"PENDING","APPROVED","IN_PROGRESS","COMPLETED","REJECTED","CANCELLED"}){%>
+                    <option value="<%=s%>" <%=s.equals(fStatus)?"selected":""%>><%=s.replace("_"," ")%></option>
                     <%}%>
-                    <a href="<%=ctx%>/supportServiceRequests<%=qp%>&page=<%=currentPage+1%>" class="page-btn" <%=currentPage>=totalPages?"style='pointer-events:none;opacity:.4'":""%>>›</a>
+                </select>
+                <select name="priority">
+                    <option value="">All Priority</option>
+                    <%for(String p:new String[]{"LOW","MEDIUM","HIGH","URGENT"}){%>
+                    <option value="<%=p%>" <%=p.equals(fPriority)?"selected":""%>><%=p%></option>
+                    <%}%>
+                </select>
+                <select name="contractType">
+                    <option value="">All Types</option>
+                    <option value="WARRANTY"    <%="WARRANTY".equals(fType)?"selected":""%>>Warranty</option>
+                    <option value="MAINTENANCE" <%="MAINTENANCE".equals(fType)?"selected":""%>>Maintenance</option>
+                </select>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+                <a href="<%=ctx%>/supportServiceRequests" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Reset
+                </a>
+                <span class="filter-total"><%=total%> request(s)</span>
+            </div>
+            </form>
+
+            <%-- Table --%>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th><th>Customer</th><th>Contract</th>
+                            <th>Title</th><th>Priority</th><th>Status</th>
+                            <th>Created</th><th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%if(requests.isEmpty()){%>
+                        <tr><td colspan="8" class="td-empty">No service requests found.</td></tr>
+                        <%}else{ for(ServiceRequest sr:requests){
+                            String st  = sr.getStatus()  != null ? sr.getStatus().toLowerCase().replace("_","-") : "";
+                            String pri = sr.getPriority()!= null ? sr.getPriority().toLowerCase() : "medium";
+                        %>
+                        <tr>
+                            <td>
+                                <a class="code-link" href="<%=ctx%>/supportServiceRequests?action=detail&id=<%=sr.getId()%>">
+                                    <%=sr.getRequestCode()%>
+                                </a>
+                            </td>
+                            <td style="font-weight:600;color:var(--text-h)"><%=sr.getCustomerName()%></td>
+                            <td>
+                                <div style="font-size:.75rem;font-weight:600;color:var(--text-h)"><%=sr.getContractCode()%></div>
+                                <span class="ct-badge <%="WARRANTY".equals(sr.getContractType())?"ct-wr":"ct-mt"%>">
+                                    <%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%>
+                                </span>
+                            </td>
+                            <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-m)" title="<%=sr.getTitle()%>">
+                                <%=sr.getTitle()%>
+                            </td>
+                            <td><span class="b b-<%=pri%>"><%=sr.getPriority()%></span></td>
+                            <td><span class="b b-<%=st%>"><%=sr.getStatus()%></span></td>
+                            <td class="td-muted"><%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().substring(0,10):""%></td>
+                            <td>
+                                <a class="btn btn-sm btn-secondary"
+                                   href="<%=ctx%>/supportServiceRequests?action=detail&id=<%=sr.getId()%>">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        <%}}%>
+                    </tbody>
+                </table>
+
+                <%-- Pagination --%>
+                <%if(totalPages>1){
+                    String qp="&keyword="+keyword+"&status="+fStatus+"&priority="+fPriority+"&contractType="+fType;
+                %>
+                <div class="pagination">
+                    <a href="<%=ctx%>/supportServiceRequests?page=<%=currentPage-1%><%=qp%>"
+                       class="<%=currentPage<=1?"disabled":""%>">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <%for(int p=Math.max(1,currentPage-2);p<=Math.min(totalPages,currentPage+2);p++){
+                        if(p==currentPage){%>
+                        <span class="active"><%=p%></span>
+                        <%}else{%>
+                        <a href="<%=ctx%>/supportServiceRequests?page=<%=p%><%=qp%>"><%=p%></a>
+                        <%}%>
+                    <%}%>
+                    <a href="<%=ctx%>/supportServiceRequests?page=<%=currentPage+1%><%=qp%>"
+                       class="<%=currentPage>=totalPages?"disabled":""%>">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
                 </div>
                 <%}%>
             </div>
+
         </div>
+    </main>
 
-        <%-- CREATE SR MODAL --%>
-        <div class="modal-bg" id="createModal">
-            <div class="modal">
-                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-                <h2><i class="fas fa-plus-circle" style="color:var(--primary);margin-right:8px"></i>Create Service Request on Behalf</h2>
-                <form method="post" action="<%=ctx%>/supportServiceRequests" id="srForm">
-                    <input type="hidden" name="action" value="create">
+    <%-- ════════ MODAL: CREATE SR ════════ --%>
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-plus-circle"></i> Create Service Request on Behalf</h2>
+            <form method="post" action="<%=ctx%>/supportServiceRequests" id="srForm">
+                <input type="hidden" name="action" value="create">
 
-                    <%-- Step 1: Customer --%>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Customer *</label>
-                            <select name="customerId" id="srCustomer" required onchange="loadContracts()">
-                                <option value="">-- Select customer --</option>
-                                <%for(User u:customers){%>
-                                <option value="<%=u.getId()%>"><%=u.getFullName()%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Contract *</label>
-                            <select name="contractId" id="srContract" required onchange="loadEquipment()" disabled>
-                                <option value="">-- Select contract first --</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <%-- Step 2: Equipment --%>
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Equipment & Issue Description *</label>
-                        <div id="srEquipContainer">
-                            <div class="equip-empty">Select a customer and contract to load equipment.</div>
-                        </div>
-                    </div>
-
-                    <%-- Step 3: Request info --%>
-                    <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" name="title" required placeholder="Brief description of the issue">
-                    </div>
-                    <div class="form-group">
-                        <label>Description *</label>
-                        <textarea name="description" rows="3" required placeholder="Detailed description..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Priority *</label>
-                        <select name="priority" required>
-                            <option value="LOW">Low</option>
-                            <option value="MEDIUM" selected>Medium</option>
-                            <option value="HIGH">High</option>
-                            <option value="URGENT">Urgent</option>
+                        <label>Customer *</label>
+                        <select name="customerId" id="srCustomer" required onchange="loadContracts()">
+                            <option value="">-- Select customer --</option>
+                            <%for(User u:customers){%>
+                            <option value="<%=u.getId()%>"><%=u.getFullName()%></option>
+                            <%}%>
                         </select>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    <div class="form-group">
+                        <label>Contract *</label>
+                        <select name="contractId" id="srContract" required onchange="loadEquipment()" disabled>
+                            <option value="">-- Select contract first --</option>
+                        </select>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Equipment & Issue Description *</label>
+                    <div id="srEquipContainer">
+                        <div class="equip-empty">Select a customer and contract to load equipment.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" name="title" required placeholder="Brief description of the issue">
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea name="description" rows="3" required placeholder="Detailed description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Priority *</label>
+                    <select name="priority" required>
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM" selected>Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <script>
-            const CTX = '<%=ctx%>';
+    <script>
+        const CTX = '<%=ctx%>';
 
-            function openCreate() {
-                document.getElementById('createModal').classList.add('open');
-            }
-            function closeModal() {
-                document.getElementById('createModal').classList.remove('open');
-            }
-            document.getElementById('createModal').addEventListener('click', e => {
-                if (e.target === document.getElementById('createModal'))
-                    closeModal();
-            });
+        function openCreate() { document.getElementById('createModal').classList.add('open'); }
+        function closeModal() { document.getElementById('createModal').classList.remove('open'); }
+        document.getElementById('createModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('createModal')) closeModal();
+        });
 
-            function loadContracts() {
-                const cid = document.getElementById('srCustomer').value;
-                const sel = document.getElementById('srContract');
-                sel.innerHTML = '<option value="">Loading...</option>';
-                sel.disabled = true;
-                document.getElementById('srEquipContainer').innerHTML = '<div class="equip-empty">Select a contract to load equipment.</div>';
+        function loadContracts() {
+            const cid = document.getElementById('srCustomer').value;
+            const sel = document.getElementById('srContract');
+            sel.innerHTML = '<option value="">Loading...</option>';
+            sel.disabled = true;
+            document.getElementById('srEquipContainer').innerHTML = '<div class="equip-empty">Select a contract to load equipment.</div>';
+            if (!cid) { sel.innerHTML = '<option value="">-- Select contract first --</option>'; return; }
+            fetch(CTX + '/supportServiceRequests?action=getContracts&customerId=' + cid)
+                .then(r => r.json())
+                .then(list => {
+                    if (list.length === 0) { sel.innerHTML = '<option value="">No active contracts</option>'; return; }
+                    sel.innerHTML = '<option value="">-- Select contract --</option>';
+                    list.forEach(c => {
+                        sel.innerHTML += '<option value="' + c.id + '">[' + c.type + '] ' + c.code + ' \u00b7 ends ' + c.endDate + '</option>';
+                    });
+                    sel.disabled = false;
+                })
+                .catch(() => { sel.innerHTML = '<option value="">Failed to load</option>'; });
+        }
 
-                if (!cid) {
-                    sel.innerHTML = '<option value="">-- Select contract first --</option>';
-                    return;
-                }
-
-                fetch(CTX + '/supportServiceRequests?action=getContracts&customerId=' + cid)
-                        .then(r => r.json())
-                        .then(list => {
-                            if (list.length === 0) {
-                                sel.innerHTML = '<option value="">No active contracts</option>';
-                                return;
-                            }
-                            sel.innerHTML = '<option value="">-- Select contract --</option>';
-                            list.forEach(c => {
-                                sel.innerHTML += '<option value="' + c.id + '">[' + c.type + '] ' + c.code + ' \u00b7 ends ' + c.endDate + '</option>';
-                            });
-                            sel.disabled = false;
-                        })
-                        .catch(() => {
-                            sel.innerHTML = '<option value="">Failed to load</option>';
-                        });
-            }
-
-            function loadEquipment() {
-                const contractId = document.getElementById('srContract').value;
-                const container = document.getElementById('srEquipContainer');
-                if (!contractId) {
-                    container.innerHTML = '<div class="equip-empty">Select a contract to load equipment.</div>';
-                    return;
-                }
-                container.innerHTML = '<div class="equip-loading"><i class="fas fa-spinner fa-spin"></i> Loading equipment...</div>';
-                fetch(CTX + '/supportServiceRequests?action=getEquipment&contractId=' + contractId)
-                        .then(function (r) {
-                            return r.json();
-                        })
-                        .then(function (list) {
-                            if (!list || list.length === 0) {
-                                container.innerHTML = '<div class="equip-empty">No equipment found for this contract.</div>';
-                                return;
-                            }
-                            let html = '<div class="equip-section"><div class="equip-section-hd">Select equipment and describe the issue</div>';
-                            list.forEach(function (e) {
-                                html += '<div class="equip-row" id="erow-' + e.id + '">';
-                                html += '<input type="checkbox" value="' + e.id + '" id="echeck-' + e.id + '"';
-                                html += ' style="accent-color:var(--primary);width:16px;height:16px;flex-shrink:0;margin-top:3px"';
-                                html += ' onchange="toggleEquipRow(' + e.id + ', this.checked)">';
-                                html += '<div class="equip-row-info">';
-                                html += '<label for="echeck-' + e.id + '" style="cursor:pointer">';
-                                html += '<div class="equip-row-name">' + e.name + '</div>';
-                                html += '<div class="equip-row-serial">Serial: ' + e.serial + '</div>';
-                                html += '</label>';
-                                html += '<div class="equip-row-issue" id="eissue-' + e.id + '" style="display:none;margin-top:6px">';
-                                html += '<input type="text" id="edesc-' + e.id + '"';
-                                html += ' placeholder="Describe the issue with this equipment (optional)"';
-                                html += ' style="padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:.78rem;width:100%;font-family:inherit;outline:none">';
-                                html += '</div>';
-                                html += '</div>';
-                                html += '</div>';
-                            });
-                            html += '</div>';
-                            container.innerHTML = html;
-                        })
-                        .catch(function () {
-                            container.innerHTML = '<div class="equip-empty" style="color:#991b1b">Failed to load equipment.</div>';
-                        });
-            }
-
-            function toggleEquipRow(id, checked) {
-                document.getElementById('eissue-' + id).style.display = checked ? 'block' : 'none';
-            }
-
-            document.getElementById('srForm').addEventListener('submit', function (e) {
-                this.querySelectorAll('input.injected').forEach(el => el.remove());
-
-                const rows = document.querySelectorAll('[id^="erow-"]');
-                let checkedCount = 0;
-                rows.forEach(row => {
-                    const id = row.id.replace('erow-', '');
-                    const cb = document.getElementById('echeck-' + id);
-                    if (cb && cb.checked) {
-                        checkedCount++;
-                        const descVal = (document.getElementById('edesc-' + id) || {}).value || '';
-                        const hidId = document.createElement('input');
-                        hidId.type = 'hidden';
-                        hidId.name = 'equipmentIds';
-                        hidId.value = id;
-                        hidId.className = 'injected';
-                        this.appendChild(hidId);
-
-                        const hidDesc = document.createElement('input');
-                        hidDesc.type = 'hidden';
-                        hidDesc.name = 'issueDescriptions';
-                        hidDesc.value = descVal;
-                        hidDesc.className = 'injected';
-                        this.appendChild(hidDesc);
+        function loadEquipment() {
+            const contractId = document.getElementById('srContract').value;
+            const container  = document.getElementById('srEquipContainer');
+            if (!contractId) { container.innerHTML = '<div class="equip-empty">Select a contract to load equipment.</div>'; return; }
+            container.innerHTML = '<div class="equip-loading"><i class="fas fa-spinner fa-spin"></i> Loading equipment...</div>';
+            fetch(CTX + '/supportServiceRequests?action=getEquipment&contractId=' + contractId)
+                .then(r => r.json())
+                .then(list => {
+                    if (!list || list.length === 0) {
+                        container.innerHTML = '<div class="equip-empty">No equipment found for this contract.</div>'; return;
                     }
-                });
+                    let html = '<div class="equip-section"><div class="equip-section-hd">Select equipment and describe the issue</div>';
+                    list.forEach(e => {
+                        html += '<div class="equip-row" id="erow-' + e.id + '">';
+                        html += '<input type="checkbox" value="' + e.id + '" id="echeck-' + e.id + '"';
+                        html += ' style="accent-color:var(--primary);width:16px;height:16px;flex-shrink:0;margin-top:3px"';
+                        html += ' onchange="toggleEquipRow(' + e.id + ', this.checked)">';
+                        html += '<div class="equip-row-info">';
+                        html += '<label for="echeck-' + e.id + '" style="cursor:pointer">';
+                        html += '<div class="equip-row-name">' + e.name + '</div>';
+                        html += '<div class="equip-row-serial">Serial: ' + e.serial + '</div>';
+                        html += '</label>';
+                        html += '<div class="equip-row-issue" id="eissue-' + e.id + '" style="display:none;margin-top:6px">';
+                        html += '<input type="text" id="edesc-' + e.id + '" placeholder="Describe the issue with this equipment (optional)">';
+                        html += '</div></div></div>';
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(() => { container.innerHTML = '<div class="equip-empty" style="color:var(--red)">Failed to load equipment.</div>'; });
+        }
 
-                if (checkedCount === 0) {
-                    e.preventDefault();
-                    alert('Please select at least one equipment.');
+        function toggleEquipRow(id, checked) {
+            document.getElementById('eissue-' + id).style.display = checked ? 'block' : 'none';
+        }
+
+        document.getElementById('srForm').addEventListener('submit', function(e) {
+            this.querySelectorAll('input.injected').forEach(el => el.remove());
+            const rows = document.querySelectorAll('[id^="erow-"]');
+            let checkedCount = 0;
+            rows.forEach(row => {
+                const id = row.id.replace('erow-', '');
+                const cb = document.getElementById('echeck-' + id);
+                if (cb && cb.checked) {
+                    checkedCount++;
+                    const descVal = (document.getElementById('edesc-' + id) || {}).value || '';
+                    const hidId = document.createElement('input');
+                    hidId.type = 'hidden'; hidId.name = 'equipmentIds';
+                    hidId.value = id; hidId.className = 'injected';
+                    this.appendChild(hidId);
+                    const hidDesc = document.createElement('input');
+                    hidDesc.type = 'hidden'; hidDesc.name = 'issueDescriptions';
+                    hidDesc.value = descVal; hidDesc.className = 'injected';
+                    this.appendChild(hidDesc);
                 }
             });
-        </script>
-    </body></html>
+            if (checkedCount === 0) { e.preventDefault(); alert('Please select at least one equipment.'); }
+        });
+    </script>
+</body>
+</html>
