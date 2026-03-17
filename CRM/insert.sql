@@ -500,3 +500,131 @@ UPDATE equipment_types SET image_url = '/uploads/equipment/Hochiki Fire Panel.we
 UPDATE equipment_types SET image_url = '/uploads/equipment/honeywell_pro-watch_tablet.png' WHERE id = 10;
 UPDATE equipment_types SET image_url = '/uploads/equipment/Schneider Galaxy 3500.webp' WHERE id = 13;
 UPDATE equipment_types SET image_url = '/uploads/equipment/Siemens S7-1200.jpg' WHERE id = 14;
+
+UPDATE users SET
+    address_street   = '01 Đường Sao Mai',
+    address_ward     = 'Phường Ánh Dương',
+    address_district = 'Quận Bình Minh',
+    address_city     = 'Hà Nội',
+    address_full     = '01 Đường Sao Mai, Phường Ánh Dương, Quận Bình Minh, Hà Nội',
+    hometown         = 'Ninh Bình',
+    date_of_birth    = '1992-03-10',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Sao Mai Tech',
+    emergency_name   = 'Nguyễn Thị Lan',
+    emergency_phone  = '0900000001',
+    emergency_relation = 'Mẹ',
+    bio              = 'Kỹ thuật viên hệ thống điện cơ bản.'
+WHERE id = 1;
+
+UPDATE users SET
+    address_street   = '22 Đường Hòa Bình',
+    address_ward     = 'Phường Thanh Xuân',
+    address_district = 'Quận Trung Tâm',
+    address_city     = 'Hà Nội',
+    address_full     = '22 Đường Hòa Bình, Phường Thanh Xuân, Quận Trung Tâm, Hà Nội',
+    hometown         = 'Hà Nam',
+    date_of_birth    = '1991-07-21',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty CP Hòa Bình Group',
+    emergency_name   = 'Trần Văn Nam',
+    emergency_phone  = '0900000002',
+    emergency_relation = 'Anh',
+    bio              = 'Chuyên viên quản lý thiết bị văn phòng.'
+WHERE id = 2;
+
+UPDATE users SET
+    address_street   = '15 Đường Mặt Trời',
+    address_ward     = 'Phường Bình An',
+    address_district = 'Quận Đông Thành',
+    address_city     = 'Hà Nội',
+    address_full     = '15 Đường Mặt Trời, Phường Bình An, Quận Đông Thành, Hà Nội',
+    hometown         = 'Thái Bình',
+    date_of_birth    = '1993-11-05',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Sunrise Tech',
+    emergency_name   = 'Lê Thị Hoa',
+    emergency_phone  = '0900000003',
+    emergency_relation = 'Chị',
+    bio              = 'Kỹ sư bảo trì hệ thống điện lạnh.'
+WHERE id = 3;
+
+UPDATE users SET
+    address_street   = '88 Đường Gió Nam',
+    address_ward     = 'Phường Tân Phong',
+    address_district = 'Quận Nam Thành',
+    address_city     = 'Hà Nội',
+    address_full     = '88 Đường Gió Nam, Phường Tân Phong, Quận Nam Thành, Hà Nội',
+    hometown         = 'Thanh Hóa',
+    date_of_birth    = '1989-01-18',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Gió Nam Solutions',
+    emergency_name   = 'Phạm Thị Mai',
+    emergency_phone  = '0900000004',
+    emergency_relation = 'Vợ',
+    bio              = 'Quản lý vận hành hệ thống cơ điện.'
+WHERE id = 4;
+
+UPDATE users SET
+    address_street   = '77 Đường Ánh Trăng',
+    address_ward     = 'Phường Minh Khai',
+    address_district = 'Quận Bắc Thành',
+    address_city     = 'Hà Nội',
+    address_full     = '77 Đường Ánh Trăng, Phường Minh Khai, Quận Bắc Thành, Hà Nội',
+    hometown         = 'Hải Dương',
+    date_of_birth    = '1994-09-30',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty CP Moonlight Tech',
+    emergency_name   = 'Nguyễn Văn Bình',
+    emergency_phone  = '0900000005',
+    emergency_relation = 'Bố',
+    bio              = 'Chuyên viên hỗ trợ kỹ thuật thiết bị.'
+WHERE id = 5;
+
+UPDATE users SET
+    address_street   = '09 Đường Cầu Vồng',
+    address_ward     = 'Phường Hòa Lạc',
+    address_district = 'Quận Tây Thành',
+    address_city     = 'Hà Nội',
+    address_full     = '09 Đường Cầu Vồng, Phường Hòa Lạc, Quận Tây Thành, Hà Nội',
+    hometown         = 'Nam Định',
+    date_of_birth    = '1990-12-12',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Rainbow Systems',
+    emergency_name   = 'Đỗ Thị Hạnh',
+    emergency_phone  = '0900000006',
+    emergency_relation = 'Mẹ',
+    bio              = 'Nhân viên kỹ thuật bảo trì thiết bị.'
+WHERE id = 6;
+
+UPDATE users SET
+    address_street   = '33 Đường Bình Minh',
+    address_ward     = 'Phường Tân An',
+    address_district = 'Quận Nam Trung',
+    address_city     = 'Hà Nội',
+    address_full     = '33 Đường Bình Minh, Phường Tân An, Quận Nam Trung, Hà Nội',
+    hometown         = 'Hưng Yên',
+    date_of_birth    = '1995-06-25',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty TNHH Bình Minh Tech',
+    emergency_name   = 'Lê Văn Hùng',
+    emergency_phone  = '0900000007',
+    emergency_relation = 'Anh',
+    bio              = 'Chuyên viên quản lý hệ thống kỹ thuật.'
+WHERE id = 7;
+
+UPDATE users SET
+    address_street   = '55 Đường Đại Dương',
+    address_ward     = 'Phường Hải An',
+    address_district = 'Quận Đông Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '55 Đường Đại Dương, Phường Hải An, Quận Đông Hải, Hà Nội',
+    hometown         = 'Quảng Ninh',
+    date_of_birth    = '1996-02-14',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Ocean Tech',
+    emergency_name   = 'Trần Thị Nga',
+    emergency_phone  = '0900000008',
+    emergency_relation = 'Chị',
+    bio              = 'Kỹ thuật viên hệ thống làm lạnh.'
+WHERE id = 8;
