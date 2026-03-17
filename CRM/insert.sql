@@ -79,6 +79,7 @@ INSERT INTO part_types (name, category_id, description, unit_price, updated_by) 
 ('V-Belt Drive',          4, 'Industrial V-belt for fan/pump drive',                1850000, 6),
 ('Shaft Coupling',        4, 'Flexible shaft coupling for pump',                    9600000, 6);
 
+
 -- ================================================================
 -- 3. PART_UNITS
 -- ================================================================
