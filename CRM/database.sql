@@ -506,4 +506,44 @@ CREATE TABLE IF NOT EXISTS ai_chat_messages (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_time (user_id, created_at DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ================================================================
+-- MIGRATION: Add Extended Personal Info to Users Table
+-- Run this script once on your existing crm_db
+-- ================================================================
+
+USE crm_db;
+
+ALTER TABLE users
+    -- Địa chỉ thường trú (dùng cho technician tìm đường)
+    ADD COLUMN address_street    VARCHAR(255) DEFAULT NULL COMMENT 'Số nhà, tên đường',
+    ADD COLUMN address_ward      VARCHAR(100) DEFAULT NULL COMMENT 'Phường / Xã',
+    ADD COLUMN address_district  VARCHAR(100) DEFAULT NULL COMMENT 'Quận / Huyện',
+    ADD COLUMN address_city      VARCHAR(100) DEFAULT NULL COMMENT 'Tỉnh / Thành phố',
+    ADD COLUMN address_full      VARCHAR(500) DEFAULT NULL COMMENT 'Địa chỉ đầy đủ (auto-concat, dùng cho maps)',
+
+    -- Quê quán
+    ADD COLUMN hometown          VARCHAR(255) DEFAULT NULL COMMENT 'Quê quán',
+
+    -- Thông tin cá nhân
+    ADD COLUMN date_of_birth     DATE         DEFAULT NULL COMMENT 'Ngày sinh',
+    ADD COLUMN gender            ENUM('MALE','FEMALE','OTHER') DEFAULT NULL COMMENT 'Giới tính',
+    ADD COLUMN national_id       VARCHAR(20)  DEFAULT NULL COMMENT 'Số CCCD / CMND',
+
+    -- Liên hệ khẩn cấp
+    ADD COLUMN emergency_name    VARCHAR(150) DEFAULT NULL COMMENT 'Tên người liên hệ khẩn cấp',
+    ADD COLUMN emergency_phone   VARCHAR(20)  DEFAULT NULL COMMENT 'SĐT người liên hệ khẩn cấp',
+    ADD COLUMN emergency_relation VARCHAR(50) DEFAULT NULL COMMENT 'Quan hệ (vợ/chồng, cha/mẹ...)',
+
+    -- Thông tin nghề nghiệp / bổ sung
+    ADD COLUMN company_name      VARCHAR(150) DEFAULT NULL COMMENT 'Tên công ty / tổ chức',
+    ADD COLUMN bio               TEXT         DEFAULT NULL COMMENT 'Mô tả bản thân';
+
+-- Index cho tìm kiếm theo thành phố (technician dispatch)
+ALTER TABLE users
+    ADD INDEX idx_address_city (address_city),
+    ADD INDEX idx_address_district (address_district);
+
+UPDATE users SET password = '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6' 
+WHERE username IN ('admin','techmanager','supporter','technician','customer2','storekeeper','customer');
  
