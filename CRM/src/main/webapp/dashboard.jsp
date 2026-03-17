@@ -16,280 +16,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dashboard - Storekeeper</title>
+    <title>Dashboard – Storekeeper</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --navy:        #0b1437;
-            --navy-2:      #0f1c4d;
-            --navy-card:   #111a42;
-            --navy-light:  #162050;
-            --accent:      #4f7ef8;
-            --accent-2:    #7c9ffa;
-            --accent-glow: rgba(79,126,248,0.22);
-            --green:       #34d399;
-            --green-dim:   rgba(52,211,153,0.12);
-            --amber:       #fbbf24;
-            --amber-dim:   rgba(251,191,36,0.12);
-            --danger:      #f87171;
-            --danger-dim:  rgba(248,113,113,0.12);
-            --purple:      #a78bfa;
-            --purple-dim:  rgba(167,139,250,0.12);
-            --info:        #38bdf8;
-            --info-dim:    rgba(56,189,248,0.12);
-            --orange:      #fb923c;
-            --orange-dim:  rgba(251,146,60,0.12);
-            --text:        #ffffff;
-            --text-2:      #c8d4f0;
-            --muted:       #7a8ab8;
-            --border:      rgba(255,255,255,0.07);
-            --border-2:    rgba(255,255,255,0.04);
-            --sb-width:    248px;
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Sora', sans-serif;
-            background: var(--navy);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--navy); }
-        ::-webkit-scrollbar-thumb { background: rgba(79,126,248,0.4); border-radius: 4px; }
+            /* Sidebar (dark indigo) */
+            --sb-bg:        #1e1b4b;
+            --sb-border:    rgba(255,255,255,0.08);
+            --sb-text:      rgba(255,255,255,0.45);
+            --sb-accent:    #818cf8;
+            --sb-accent-2:  #a5b4fc;
+            --sb-item-on:   rgba(129,140,248,0.2);
+            --sb-width:     252px;
 
-        /* ════════════════════ SIDEBAR ════════════════════ */
-        .sb {
-            width: var(--sb-width);
-            min-height: 100vh;
-            background: rgba(9,15,40,0.95);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border);
-            display: flex; flex-direction: column;
-            position: fixed; top: 0; left: 0; z-index: 100;
-        }
-        .sb-brand {
-            padding: 22px 18px 16px;
-            display: flex; align-items: center; gap: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .sb-logo {
-            width: 36px; height: 36px;
-            background: linear-gradient(135deg, var(--info), #0284c7);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.88rem;
-            box-shadow: 0 4px 14px rgba(56,189,248,0.3);
-            flex-shrink: 0;
-        }
-        .sb-name { color: #fff; font-size: 1rem; font-weight: 700; }
-        .sb-role {
-            display: inline-flex; align-items: center;
-            background: rgba(56,189,248,0.15);
-            border: 1px solid rgba(56,189,248,0.3);
-            color: var(--info);
-            font-size: 0.62rem; font-weight: 700;
-            letter-spacing: 1px; text-transform: uppercase;
-            padding: 2px 8px; border-radius: 20px; margin-top: 3px;
-        }
-        .sb-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
-        .sb-lbl {
-            color: rgba(255,255,255,0.22);
-            font-size: 0.62rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.4px;
-            padding: 0 8px; margin: 16px 0 5px;
-        }
-        .sb-item {
-            display: flex; align-items: center; gap: 9px;
-            padding: 9px 10px; border-radius: 9px; margin-bottom: 1px;
-            color: rgba(255,255,255,0.45); text-decoration: none;
-            font-size: 0.83rem; font-weight: 500; transition: all 0.2s;
-            border-left: 2px solid transparent;
-        }
-        .sb-item i {
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; border-radius: 8px;
-            background: rgba(255,255,255,0.05);
-            flex-shrink: 0; transition: all 0.2s;
-        }
-        /* Active */
-        .sb-item.on { color: #fff; border-left: 2px solid var(--info); background: linear-gradient(90deg, rgba(56,189,248,0.18), rgba(56,189,248,0.04)); }
-        .sb-item.on i { background: rgba(56,189,248,0.2); color: var(--info); }
-        /* Hover per item */
-        .si-home:hover    { color:#fff; background: rgba(79,126,248,0.1);  border-left-color: var(--accent); }
-        .si-home:hover i  { background: rgba(79,126,248,0.2);  color: var(--accent-2); }
-        .si-stats:hover   { color:#fff; background: rgba(56,189,248,0.1);  border-left-color: var(--info); }
-        .si-stats:hover i { background: rgba(56,189,248,0.2);  color: var(--info); }
-        .si-parts:hover   { color:#fff; background: var(--green-dim);       border-left-color: var(--green); }
-        .si-parts:hover i { background: rgba(52,211,153,0.2);  color: var(--green); }
-        .si-equip:hover   { color:#fff; background: var(--info-dim);        border-left-color: var(--info); }
-        .si-equip:hover i { background: rgba(56,189,248,0.2);  color: var(--info); }
-        .si-tx:hover      { color:#fff; background: var(--amber-dim);       border-left-color: var(--amber); }
-        .si-tx:hover i    { background: rgba(251,191,36,0.2);  color: var(--amber); }
+            /* Content (light) */
+            --bg:           #f3f4f9;
+            --bg-card:      #ffffff;
+            --bg-topbar:    #ffffff;
+            --border-light: #e8ecf5;
+            --border-light2:#f0f2fb;
+            --text-h:       #1e1b4b;
+            --text-b:       #374151;
+            --text-m:       #6b7280;
+            --text-s:       #9ca3af;
 
-        .sb-foot { padding: 12px 10px 16px; border-top: 1px solid var(--border); }
-        .sb-user {
-            display: flex; align-items: center; gap: 9px;
-            padding: 10px; border-radius: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            margin-bottom: 6px; text-decoration: none; transition: all 0.2s;
-        }
-        .sb-user:hover { background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.2); }
-        .sb-ava {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--info), #0284c7);
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.88rem; font-weight: 700;
-            flex-shrink: 0; overflow: hidden;
-        }
-        .sb-ava img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }
-        .sb-uname { color: #fff; font-size: 0.82rem; font-weight: 600; }
-        .sb-urole { color: var(--muted); font-size: 0.68rem; margin-top: 1px; }
-        .sb-logout {
-            display: flex; align-items: center; gap: 8px;
-            width: 100%; padding: 8px 10px; border-radius: 8px;
-            color: rgba(255,255,255,0.35); text-decoration: none;
-            font-size: 0.8rem; transition: all 0.2s;
-        }
-        .sb-logout:hover { color: var(--danger); background: rgba(248,113,113,0.08); }
+            /* Brand */
+            --primary:      #4f46e5;
+            --primary-2:    #6366f1;
+            --primary-light:#ede9fe;
 
-        /* ════════════════════ MAIN ════════════════════ */
-        .main { margin-left: var(--sb-width); flex: 1; padding: 32px 36px; }
-
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
+            /* Status / accent colors */
+            --purple:  #7c3aed;
+            --blue:    #2563eb;
+            --teal:    #0d9488;
+            --green:   #16a34a;
+            --red:     #dc2626;
+            --amber:   #d97706;
+            --orange:  #ea580c;
+            --info:    #0284c7;
         }
 
-        /* ── TOPBAR ── */
-        .topbar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 26px;
-            animation: cardIn 0.4s ease both;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:'Sora',sans-serif;
+            background:var(--bg);
+            color:var(--text-b);
+            min-height:100vh;
+            display:flex;
         }
-        .topbar-title { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: -0.4px; }
-        .topbar-sub { color: var(--muted); font-size: 0.84rem; margin-top: 3px; }
-        .user-badge {
-            display: flex; align-items: center; gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            font-size: 0.8rem; color: var(--muted);
-        }
-        .user-badge i { color: var(--info); font-size: 1rem; }
-        .user-badge strong { color: var(--text-2); }
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px}
 
-        /* ── WELCOME BANNER ── */
-        .welcome-banner {
-            background: linear-gradient(135deg, rgba(15,28,77,0.9) 0%, rgba(22,32,80,0.9) 60%, rgba(56,189,248,0.08) 100%);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 28px 32px;
-            margin-bottom: 28px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: relative; overflow: hidden;
-            backdrop-filter: blur(12px);
-            animation: cardIn 0.45s 0.05s ease both;
+        /* ═══════════ SIDEBAR ═══════════ */
+        .sb{
+            width:var(--sb-width);min-height:100vh;
+            background:var(--sb-bg);
+            border-right:1px solid rgba(79,70,229,0.2);
+            display:flex;flex-direction:column;
+            position:fixed;top:0;left:0;z-index:100;
+            box-shadow:4px 0 24px rgba(0,0,0,0.15);
         }
-        .welcome-banner::before {
-            content: '';
-            position: absolute; top: -40px; right: -40px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%);
-            border-radius: 50%;
+        .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border);}
+        .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0;}
+        .sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px}
+        .sb-role{
+            display:inline-flex;align-items:center;
+            background:rgba(129,140,248,0.2);
+            border:1px solid rgba(129,140,248,0.3);
+            color:var(--sb-accent-2);
+            font-size:.6rem;font-weight:700;
+            letter-spacing:1px;text-transform:uppercase;
+            padding:2px 8px;border-radius:20px;margin-top:3px;
         }
-        .welcome-banner::after {
-            content: '';
-            position: absolute; bottom: -50px; right: 130px;
-            width: 150px; height: 150px;
-            background: radial-gradient(circle, rgba(52,211,153,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .welcome-text { position: relative; z-index: 1; }
-        .welcome-text h2 { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 5px; }
-        .welcome-text h2 span { color: var(--info); }
-        .welcome-text p { color: var(--muted); font-size: 0.86rem; }
-        .welcome-icon {
-            font-size: 3.8rem; color: var(--info);
-            opacity: 0.12; position: absolute; right: 36px; z-index: 0;
-        }
+        .sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+        .sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px;}
+        .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;transition:all .18s;border-left:2px solid transparent;}
+        .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s;}
+        .sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent);}
+        .sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2)}
+        .sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06);}
+        .sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border)}
+        .sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);margin-bottom:5px;text-decoration:none;transition:all .18s;cursor:pointer;}
+        .sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3)}
+        .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;font-weight:700;flex-shrink:0;overflow:hidden;}
+        .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%}
+        .sb-uname{color:#fff;font-size:.8rem;font-weight:600}
+        .sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px}
+        .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s;}
+        .sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1)}
 
-        /* ── SECTION LABEL ── */
-        .section-lbl {
-            font-size: 0.68rem; font-weight: 700;
-            color: var(--muted); text-transform: uppercase;
-            letter-spacing: 1.3px; margin-bottom: 14px;
-        }
+        /* ═══════════ MAIN (light) ═══════════ */
+        .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;min-height:100vh}
 
-        /* ── NAV GRID ── */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 28px;
+        .topbar{
+            display:flex;justify-content:space-between;align-items:center;
+            padding:18px 28px;
+            background:var(--bg-topbar);
+            border-bottom:1px solid var(--border-light);
+            position:sticky;top:0;z-index:50;
+            box-shadow:0 1px 6px rgba(0,0,0,0.06);
         }
+        .topbar-greeting{font-size:1.2rem;font-weight:800;color:var(--text-h);letter-spacing:-.3px}
+        .topbar-sub{color:var(--text-s);font-size:.78rem;margin-top:2px}
+        .user-badge{
+            display:flex;align-items:center;gap:8px;
+            padding:8px 16px;
+            background:#fff;
+            border:1.5px solid var(--border-light);
+            border-radius:24px;
+            font-size:.8rem;color:var(--text-m);
+        }
+        .user-badge i{color:var(--primary-2);font-size:1rem}
+        .user-badge strong{color:var(--text-h)}
 
-        .nav-card {
-            background: rgba(17,26,66,0.7);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 22px 20px;
-            text-decoration: none;
-            display: flex; flex-direction: column; gap: 13px;
-            position: relative; overflow: hidden;
-            backdrop-filter: blur(12px);
-            transition: all 0.22s ease;
-            cursor: pointer;
-        }
-        .nav-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: var(--c, var(--accent));
-            transform: scaleX(0); transform-origin: left;
-            transition: transform 0.22s ease;
-        }
-        .nav-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.12); box-shadow: 0 12px 36px rgba(0,0,0,0.3); }
-        .nav-card:hover::before { transform: scaleX(1); }
-        .nav-card:hover .nav-card-icon { transform: scale(1.1) rotate(-4deg); }
-        .nav-card:hover .nav-arrow-icon { transform: translateX(4px); }
+        .content{padding:24px 28px;flex:1}
 
-        .nav-card-icon {
-            width: 46px; height: 46px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.15rem;
-            background: var(--cb, rgba(79,126,248,0.15));
-            color: var(--c, var(--accent));
-            transition: transform 0.2s;
+        /* Section label */
+        .section-lbl{
+            font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+            color:var(--primary-2);margin-bottom:13px;
+            display:flex;align-items:center;gap:10px;
         }
-        .nav-card-content h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-        .nav-card-content p  { font-size: 0.77rem; color: var(--muted); line-height: 1.55; }
-        .nav-card-arrow {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-top: auto;
+        .section-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(99,102,241,0.2),transparent)}
+
+        @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+        /* Welcome banner */
+        .welcome-banner{
+            background:linear-gradient(135deg,var(--primary) 0%,var(--purple) 60%,#6366f1 100%);
+            border-radius:18px;padding:28px 32px;
+            margin-bottom:28px;
+            display:flex;align-items:center;justify-content:space-between;
+            position:relative;overflow:hidden;color:#fff;
+            box-shadow:0 8px 32px rgba(79,70,229,0.3);
+            animation:cardIn .45s .05s ease both;
         }
-        .nav-card-arrow span { font-size: 0.75rem; font-weight: 600; color: var(--c, var(--accent)); }
-        .nav-arrow-icon { font-size: 0.72rem; color: var(--c, var(--accent)); transition: transform 0.2s; }
+        .welcome-banner::before{
+            content:'';position:absolute;top:-40px;right:-40px;
+            width:200px;height:200px;
+            background:radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%);
+            border-radius:50%;
+        }
+        .welcome-banner::after{
+            content:'';position:absolute;bottom:-50px;right:130px;
+            width:150px;height:150px;
+            background:radial-gradient(circle,rgba(255,255,255,0.08) 0%,transparent 70%);
+            border-radius:50%;
+        }
+        .welcome-text{position:relative;z-index:1;}
+        .welcome-text h2{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:5px;}
+        .welcome-text h2 span{color:#c7d2fe;}
+        .welcome-text p{color:rgba(255,255,255,0.75);font-size:.86rem;}
+        .welcome-icon{font-size:3.8rem;color:rgba(255,255,255,0.12);position:absolute;right:36px;z-index:0;}
 
-        /* color helpers */
-        .cc-info   { --c: var(--info);   --cb: rgba(56,189,248,0.15); }
-        .cc-green  { --c: var(--green);  --cb: var(--green-dim); }
-        .cc-sky    { --c: #67e8f9;       --cb: rgba(103,232,249,0.12); }
-        .cc-amber  { --c: var(--amber);  --cb: var(--amber-dim); }
-        .cc-rose   { --c: #fb7185;       --cb: rgba(251,113,133,0.12); }
-        .cc-purple { --c: var(--purple); --cb: var(--purple-dim); }
+        /* Nav grid */
+        .nav-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:14px;
+        }
+        .nav-card{
+            background:var(--bg-card);
+            border:1.5px solid var(--border-light);
+            border-radius:16px;padding:22px 20px;
+            text-decoration:none;
+            display:flex;flex-direction:column;gap:13px;
+            position:relative;overflow:hidden;
+            transition:all .22s ease;
+            box-shadow:0 1px 6px rgba(0,0,0,0.05);
+        }
+        .nav-card::before{
+            content:'';
+            position:absolute;top:0;left:0;right:0;height:3px;
+            background:var(--c,var(--primary));
+            transform:scaleX(0);transform-origin:left;
+            transition:transform .22s ease;
+            border-radius:16px 16px 0 0;
+        }
+        .nav-card:hover{transform:translateY(-3px);border-color:rgba(99,102,241,0.2);box-shadow:0 12px 32px rgba(0,0,0,0.1);}
+        .nav-card:hover::before{transform:scaleX(1);}
+        .nav-card:hover .nav-card-icon{transform:scale(1.1) rotate(-4deg);}
+        .nav-card:hover .nav-arrow-icon{transform:translateX(4px);}
 
-        /* stagger */
-        .nav-card:nth-child(1) { animation: cardIn 0.45s 0.08s ease both; }
-        .nav-card:nth-child(2) { animation: cardIn 0.45s 0.13s ease both; }
-        .nav-card:nth-child(3) { animation: cardIn 0.45s 0.18s ease both; }
-        .nav-card:nth-child(4) { animation: cardIn 0.45s 0.23s ease both; }
-        .nav-card:nth-child(5) { animation: cardIn 0.45s 0.28s ease both; }
+        .nav-card-icon{
+            width:46px;height:46px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.15rem;
+            background:var(--cb,var(--primary-light));
+            color:var(--c,var(--primary));
+            transition:transform .2s;
+        }
+        .nav-card-content h3{font-size:.9rem;font-weight:700;color:var(--text-h);margin-bottom:4px;}
+        .nav-card-content p{font-size:.77rem;color:var(--text-m);line-height:1.55;}
+        .nav-card-arrow{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+        .nav-card-arrow span{font-size:.75rem;font-weight:600;color:var(--c,var(--primary));}
+        .nav-arrow-icon{font-size:.72rem;color:var(--c,var(--primary));transition:transform .2s;}
+
+        /* Color helpers — light palette */
+        .cc-primary{--c:var(--primary);  --cb:var(--primary-light);}
+        .cc-green  {--c:var(--green);    --cb:#dcfce7;}
+        .cc-info   {--c:var(--info);     --cb:#e0f2fe;}
+        .cc-amber  {--c:var(--amber);    --cb:#fef3c7;}
+        .cc-rose   {--c:#e11d48;         --cb:#fee2e2;}
+        .cc-purple {--c:var(--purple);   --cb:#ede9fe;}
+
+        /* Stagger */
+        .nav-card:nth-child(1){animation:cardIn .45s .08s ease both;}
+        .nav-card:nth-child(2){animation:cardIn .45s .13s ease both;}
+        .nav-card:nth-child(3){animation:cardIn .45s .18s ease both;}
+        .nav-card:nth-child(4){animation:cardIn .45s .23s ease both;}
+        .nav-card:nth-child(5){animation:cardIn .45s .28s ease both;}
     </style>
 </head>
 <body>
@@ -305,22 +245,21 @@
         </div>
         <nav class="sb-nav">
             <div class="sb-lbl">Overview</div>
-            <a href="<%=ctx%>/dashboard.jsp" class="sb-item on si-home">
+            <a href="<%=ctx%>/dashboard.jsp" class="sb-item on">
                 <i class="fas fa-house"></i> Home
             </a>
-               
-            <a href="<%=ctx%>/storekeeper" class="sb-item si-stats">
+            <a href="<%=ctx%>/storekeeper" class="sb-item">
                 <i class="fas fa-chart-bar"></i> Statistics
             </a>
-                 <div class="sb-lbl">Inventory</div>
-            <a href="<%=ctx%>/numberPart" class="sb-item si-parts">
+            <div class="sb-lbl">Inventory</div>
+            <a href="<%=ctx%>/numberPart" class="sb-item">
                 <i class="fas fa-puzzle-piece"></i> Parts List
             </a>
-            <a href="<%=ctx%>/numberEquipment" class="sb-item si-equip">
+            <a href="<%=ctx%>/numberEquipment" class="sb-item">
                 <i class="fas fa-desktop"></i> Equipment List
             </a>
-                 <div class="sb-lbl">Records</div>
-            <a href="<%=ctx%>/transactions" class="sb-item si-tx">
+            <div class="sb-lbl">Records</div>
+            <a href="<%=ctx%>/transactions" class="sb-item">
                 <i class="fas fa-clock-rotate-left"></i> Transaction History
             </a>
         </nav>
@@ -345,10 +284,11 @@
     <%-- ═══════════ MAIN ═══════════ --%>
     <main class="main">
 
-        <%-- Topbar --%>
         <div class="topbar">
             <div>
-                <div class="topbar-title">Dashboard</div>
+                <div class="topbar-greeting">
+                    <i class="fas fa-house" style="color:var(--primary-2);margin-right:8px;font-size:1rem"></i>Dashboard
+                </div>
                 <div class="topbar-sub">Welcome back! Select a function below to get started.</div>
             </div>
             <div class="user-badge">
@@ -358,81 +298,83 @@
             </div>
         </div>
 
-        <%-- Welcome Banner --%>
-        <div class="welcome-banner">
-            <div class="welcome-text">
-                <h2>Hello, <span><%=displayName%>!</span></h2>
-                <p>Manage your warehouse, parts, and equipment from here.</p>
+        <div class="content">
+
+            <%-- Welcome Banner --%>
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h2>Hello, <span><%=displayName%>!</span></h2>
+                    <p>Manage your warehouse, parts, and equipment from here.</p>
+                </div>
+                <i class="fas fa-warehouse welcome-icon"></i>
             </div>
-            <i class="fas fa-warehouse welcome-icon"></i>
+
+            <%-- Nav Cards --%>
+            <div class="section-lbl">Main Functions</div>
+            <div class="nav-grid">
+
+                <a href="<%=ctx%>/storekeeper" class="nav-card cc-primary">
+                    <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="nav-card-content">
+                        <h3>Warehouse Statistics</h3>
+                        <p>Overview of parts and equipment stock status.</p>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <span>View statistics</span>
+                        <i class="fas fa-arrow-right nav-arrow-icon"></i>
+                    </div>
+                </a>
+
+                <a href="<%=ctx%>/numberPart" class="nav-card cc-green">
+                    <div class="nav-card-icon"><i class="fas fa-list-ul"></i></div>
+                    <div class="nav-card-content">
+                        <h3>Parts List</h3>
+                        <p>Manage, add, edit, and delete part types.</p>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <span>Manage parts</span>
+                        <i class="fas fa-arrow-right nav-arrow-icon"></i>
+                    </div>
+                </a>
+
+                <a href="<%=ctx%>/numberEquipment" class="nav-card cc-info">
+                    <div class="nav-card-icon"><i class="fas fa-desktop"></i></div>
+                    <div class="nav-card-content">
+                        <h3>Equipment List</h3>
+                        <p>Manage equipment models and serial number stock.</p>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <span>Manage equipment</span>
+                        <i class="fas fa-arrow-right nav-arrow-icon"></i>
+                    </div>
+                </a>
+
+                <a href="<%=ctx%>/transactions" class="nav-card cc-amber">
+                    <div class="nav-card-icon"><i class="fas fa-clock-rotate-left"></i></div>
+                    <div class="nav-card-content">
+                        <h3>Transaction History</h3>
+                        <p>Browse purchase, repair, and stock-in history.</p>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <span>View history</span>
+                        <i class="fas fa-arrow-right nav-arrow-icon"></i>
+                    </div>
+                </a>
+
+                <a href="<%=ctx%>/profile" class="nav-card cc-rose">
+                    <div class="nav-card-icon"><i class="fas fa-circle-user"></i></div>
+                    <div class="nav-card-content">
+                        <h3>Personal Profile</h3>
+                        <p>View and update your account information.</p>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <span>View profile</span>
+                        <i class="fas fa-arrow-right nav-arrow-icon"></i>
+                    </div>
+                </a>
+
+            </div>
         </div>
-
-        <%-- Nav Cards --%>
-        <div class="section-lbl">Main Functions</div>
-        <div class="nav-grid">
-
-            <a href="<%=ctx%>/storekeeper" class="nav-card cc-info">
-                <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
-                <div class="nav-card-content">
-                    <h3>Warehouse Statistics</h3>
-                    <p>Overview of parts and equipment stock status.</p>
-                </div>
-                <div class="nav-card-arrow">
-                    <span>View statistics</span>
-                    <i class="fas fa-arrow-right nav-arrow-icon"></i>
-                </div>
-            </a>
-
-            <a href="<%=ctx%>/numberPart" class="nav-card cc-green">
-                <div class="nav-card-icon"><i class="fas fa-list-ul"></i></div>
-                <div class="nav-card-content">
-                    <h3>Parts List</h3>
-                    <p>Manage, add, edit, and delete part types.</p>
-                </div>
-                <div class="nav-card-arrow">
-                    <span>Manage parts</span>
-                    <i class="fas fa-arrow-right nav-arrow-icon"></i>
-                </div>
-            </a>
-
-            <a href="<%=ctx%>/numberEquipment" class="nav-card cc-sky">
-                <div class="nav-card-icon"><i class="fas fa-desktop"></i></div>
-                <div class="nav-card-content">
-                    <h3>Equipment List</h3>
-                    <p>Manage equipment models and serial number stock.</p>
-                </div>
-                <div class="nav-card-arrow">
-                    <span>Manage equipment</span>
-                    <i class="fas fa-arrow-right nav-arrow-icon"></i>
-                </div>
-            </a>
-
-            <a href="<%=ctx%>/transactions" class="nav-card cc-amber">
-                <div class="nav-card-icon"><i class="fas fa-clock-rotate-left"></i></div>
-                <div class="nav-card-content">
-                    <h3>Transaction History</h3>
-                    <p>Browse purchase, repair, and stock-in history.</p>
-                </div>
-                <div class="nav-card-arrow">
-                    <span>View history</span>
-                    <i class="fas fa-arrow-right nav-arrow-icon"></i>
-                </div>
-            </a>
-
-            <a href="<%=ctx%>/profile" class="nav-card cc-rose">
-                <div class="nav-card-icon"><i class="fas fa-circle-user"></i></div>
-                <div class="nav-card-content">
-                    <h3>Personal Profile</h3>
-                    <p>View and update your account information.</p>
-                </div>
-                <div class="nav-card-arrow">
-                    <span>View profile</span>
-                    <i class="fas fa-arrow-right nav-arrow-icon"></i>
-                </div>
-            </a>
-
-        </div>
-
     </main>
 </body>
 </html>
