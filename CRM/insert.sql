@@ -628,3 +628,12 @@ UPDATE users SET
     emergency_relation = 'Chị',
     bio              = 'Kỹ thuật viên hệ thống làm lạnh.'
 WHERE id = 8;
+
+UPDATE users SET avatar_url = '/uploads/avatar/beluga-beluga-cat-meme.gif' WHERE id = 1;
+UPDATE users SET avatar_url = '/uploads/avatar/chó.webp' WHERE id = 2;
+UPDATE users SET avatar_url = '/uploads/avatar/mèo.webp' WHERE id = 3;
+UPDATE users SET avatar_url = '/uploads/avatar/khoc.webp' WHERE id = 4;
+UPDATE users SET avatar_url = '/uploads/avatar/meo1.webp' WHERE id = 5;
+UPDATE users SET avatar_url = '/uploads/avatar/ngua.webp' WHERE id = 6;
+UPDATE users SET avatar_url = '/uploads/avatar/OIP.webp' WHERE id = 7;
+UPDATE users SET avatar_url = '/uploads/avatar/vit.webp' WHERE id = 8;

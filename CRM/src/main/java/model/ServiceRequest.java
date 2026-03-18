@@ -22,6 +22,7 @@ public class ServiceRequest {
     private String rejectReason;
     private Integer assignedTo;
     private String assignedToName;
+    private String assignedToAvatarUrl;   // FIX: technician avatar
     private LocalDateTime assignedAt;
     private LocalDateTime completedAt;
     private LocalDateTime createdAt;
@@ -202,6 +203,15 @@ public class ServiceRequest {
 
     public void setAssignedToName(String assignedToName) {
         this.assignedToName = assignedToName;
+    }
+
+    // FIX: getter/setter for technician avatar
+    public String getAssignedToAvatarUrl() {
+        return assignedToAvatarUrl;
+    }
+
+    public void setAssignedToAvatarUrl(String assignedToAvatarUrl) {
+        this.assignedToAvatarUrl = assignedToAvatarUrl;
     }
 
     public LocalDateTime getAssignedAt() {

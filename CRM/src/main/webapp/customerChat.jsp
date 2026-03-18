@@ -99,7 +99,8 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
 ══════════════════════════════════════════ */
 .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 .chat-hd{padding:0 24px;height:64px;display:flex;align-items:center;gap:14px;flex-shrink:0;background:rgba(11,20,55,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.chat-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:700;flex-shrink:0;position:relative;}
+.chat-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;font-weight:700;flex-shrink:0;position:relative;overflow:hidden;}
+.chat-ava img{width:40px;height:40px;object-fit:cover;border-radius:50%;}
 .online-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;background:var(--green);border-radius:50%;border:2px solid var(--navy);box-shadow:0 0 6px rgba(52,211,153,0.6);}
 .chat-hd-info{flex:1;}
 .chat-hd-name{font-size:.93rem;font-weight:700;color:#fff;}
@@ -122,9 +123,13 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
 .msg-row{display:flex;align-items:flex-end;gap:8px;max-width:72%;position:relative;margin-bottom:4px;}
 .msg-row.mine{margin-left:auto;flex-direction:row-reverse;}
 .msg-row.other{margin-right:auto;}
-.msg-ava{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* ── MSG AVATAR — supports image ── */
+.msg-ava{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.msg-ava img{width:30px;height:30px;object-fit:cover;border-radius:50%;display:block;}
 .msg-ava.support{background:linear-gradient(135deg,var(--green),#059669);}
 .msg-ava.me{background:linear-gradient(135deg,var(--accent),var(--purple));}
+
 .msg-content{display:flex;flex-direction:column;gap:3px;position:relative;}
 .msg-row.mine .msg-content{align-items:flex-end;}
 .msg-row.other .msg-content{align-items:flex-start;}
@@ -258,7 +263,15 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
 
     <!-- Chat header -->
     <div class="chat-hd">
-        <div class="chat-ava"><%=agent.getFullName().substring(0,1).toUpperCase()%><span class="online-dot"></span></div>
+        <%-- FIX: agent avatar in header --%>
+        <div class="chat-ava">
+            <%if(agent.getAvatarUrl()!=null&&!agent.getAvatarUrl().isEmpty()){%>
+            <img src="<%=ctx%><%=agent.getAvatarUrl()%>" alt="avatar">
+            <%}else{%>
+            <%=agent.getFullName().substring(0,1).toUpperCase()%>
+            <%}%>
+            <span class="online-dot"></span>
+        </div>
         <div class="chat-hd-info">
             <div class="chat-hd-name"><%=agent.getFullName()%></div>
             <div class="chat-hd-status"><i class="fas fa-circle"></i> Online · Support Agent</div>
@@ -290,10 +303,23 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
         <div class="date-sep"><span><%=dateStr%></span></div>
         <%}
             List<Map<String,Object>> msgReactions=reactionsMap.getOrDefault(m.getId(),new ArrayList<>());
+
+            /* Determine which avatar URL to use for this message sender */
+            String senderAvatar = mine
+                ? (me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty() ? me.getAvatarUrl() : null)
+                : (agent.getAvatarUrl()!=null&&!agent.getAvatarUrl().isEmpty() ? agent.getAvatarUrl() : null);
+            String senderInitial = (m.getSenderName()!=null?m.getSenderName():"?").substring(0,1).toUpperCase();
         %>
         <div class="msg-row <%=mine?"mine":"other"%>" data-id="<%=m.getId()%>" data-mine="<%=mine%>"
              <%=m.isPinned()?"data-pinned='true'":""%>>
-            <div class="msg-ava <%=mine?"me":"support"%>"><%=(m.getSenderName()!=null?m.getSenderName():"?").substring(0,1).toUpperCase()%></div>
+            <%-- FIX: render img if avatarUrl exists, otherwise show initial letter --%>
+            <div class="msg-ava <%=mine?"me":"support"%>">
+                <%if(senderAvatar!=null){%>
+                <img src="<%=ctx%><%=senderAvatar%>" alt="avatar">
+                <%}else{%>
+                <%=senderInitial%>
+                <%}%>
+            </div>
             <div class="msg-content">
                 <%if(!mine){%><div class="msg-name"><%=m.getSenderName()%></div><%}%>
                 <div class="msg-bubble <%=m.isRecalled()?"recalled":""%>">
@@ -342,7 +368,13 @@ body{font-family:'Sora',sans-serif;background:var(--navy);color:var(--text);min-
         <%}}%>
 
         <div class="msg-row other typing" id="typing">
-            <div class="msg-ava support"><%=agent.getFullName().substring(0,1).toUpperCase()%></div>
+            <div class="msg-ava support">
+                <%if(agent.getAvatarUrl()!=null&&!agent.getAvatarUrl().isEmpty()){%>
+                <img src="<%=ctx%><%=agent.getAvatarUrl()%>" alt="avatar">
+                <%}else{%>
+                <%=agent.getFullName().substring(0,1).toUpperCase()%>
+                <%}%>
+            </div>
             <div class="msg-content">
                 <div class="typing-bubble"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>
             </div>
@@ -378,6 +410,10 @@ const CTX = '<%=ctx%>';
 const MY_ID = <%=me.getId()%>;
 const MY_NAME = '<%=me.getFullName().replace("\\","\\\\").replace("'","\\'")%>';
 const AGENT_NAME = '<%=agent!=null?agent.getFullName().replace("\\","\\\\").replace("'","\\'"):""%>';
+/* FIX: pass avatar URLs to JS for dynamically-built message rows */
+const MY_AVATAR    = '<%=me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()?ctx+me.getAvatarUrl():""%>';
+const AGENT_AVATAR = '<%=agent!=null&&agent.getAvatarUrl()!=null&&!agent.getAvatarUrl().isEmpty()?ctx+agent.getAvatarUrl():""%>';
+
 let lastId = <%=lastId%>;
 let pollTimer = null;
 let pollUpdatesTimer = null;
@@ -427,6 +463,16 @@ function showToast(msg, duration) {
     setTimeout(() => t.classList.remove('show'), duration || 2000);
 }
 
+/* FIX: buildAvatarHtml — returns <img> or letter depending on available URL */
+function buildAvatarHtml(isMine) {
+    const avatarUrl = isMine ? MY_AVATAR : AGENT_AVATAR;
+    const letter    = (isMine ? MY_NAME : AGENT_NAME).substring(0,1).toUpperCase();
+    if (avatarUrl) {
+        return '<img src="' + avatarUrl + '" alt="avatar">';
+    }
+    return letter;
+}
+
 function buildMsgRow(m, isMine) {
     const row = document.createElement('div');
     row.className = 'msg-row ' + (isMine ? 'mine' : 'other');
@@ -436,7 +482,6 @@ function buildMsgRow(m, isMine) {
     const isRecalled = m.recalled === true;
     const safe = isRecalled ? '' : String(m.message || '')
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-    const initLetter = (isMine ? MY_NAME : AGENT_NAME).substring(0,1).toUpperCase();
     const nameHtml = !isMine ? '<div class="msg-name">' + AGENT_NAME + '</div>' : '';
     const bubbleContent = isRecalled
         ? '<i class="fas fa-rotate-left" style="margin-right:5px;font-size:.7rem"></i>Message recalled'
@@ -468,8 +513,9 @@ function buildMsgRow(m, isMine) {
     }
     reactHtml += '</div>';
 
+    /* FIX: use buildAvatarHtml instead of plain letter */
     row.innerHTML =
-        '<div class="msg-ava ' + (isMine?'me':'support') + '">' + initLetter + '</div>' +
+        '<div class="msg-ava ' + (isMine?'me':'support') + '">' + buildAvatarHtml(isMine) + '</div>' +
         '<div class="msg-content">' + nameHtml +
         '<div class="msg-bubble' + (isRecalled?' recalled':'') + '">' + bubbleContent + '</div>' +
         reactHtml +

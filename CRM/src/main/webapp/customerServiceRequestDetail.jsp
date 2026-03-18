@@ -27,6 +27,14 @@
     boolean p4="COMPLETED".equals(sr.getStatus());
     boolean rejected="REJECTED".equals(sr.getStatus());
     boolean cancelled="CANCELLED".equals(sr.getStatus());
+
+    /* FIX: get technician avatar URL safely — use getAssignedToAvatarUrl() if it exists,
+       otherwise fall back to null so we always show the letter-avatar gracefully */
+    String techAvatarUrl = null;
+    try { techAvatarUrl = sr.getAssignedToAvatarUrl(); } catch(Exception _e) {}
+    boolean hasTechAvatar = techAvatarUrl != null && !techAvatarUrl.isEmpty();
+    String techInitial = sr.getAssignedToName() != null && !sr.getAssignedToName().isEmpty()
+        ? sr.getAssignedToName().substring(0,1).toUpperCase() : "?";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -424,13 +432,20 @@
         .tl-label.dim{color:var(--text-s)}
         .tl-sub{font-size:.73rem; color:var(--text-s); margin-top:3px}
 
-        /* Technician card */
+        /* Technician card — FIX: support img avatar */
         .tech-avatar{
             width:44px; height:44px; border-radius:50%;
             background:linear-gradient(135deg,#0284c7,#38bdf8);
             display:flex; align-items:center; justify-content:center;
             font-size:1.1rem; font-weight:700; color:#fff;
-            flex-shrink:0; box-shadow:0 4px 12px rgba(2,132,199,0.2);
+            flex-shrink:0;
+            box-shadow:0 4px 12px rgba(2,132,199,0.2);
+            overflow:hidden;
+        }
+        .tech-avatar img{
+            width:44px; height:44px;
+            object-fit:cover; border-radius:50%;
+            display:block;
         }
         .tech-name{font-size:.875rem; font-weight:600; color:var(--text-h)}
         .tech-role{font-size:.73rem; color:var(--text-m); margin-top:2px}
@@ -760,7 +775,14 @@
                         <div class="card-body">
                             <%if(sr.getAssignedToName()!=null){%>
                             <div style="display:flex;align-items:center;gap:12px">
-                                <div class="tech-avatar"><%=sr.getAssignedToName().substring(0,1).toUpperCase()%></div>
+                                <%-- FIX: show avatar image if available, otherwise show letter --%>
+                                <div class="tech-avatar">
+                                    <%if(hasTechAvatar){%>
+                                    <img src="<%=ctx%><%=techAvatarUrl%>" alt="avatar">
+                                    <%}else{%>
+                                    <%=techInitial%>
+                                    <%}%>
+                                </div>
                                 <div>
                                     <div class="tech-name"><%=sr.getAssignedToName()%></div>
                                     <div class="tech-role"><i class="fas fa-wrench" style="margin-right:4px;color:var(--info)"></i>Technician</div>

@@ -11,10 +11,11 @@ public class ServiceRequestDAO {
 
     private static final String BASE = """
         SELECT sr.*,
-               u.full_name    AS customer_name,
+               u.full_name        AS customer_name,
                c.contract_code, c.contract_type,
-               rv.full_name   AS reviewed_by_name,
-               tech.full_name AS assigned_to_name
+               rv.full_name       AS reviewed_by_name,
+               tech.full_name     AS assigned_to_name,
+               tech.avatar_url    AS assigned_to_avatar_url
         FROM service_requests sr
         JOIN users     u    ON u.id    = sr.customer_id
         JOIN contracts c    ON c.id    = sr.contract_id
@@ -239,6 +240,8 @@ public class ServiceRequestDAO {
             sr.setAssignedTo(at);
         }
         sr.setAssignedToName(rs.getString("assigned_to_name"));
+        // FIX: map technician avatar URL
+        sr.setAssignedToAvatarUrl(rs.getString("assigned_to_avatar_url"));
         Timestamp aat = rs.getTimestamp("assigned_at");
         if (aat != null) {
             sr.setAssignedAt(aat.toLocalDateTime());
@@ -398,6 +401,7 @@ public class ServiceRequestDAO {
         }
         return stats;
     }
+
     // ── TECHNICAL MANAGER: Approve a PENDING request ─────────────────────
     public boolean approve(int requestId, int reviewedBy) throws Exception {
         String sql = """
