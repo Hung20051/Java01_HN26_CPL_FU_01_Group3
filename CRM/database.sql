@@ -561,3 +561,38 @@ ALTER TABLE users
 UPDATE users SET password = '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6' 
 WHERE username IN ('admin','techmanager','supporter','technician','customer2','storekeeper','customer');
  
+-- ================================================================
+-- MIGRATION: Chat features enhancement
+-- ================================================================
+ 
+-- 1. Thêm attachment support vào chat_messages
+ALTER TABLE chat_messages
+    ADD COLUMN attachment_url  VARCHAR(500) DEFAULT NULL COMMENT 'URL file/ảnh đính kèm',
+    ADD COLUMN attachment_name VARCHAR(255) DEFAULT NULL COMMENT 'Tên gốc của file',
+    ADD COLUMN attachment_type ENUM('IMAGE','FILE') DEFAULT NULL COMMENT 'Loại đính kèm';
+ 
+-- 2. Thêm is_delivered (message status: sent → delivered → read)
+ALTER TABLE chat_messages
+    ADD COLUMN is_delivered TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = receiver đã nhận được';
+ 
+-- Index để query nhanh hơn
+ALTER TABLE chat_messages
+    ADD INDEX idx_delivered (receiver_id, is_delivered);
+ 
+-- 3. Bảng user_presence (online/offline)
+CREATE TABLE IF NOT EXISTS user_presence (
+    user_id    INT PRIMARY KEY,
+    last_seen  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_online  TINYINT(1) NOT NULL DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ 
+-- 4. Bảng user_typing (typing indicator — TTL ngắn, tự cleanup)
+CREATE TABLE IF NOT EXISTS user_typing (
+    user_id     INT NOT NULL,
+    receiver_id INT NOT NULL,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, receiver_id),
+    FOREIGN KEY (user_id)     REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
