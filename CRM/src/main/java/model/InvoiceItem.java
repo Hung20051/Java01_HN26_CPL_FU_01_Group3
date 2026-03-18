@@ -11,6 +11,9 @@ public class InvoiceItem {
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
+    // ── [THÊM MỚI] Lưu part_type_id hoặc equipment_type_id để check đã mua chưa ──
+    private int refItemId;
+    // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────────────────────────────
 
     public int getId() {
         return id;
@@ -67,4 +70,14 @@ public class InvoiceItem {
     public void setTotalPrice(BigDecimal v) {
         totalPrice = v;
     }
+
+    // ── [THÊM MỚI] ──
+    public int getRefItemId() {
+        return refItemId;
+    }
+
+    public void setRefItemId(int v) {
+        refItemId = v;
+    }
+    // ── [KẾT THÚC THÊM MỚI] ──
 }
