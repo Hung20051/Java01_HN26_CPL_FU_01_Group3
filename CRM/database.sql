@@ -558,7 +558,7 @@ ALTER TABLE users
     ADD INDEX idx_address_city (address_city),
     ADD INDEX idx_address_district (address_district);
 
-UPDATE users SET password = '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6' 
+UPDATE users SET password = '$2a$12$2DuRJznQjyVCKB5kFHBTCuYV5WWmfrz4UbvCfgAdyaRLrFGrLwTE.' 
 WHERE username IN ('admin','techmanager','supporter','technician','customer2','storekeeper','customer');
  
 -- ================================================================
@@ -596,3 +596,18 @@ CREATE TABLE IF NOT EXISTS user_typing (
     FOREIGN KEY (user_id)     REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ ALTER TABLE invoice_items
+ADD COLUMN ref_item_id INT DEFAULT NULL COMMENT 'part_type_id hoặc equipment_type_id';
+
+CREATE TABLE IF NOT EXISTS product_reviews (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id   INT          NOT NULL,
+    item_type     VARCHAR(20)  NOT NULL,  -- 'PART' hoặc 'EQUIPMENT'
+    item_id       INT          NOT NULL,  -- part_type_id hoặc equipment_type_id
+    rating        TINYINT      NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment       TEXT,
+    image_url     VARCHAR(500),
+    created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(id)
+);

@@ -512,5 +512,14 @@
     <servlet-name>AIChatServlet</servlet-name>
     <url-pattern>/customerAIChat</url-pattern>
 </servlet-mapping>
-    
+      
+<servlet>
+    <servlet-name>ReviewImageServlet</servlet-name>
+    <servlet-class>controller.ReviewImageServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ReviewImageServlet</servlet-name>
+    <url-pattern>/review-images/*</url-pattern>
+</servlet-mapping>   
+     
 </web-app>

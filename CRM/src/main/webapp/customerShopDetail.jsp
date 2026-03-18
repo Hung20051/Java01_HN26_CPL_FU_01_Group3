@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.User, dao.ShopDAO.ShopItem, java.util.*, java.text.*" %>
+<%@ page import="model.User, dao.ShopDAO.ShopItem, dao.ReviewDAO, java.util.*, java.text.*" %>
 <%
     User me = (User) session.getAttribute("user");
     if (me == null || !"CUSTOMER".equals(me.getRoleName())) {
@@ -647,6 +647,188 @@
                 </div>
             </div>
         </div>
+
+        <%-- ═══════════ [THÊM MỚI] REVIEW SECTION ═══════════ --%>
+        <%
+            List<ReviewDAO.Review> reviews = (List<ReviewDAO.Review>) request.getAttribute("reviews");
+            double avgRating = request.getAttribute("avgRating") != null ? (double)request.getAttribute("avgRating") : 0;
+            Map<Integer,Integer> ratingDist = (Map<Integer,Integer>) request.getAttribute("ratingDist");
+            boolean hasReviewed = request.getAttribute("hasReviewed") != null && (boolean)request.getAttribute("hasReviewed");
+            int totalReviews = reviews != null ? reviews.size() : 0;
+            if (ratingDist == null) ratingDist = new java.util.HashMap<>();
+        %>
+        <div style="background:#fff;border:1px solid var(--border-light);border-radius:16px;padding:28px;margin-bottom:28px;">
+
+            <%-- Header --%>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-light2);">
+                <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-h);display:flex;align-items:center;gap:8px;">
+                    <span style="background:#d1fae5;color:var(--green);width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    Đánh giá sản phẩm
+                </h3>
+                <span style="font-size:.82rem;color:var(--text-s);"><%=totalReviews%> đánh giá</span>
+            </div>
+
+            <%if(totalReviews > 0){%>
+            <%-- Summary bar --%>
+            <div style="display:flex;gap:24px;align-items:center;background:#f9fafb;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+                <div style="text-align:center;padding-right:20px;border-right:1px solid var(--border-light);">
+                    <div style="font-size:2.4rem;font-weight:800;color:var(--green);line-height:1;">
+                        <%=String.format("%.1f", avgRating)%>
+                    </div>
+                    <div style="display:flex;gap:2px;justify-content:center;margin:5px 0 3px;">
+                        <%for(int s=1;s<=5;s++){%>
+                        <span style="color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;font-size:14px;">★</span>
+                        <%}%>
+                    </div>
+                    <div style="font-size:.72rem;color:var(--text-s);"><%=totalReviews%> đánh giá</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+                    <%for(int s=5;s>=1;s--){
+                        int cnt = ratingDist.getOrDefault(s,0);
+                        int pct = totalReviews>0 ? cnt*100/totalReviews : 0;
+                    %>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text-m);">
+                        <span style="min-width:18px;"><%=s%>★</span>
+                        <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                            <div style="width:<%=pct%>%;height:100%;background:var(--green);border-radius:3px;"></div>
+                        </div>
+                        <span style="min-width:16px;"><%=cnt%></span>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+
+            <%-- Review list --%>
+            <%for(ReviewDAO.Review rv : reviews){
+                String rvInitials = rv.customerName!=null&&!rv.customerName.isEmpty()
+                    ? rv.customerName.substring(0,1).toUpperCase() : "?";
+                java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            %>
+            <div style="border:1px solid var(--border-light2);border-radius:12px;padding:16px;margin-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--green);flex-shrink:0;">
+                        <%=rvInitials%>
+                    </div>
+                    <div>
+                        <div style="font-size:.85rem;font-weight:600;color:var(--text-h);"><%=rv.customerName%></div>
+                        <div style="font-size:.72rem;color:var(--text-s);"><%=rvSdf.format(rv.createdAt)%></div>
+                    </div>
+                    <span style="margin-left:auto;background:#d1fae5;color:var(--green);font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;">✓ Đã mua hàng</span>
+                </div>
+                <div style="margin-bottom:6px;">
+                    <%for(int s=1;s<=5;s++){%>
+                    <span style="color:<%=s<=rv.rating?"#f59e0b":"#e5e7eb"%>;font-size:14px;">★</span>
+                    <%}%>
+                </div>
+                <p style="font-size:.84rem;color:var(--text-b);line-height:1.6;"><%=rv.comment!=null?rv.comment:""%></p>
+                <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
+                <div style="margin-top:10px;">
+                    <%-- src dùng ctx + rv.imageUrl để đúng với context path /DRSMS/ --%>
+                    <img src="<%=ctx + rv.imageUrl%>" alt="review"
+                         style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border-light);cursor:zoom-in;transition:transform .15s;"
+                         onmouseover="this.style.transform='scale(1.05)'"
+                         onmouseout="this.style.transform='scale(1)'"
+                         onclick="openLightbox('<%=ctx + rv.imageUrl%>')">
+                </div>
+                <%}%>
+            </div>
+            <%}%>
+            <%}else{%>
+            <div style="text-align:center;padding:32px;color:var(--text-s);">
+                <div style="font-size:2rem;margin-bottom:8px;">💬</div>
+                <div style="font-size:.88rem;">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>
+            </div>
+            <%}%>
+
+            <%-- Write review form --%>
+            <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light2);">
+                <h4 style="font-size:.95rem;font-weight:700;color:var(--text-h);margin-bottom:16px;">
+                    <%=hasReviewed ? "Bạn đã đánh giá sản phẩm này" : "Viết đánh giá của bạn"%>
+                </h4>
+
+                <%if(!hasReviewed){%>
+                <form method="post" action="<%=ctx%>/customerShop" enctype="multipart/form-data">
+                    <input type="hidden" name="action"   value="addReview">
+                    <input type="hidden" name="itemType" value="<%=item.itemType%>">
+                    <input type="hidden" name="itemId"   value="<%=item.id%>">
+                    <input type="hidden" name="rating"   id="ratingInput" value="0">
+
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Đánh giá của bạn</label>
+                        <div id="starPicker" style="display:flex;gap:6px;cursor:pointer;">
+                            <span class="rv-star" data-val="1" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
+                            <span class="rv-star" data-val="2" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
+                            <span class="rv-star" data-val="3" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
+                            <span class="rv-star" data-val="4" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
+                            <span class="rv-star" data-val="5" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
+                        </div>
+                        <p id="starLabel" style="font-size:.75rem;color:var(--text-s);margin-top:4px;">Chọn số sao</p>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Nhận xét</label>
+                        <textarea name="comment" maxlength="500" required
+                            placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."
+                            style="width:100%;padding:10px 12px;font-family:'Sora',sans-serif;font-size:.84rem;color:var(--text-b);background:#f9fafb;border:1px solid var(--border-light);border-radius:10px;resize:vertical;min-height:88px;outline:none;"
+                            onfocus="this.style.borderColor='var(--green)'"
+                            onblur="this.style.borderColor='var(--border-light)'"></textarea>
+                    </div>
+
+                    <%-- [THÊM MỚI] Upload ảnh từ máy thay vì nhập URL --%>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">
+                            Hình ảnh <span style="color:var(--text-s)">(tùy chọn · JPG, PNG, WEBP · tối đa 5MB)</span>
+                        </label>
+                        <%-- Vùng kéo thả / click chọn ảnh --%>
+                        <div id="rvUploadArea"
+                             style="border:1.5px dashed var(--border-light);border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:#f9fafb;transition:border-color .2s;"
+                             onclick="document.getElementById('reviewImage').click()"
+                             ondragover="event.preventDefault();this.style.borderColor='var(--green)'"
+                             ondragleave="this.style.borderColor='var(--border-light)'"
+                             ondrop="handleDrop(event)">
+                            <div id="rvUploadHint">
+                                <div style="font-size:1.6rem;margin-bottom:6px;">📎</div>
+                                <div style="font-size:.82rem;color:var(--text-m);font-weight:600;">Nhấn để chọn ảnh</div>
+                                <div style="font-size:.73rem;color:var(--text-s);margin-top:3px;">hoặc kéo thả vào đây</div>
+                            </div>
+                            <%-- Preview ảnh sau khi chọn --%>
+                            <div id="rvPreviewWrap" style="display:none;">
+                                <img id="rvPreviewImg" src="" alt="preview"
+                                     style="max-height:120px;max-width:100%;border-radius:8px;object-fit:contain;">
+                                <div style="margin-top:8px;">
+                                    <span id="rvFileName" style="font-size:.75rem;color:var(--text-m);"></span>
+                                    <button type="button" onclick="clearImage(event)"
+                                        style="margin-left:10px;font-size:.72rem;color:var(--red);background:none;border:none;cursor:pointer;text-decoration:underline;">
+                                        Xóa ảnh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <%-- Input file ẩn, name="reviewImage" khớp với req.getPart("reviewImage") trong servlet --%>
+                        <input type="file" id="reviewImage" name="reviewImage"
+                               accept="image/jpeg,image/png,image/webp,image/gif"
+                               style="display:none;"
+                               onchange="previewReviewImage(this)">
+                    </div>
+                    <%-- [KẾT THÚC THÊM MỚI] --%>
+
+                    <button type="submit" id="rvSubmit"
+                        style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;opacity:.5;pointer-events:none;transition:all .2s;">
+                        <i class="fas fa-paper-plane"></i> Gửi đánh giá
+                    </button>
+                </form>
+                <%}else{%>
+                <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
+                    <i class="fas fa-check-circle"></i> Bạn đã gửi đánh giá cho sản phẩm này rồi.
+                </div>
+                <%}%>
+            </div>
+
+        </div>
+        <%-- ═══════════ [KẾT THÚC THÊM MỚI] REVIEW SECTION ═══════════ --%>
+
     </div>
 </main>
 
@@ -667,7 +849,125 @@
         const main = document.getElementById('mainImg');
         if (main && src) main.src = src;
     }
+
+    // ── [THÊM MỚI] Xử lý preview ảnh review trước khi upload ──
+    function previewReviewImage(input) {
+        if (!input.files || !input.files[0]) return;
+        var file = input.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('rvPreviewImg').src = e.target.result;
+            document.getElementById('rvFileName').textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+            document.getElementById('rvUploadHint').style.display = 'none';
+            document.getElementById('rvPreviewWrap').style.display = 'block';
+            document.getElementById('rvUploadArea').style.borderColor = 'var(--green)';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearImage(event) {
+        event.stopPropagation(); // không trigger click của upload area
+        document.getElementById('reviewImage').value = '';
+        document.getElementById('rvPreviewImg').src = '';
+        document.getElementById('rvUploadHint').style.display = 'block';
+        document.getElementById('rvPreviewWrap').style.display = 'none';
+        document.getElementById('rvUploadArea').style.borderColor = 'var(--border-light)';
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        document.getElementById('rvUploadArea').style.borderColor = 'var(--border-light)';
+        var files = event.dataTransfer.files;
+        if (files && files[0]) {
+            // Gán file vào input để form submit được
+            var dt = new DataTransfer();
+            dt.items.add(files[0]);
+            var inp = document.getElementById('reviewImage');
+            inp.files = dt.files;
+            previewReviewImage(inp);
+        }
+    }
+    // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────
+    (function(){
+        var selected = 0;
+        var labels = ['','Rất tệ','Tệ','Bình thường','Tốt','Rất tốt'];
+        var stars = document.querySelectorAll('.rv-star');
+        if (!stars.length) return; // không render nếu đã review rồi
+        stars.forEach(function(s){
+            // Click: chốt số sao
+            s.addEventListener('click', function(){
+                selected = +this.dataset.val;
+                document.getElementById('ratingInput').value = selected;
+                stars.forEach(function(x){
+                    x.style.color = +x.dataset.val <= selected ? '#f59e0b' : '#e5e7eb';
+                });
+                document.getElementById('starLabel').textContent = labels[selected];
+                var btn = document.getElementById('rvSubmit');
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+            });
+            // Hover: preview màu
+            s.addEventListener('mouseover', function(){
+                var v = +this.dataset.val;
+                stars.forEach(function(x){
+                    x.style.color = +x.dataset.val <= v ? '#f59e0b' : '#e5e7eb';
+                });
+            });
+            // Mouse out: khôi phục về sao đã chọn
+            s.addEventListener('mouseout', function(){
+                stars.forEach(function(x){
+                    x.style.color = +x.dataset.val <= selected ? '#f59e0b' : '#e5e7eb';
+                });
+            });
+        });
+    })();
+    // ── [KẾT THÚC THÊM MỚI] ────────────────────────────
 </script>
+
+<%-- ── [THÊM MỚI] Lightbox xem ảnh review toàn màn hình ── --%>
+<div id="rvLightbox"
+     style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.82);
+            align-items:center;justify-content:center;cursor:zoom-out;"
+     onclick="closeLightbox()">
+    <%-- Nút đóng góc trên phải --%>
+    <button onclick="closeLightbox()" title="Đóng"
+            style="position:absolute;top:18px;right:22px;background:rgba(255,255,255,0.15);
+                   border:none;color:#fff;font-size:1.4rem;width:40px;height:40px;
+                   border-radius:50%;cursor:pointer;display:flex;align-items:center;
+                   justify-content:center;transition:background .2s;z-index:1;"
+            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.15)'">✕</button>
+    <%-- Ảnh lớn — click vào ảnh không đóng lightbox --%>
+    <img id="rvLightboxImg" src="" alt="review full"
+         style="max-width:90vw;max-height:88vh;object-fit:contain;
+                border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.5);
+                cursor:default;"
+         onclick="event.stopPropagation()">
+    <%-- Caption nhỏ bên dưới --%>
+    <div style="position:absolute;bottom:18px;color:rgba(255,255,255,0.5);font-size:.75rem;">
+        Nhấn ra ngoài hoặc nhấn ESC để đóng
+    </div>
+</div>
+
+<script>
+    function openLightbox(src) {
+        var lb = document.getElementById('rvLightbox');
+        document.getElementById('rvLightboxImg').src = src;
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // khóa scroll trang khi lightbox mở
+    }
+    function closeLightbox() {
+        document.getElementById('rvLightbox').style.display = 'none';
+        document.getElementById('rvLightboxImg').src = '';
+        document.body.style.overflow = '';
+    }
+    // Nhấn ESC để đóng lightbox
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+<%-- ── [KẾT THÚC THÊM MỚI] ── --%>
+
 <%@ include file="customerAIBubble.jsp" %>
 </body>
 </html>
