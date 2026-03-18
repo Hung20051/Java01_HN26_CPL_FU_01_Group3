@@ -13,9 +13,15 @@ public class ChatMessage {
     private int receiverId;
     private String message;
     private boolean read;
+    private boolean delivered;
     private LocalDateTime createdAt;
     private boolean recalled;
     private boolean pinned;
+
+    // Attachment fields
+    private String attachmentUrl;
+    private String attachmentName;
+    private String attachmentType; // IMAGE / FILE
 
     public String getTimeFormatted() {
         if (createdAt == null) {
@@ -27,6 +33,15 @@ public class ChatMessage {
         return createdAt.format(DateTimeFormatter.ofPattern("dd/MM HH:mm"));
     }
 
+    public boolean hasAttachment() {
+        return attachmentUrl != null && !attachmentUrl.isEmpty();
+    }
+
+    public boolean isImage() {
+        return "IMAGE".equals(attachmentType);
+    }
+
+    // ── Getters & Setters ──
     public int getId() {
         return id;
     }
@@ -83,6 +98,14 @@ public class ChatMessage {
         read = v;
     }
 
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean v) {
+        delivered = v;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -105,5 +128,29 @@ public class ChatMessage {
 
     public void setPinned(boolean v) {
         pinned = v;
+    }
+
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public void setAttachmentUrl(String v) {
+        attachmentUrl = v;
+    }
+
+    public String getAttachmentName() {
+        return attachmentName;
+    }
+
+    public void setAttachmentName(String v) {
+        attachmentName = v;
+    }
+
+    public String getAttachmentType() {
+        return attachmentType;
+    }
+
+    public void setAttachmentType(String v) {
+        attachmentType = v;
     }
 }
