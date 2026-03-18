@@ -401,9 +401,23 @@ CREATE TABLE IF NOT EXISTS invoice_items (
 
 -- Additional users
 INSERT IGNORE INTO users (full_name, email, phone, username, password, auth_provider, role_id, active) VALUES
-('Nguyen Van Binh', 'customer2@drsms.local', '0901234567', 'customer2',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1),
-('Le Thi Thu',      'support2@drsms.local',  '0923456789', 'supporter2', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 3, 1);
+('Nguyen Van Binh', 'customer2@drsms.local', '0901234567', 'customer2',  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdFd3dByM0X5pMe', 'LOCAL', 2, 1);
 
+INSERT IGNORE INTO users (full_name, email, phone, username, password, auth_provider, role_id, active) VALUES
+('Tran Van Minh',      'customer3@drsms.local', '0912345601', 'customer3', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 2, 1),
+('Nguyen Thi Lan',     'customer4@drsms.local', '0912345602', 'customer4', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 2, 1),
+('Le Hoang Nam',       'customer5@drsms.local', '0912345603', 'customer5', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 2, 1),
+('Pham Thi Huong',     'customer6@drsms.local', '0912345604', 'customer6', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 2, 1),
+('Hoang Duc Thanh',    'customer7@drsms.local', '0912345605', 'customer7', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 2, 1);
+ 
+-- ================================================================
+-- THÊM 4 TECHNICIANS (role_id = 6)
+-- ================================================================
+INSERT IGNORE INTO users (full_name, email, phone, username, password, auth_provider, role_id, active) VALUES
+('Nguyen Van Khanh',   'technician2@drsms.local', '0923456781', 'technician2', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 6, 1),
+('Tran Duc Hieu',      'technician3@drsms.local', '0923456782', 'technician3', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 6, 1),
+('Le Van Phong',       'technician4@drsms.local', '0923456783', 'technician4', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 6, 1),
+('Pham Quoc Bao',      'technician5@drsms.local', '0923456784', 'technician5', '$2a$12$eUY11RuVC6WvbwSyZac2kuOT/XszxgH1XIs/mQhlyib4TSC7C7TF6', 'LOCAL', 6, 1);
 -- Customer equipment (customer id=5 owns the following equipment)
 INSERT INTO customer_equipment (customer_id, equipment_unit_id, source, purchased_date, warranty_expires, notes) VALUES
 (5, 2,  'INTERNAL', '2022-01-15', '2024-01-15', 'Daikin VRV IV - warranty expired'),
