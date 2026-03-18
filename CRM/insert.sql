@@ -629,6 +629,134 @@ UPDATE users SET
     bio              = 'Kỹ thuật viên hệ thống làm lạnh.'
 WHERE id = 8;
 
+UPDATE users SET
+    address_street   = '11 Đường Hoa Sen',
+    address_ward     = 'Phường Thanh Bình',
+    address_district = 'Quận Nam Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '11 Đường Hoa Sen, Phường Thanh Bình, Quận Nam Hải, Hà Nội',
+    hometown         = 'Bắc Ninh',
+    date_of_birth    = '1992-08-12',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty TNHH Hoa Sen Tech',
+    emergency_name   = 'Nguyễn Văn Dũng',
+    emergency_phone  = '0910000009',
+    emergency_relation = 'Anh',
+    bio              = 'Nhân viên quản lý thiết bị văn phòng.'
+WHERE id = 9;
+
+UPDATE users SET
+    address_street   = '66 Đường Mây Trắng',
+    address_ward     = 'Phường Hòa Phát',
+    address_district = 'Quận Bắc Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '66 Đường Mây Trắng, Phường Hòa Phát, Quận Bắc Hải, Hà Nội',
+    hometown         = 'Vĩnh Phúc',
+    date_of_birth    = '1991-04-03',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH CloudTech',
+    emergency_name   = 'Trần Thị Hạnh',
+    emergency_phone  = '0910000010',
+    emergency_relation = 'Mẹ',
+    bio              = 'Kỹ thuật viên hệ thống điện lạnh.'
+WHERE id = 10;
+
+UPDATE users SET
+    address_street   = '27 Đường Ánh Sao',
+    address_ward     = 'Phường Minh Tân',
+    address_district = 'Quận Đông Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '27 Đường Ánh Sao, Phường Minh Tân, Quận Đông Hải, Hà Nội',
+    hometown         = 'Hải Phòng',
+    date_of_birth    = '1993-10-19',
+    gender           = 'MALE',
+    company_name     = 'Công ty CP StarTech',
+    emergency_name   = 'Lê Văn Sơn',
+    emergency_phone  = '0910000011',
+    emergency_relation = 'Bố',
+    bio              = 'Chuyên viên bảo trì hệ thống cơ điện.'
+WHERE id = 11;
+
+UPDATE users SET
+    address_street   = '45 Đường Gió Bắc',
+    address_ward     = 'Phường Tân Bình',
+    address_district = 'Quận Trung Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '45 Đường Gió Bắc, Phường Tân Bình, Quận Trung Hải, Hà Nội',
+    hometown         = 'Thái Nguyên',
+    date_of_birth    = '1988-12-01',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH WindTech',
+    emergency_name   = 'Phạm Thị Lan',
+    emergency_phone  = '0910000012',
+    emergency_relation = 'Vợ',
+    bio              = 'Quản lý vận hành hệ thống kỹ thuật tòa nhà.'
+WHERE id = 12;
+
+UPDATE users SET
+    address_street   = '90 Đường Bình Yên',
+    address_ward     = 'Phường An Hòa',
+    address_district = 'Quận Tây Hải',
+    address_city     = 'Hà Nội',
+    address_full     = '90 Đường Bình Yên, Phường An Hòa, Quận Tây Hải, Hà Nội',
+    hometown         = 'Quảng Bình',
+    date_of_birth    = '1995-02-22',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty TNHH PeaceTech',
+    emergency_name   = 'Nguyễn Thị Thu',
+    emergency_phone  = '0910000013',
+    emergency_relation = 'Chị',
+    bio              = 'Nhân viên hỗ trợ kỹ thuật.'
+WHERE id = 13;
+
+UPDATE users SET
+    address_street   = '13 Đường Đại Lộ Xanh',
+    address_ward     = 'Phường Phú Mỹ',
+    address_district = 'Quận Nam Trung',
+    address_city     = 'Hà Nội',
+    address_full     = '13 Đường Đại Lộ Xanh, Phường Phú Mỹ, Quận Nam Trung, Hà Nội',
+    hometown         = 'Đà Nẵng',
+    date_of_birth    = '1990-06-14',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH GreenTech',
+    emergency_name   = 'Đỗ Văn Long',
+    emergency_phone  = '0910000014',
+    emergency_relation = 'Anh',
+    bio              = 'Kỹ sư hệ thống điện công nghiệp.'
+WHERE id = 14;
+
+UPDATE users SET
+    address_street   = '72 Đường Hoàng Hôn',
+    address_ward     = 'Phường Hồng Hà',
+    address_district = 'Quận Bắc Trung',
+    address_city     = 'Hà Nội',
+    address_full     = '72 Đường Hoàng Hôn, Phường Hồng Hà, Quận Bắc Trung, Hà Nội',
+    hometown         = 'Huế',
+    date_of_birth    = '1994-11-09',
+    gender           = 'FEMALE',
+    company_name     = 'Công ty TNHH Sunset Tech',
+    emergency_name   = 'Trần Văn Hải',
+    emergency_phone  = '0910000015',
+    emergency_relation = 'Bố',
+    bio              = 'Chuyên viên quản lý thiết bị kỹ thuật.'
+WHERE id = 15;
+
+UPDATE users SET
+    address_street   = '05 Đường Bình Minh',
+    address_ward     = 'Phường Đông Sơn',
+    address_district = 'Quận Nam Thành',
+    address_city     = 'Hà Nội',
+    address_full     = '05 Đường Bình Minh, Phường Đông Sơn, Quận Nam Thành, Hà Nội',
+    hometown         = 'Lào Cai',
+    date_of_birth    = '1996-01-27',
+    gender           = 'MALE',
+    company_name     = 'Công ty TNHH Sunrise Systems',
+    emergency_name   = 'Lê Thị Mai',
+    emergency_phone  = '0910000016',
+    emergency_relation = 'Mẹ',
+    bio              = 'Nhân viên kỹ thuật bảo trì hệ thống.'
+WHERE id = 16;
+
 UPDATE users SET avatar_url = '/uploads/avatar/beluga-beluga-cat-meme.gif' WHERE id = 1;
 UPDATE users SET avatar_url = '/uploads/avatar/chó.webp' WHERE id = 2;
 UPDATE users SET avatar_url = '/uploads/avatar/mèo.webp' WHERE id = 3;
