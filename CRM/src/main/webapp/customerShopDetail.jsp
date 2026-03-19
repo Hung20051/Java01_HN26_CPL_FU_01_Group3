@@ -420,15 +420,7 @@
                         <span style="font-size:1.4rem"><%=defaultEmoji%></span>
                         <%}%>
                     </div>
-                    <div class="thumb" style="opacity:.35">
-                        <div class="thumb-add"><i class="fas fa-image"></i><span>View 2</span></div>
-                    </div>
-                    <div class="thumb" style="opacity:.35">
-                        <div class="thumb-add"><i class="fas fa-image"></i><span>View 3</span></div>
-                    </div>
-                    <div class="thumb" style="opacity:.35">
-                        <div class="thumb-add"><i class="fas fa-rotate-right"></i><span>360°</span></div>
-                    </div>
+                    
                 </div>
             </div>
 
