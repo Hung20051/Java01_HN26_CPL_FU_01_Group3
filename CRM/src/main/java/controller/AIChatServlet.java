@@ -393,8 +393,9 @@ public class AIChatServlet extends HttpServlet {
 
         return """
             You are the AI assistant of DRSMS (Device Repair & Service Management System).
-            Always respond in the SAME language the user writes in.
-            Vietnamese input → Vietnamese reply. English input → English reply. Never mix.
+            Your DEFAULT language is ENGLISH. Always respond in English unless the user explicitly writes in Vietnamese.
+            Vietnamese input → Vietnamese reply. English input → English reply.
+            When the user's language is ambiguous (e.g. "ok", "yes", numbers, emojis) → default to English.
 
             ## CURRENT SESSION CONTEXT
             Date : %s

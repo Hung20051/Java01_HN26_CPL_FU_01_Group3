@@ -44,9 +44,9 @@ public class EmailUtil {
         });
 
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(SENDER_EMAIL, "CRM System", "UTF-8"));
+        message.setFrom(new InternetAddress(SENDER_EMAIL, "DRSMS System", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-        message.setSubject("Mã OTP xác nhận đăng ký tài khoản CRM System");
+        message.setSubject("Mã OTP xác nhận đăng ký tài khoản DRSMS System");
         message.setContent(buildEmailHtml(otp), "text/html; charset=UTF-8");
 
         Transport.send(message);
@@ -59,7 +59,7 @@ public class EmailUtil {
             <body style="font-family:Arial,sans-serif; background:#f0f4f8; margin:0; padding:20px;">
               <div style="max-width:500px; margin:0 auto; background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.1);">
                 <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:30px; text-align:center;">
-                  <h1 style="color:white; margin:0; font-size:1.5rem;">🔐 CRM System</h1>
+                  <h1 style="color:white; margin:0; font-size:1.5rem;">🔐 DRSMS System</h1>
                   <p style="color:rgba(255,255,255,.8); margin:8px 0 0;">Xác nhận đăng ký tài khoản</p>
                 </div>
                 <div style="padding:40px; text-align:center;">
