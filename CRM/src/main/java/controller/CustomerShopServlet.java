@@ -496,7 +496,7 @@ public class CustomerShopServlet extends HttpServlet {
         // Lưu review vào database
         reviewDAO.addReview(me.getId(), itemType, itemId, rating, comment, savedImageUrl);
 
-        req.getSession().setAttribute("shopFlashSuccess", "Cảm ơn bạn đã đánh giá sản phẩm!");
+        req.getSession().setAttribute("shopFlashSuccess", "Thank you for reviewing the product!");
         resp.sendRedirect(backUrl);
     }
     // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────────
@@ -610,7 +610,7 @@ public class CustomerShopServlet extends HttpServlet {
                             psCe.setInt(2, uid);
                             psCe.setDate(3, purchasedDate);
                             psCe.setDate(4, java.sql.Date.valueOf(warrantyExpires));
-                            psCe.setString(5, "Mua qua shop online - Invoice " + invoiceId);
+                            psCe.setString(5, "Buy through online shop - Invoice " + invoiceId);
                             psCe.executeUpdate();
                         }
                     }

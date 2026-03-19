@@ -276,39 +276,51 @@
             gap:16px;
         }
         .eq-card{
-            background:var(--bg-card);
-            border:1.5px solid var(--border-light);
-            border-radius:16px;
-            padding:18px;
-            box-shadow:0 1px 6px rgba(0,0,0,0.05);
-            transition:all .22s;
-            position:relative; overflow:hidden;
-            animation:cardIn .45s ease both;
-        }
+    background:var(--bg-card);
+    border:1.5px solid var(--border-light);
+    border-radius:16px;
+    padding:0;                          /* bỏ padding chung */
+    box-shadow:0 1px 6px rgba(0,0,0,0.05);
+    transition:all .22s;
+    position:relative; overflow:hidden;
+    animation:cardIn .45s ease both;
+    display:flex; flex-direction:column;
+}
         .eq-card:hover{
-            transform:translateY(-3px);
-            box-shadow:0 10px 28px rgba(79,70,229,0.12);
-            border-color:rgba(99,102,241,0.3);
-        }
+    transform:translateY(-3px);
+    box-shadow:0 10px 28px rgba(79,70,229,0.12);
+    border-color:rgba(99,102,241,0.3);
+}
         /* Left accent bar on hover */
         .eq-card::before{
-            content:''; position:absolute;
-            left:0; top:0; bottom:0; width:3px;
-            background:linear-gradient(180deg,var(--primary),var(--purple));
-            opacity:0; transition:opacity .22s;
-            border-radius:16px 0 0 16px;
-        }
+    content:''; position:absolute;
+    left:0; top:0; bottom:0; width:3px;
+    background:linear-gradient(180deg,var(--primary),var(--purple));
+    opacity:0; transition:opacity .22s;
+    border-radius:16px 0 0 16px;
+    z-index:2;
+}
         .eq-card:hover::before{opacity:1}
 
         .eq-card-top{
             display:flex; justify-content:space-between; align-items:flex-start;
             margin-bottom:13px;
         }
-        .eq-icon-wrap{
-            width:46px; height:46px; border-radius:13px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:1.2rem; flex-shrink:0;
-        }
+       .eq-icon-wrap{
+    width:56px; height:56px; border-radius:13px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; flex-shrink:0;
+    overflow:hidden;
+    padding:5px;
+    border:1px solid var(--border-light);
+}
+.eq-icon-wrap img{
+    width:100%; height:100%;
+    object-fit:contain;
+    border-radius:8px;
+}
+.eq-icon-int{ background:var(--primary-light); color:var(--primary-2); }
+.eq-icon-ext{ background:#fef3c7; color:var(--amber); }
         .eq-icon-int{background:var(--primary-light); color:var(--primary-2)}
         .eq-icon-ext{background:#fef3c7; color:var(--amber)}
 
@@ -526,9 +538,14 @@
                 %>
                 <div class="eq-card">
                     <div class="eq-card-top">
-                        <div class="eq-icon-wrap <%=isInternal?"eq-icon-int":"eq-icon-ext"%>">
-                            <i class="fas fa-desktop"></i>
-                        </div>
+                       <% String imgUrl = eq.getImageUrl(); %>
+<div class="eq-icon-wrap <%=isInternal?"eq-icon-int":"eq-icon-ext"%>">
+    <%if(imgUrl != null && !imgUrl.isEmpty()){%>
+    <img src="<%=ctx%><%=imgUrl%>" alt="<%=eq.getDisplayName()%>">
+    <%}else{%>
+    <i class="fas fa-desktop"></i>
+    <%}%>
+</div>
                         <div class="eq-tags">
                             <span class="tag <%=isInternal?"tag-int":"tag-ext"%>">
                                 <%=isInternal?"In-System":"External"%>

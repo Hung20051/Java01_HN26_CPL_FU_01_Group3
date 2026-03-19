@@ -925,3 +925,10 @@ INSERT INTO product_reviews (customer_id, item_type, item_id, rating, comment, i
 (11, 'PART', 13, 5, 'Genuine V-belt, noticeably more durable than generic alternatives. Almost a year in and no replacement needed yet.', NULL),
 (13, 'PART', 13, 4, 'Belt fits the pulley perfectly. Machine runs more stably after the swap.', NULL),
 (15, 'PART', 13, 3, 'Quality is fine but delivery was slow. Belt performs well and does not stretch quickly like cheaper alternatives.', NULL);
+
+
+
+UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Panasonic 2HP Air Conditioner.webp' WHERE id = 7;
+UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Honda 5kW Generator.jpg' WHERE id = 8;
+UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Toshiba 2.5HP Air Conditioner.webp' WHERE id = 13;
+UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Pentax CM50 Water Pump.jpg' WHERE id = 14;

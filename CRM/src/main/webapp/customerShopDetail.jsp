@@ -665,9 +665,9 @@
                     <span style="background:#d1fae5;color:var(--green);width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;">
                         <i class="fas fa-star"></i>
                     </span>
-                    Đánh giá sản phẩm
+                    Product Reviews
                 </h3>
-                <span style="font-size:.82rem;color:var(--text-s);"><%=totalReviews%> đánh giá</span>
+                <span style="font-size:.82rem;color:var(--text-s);"><%=totalReviews%> review<%=totalReviews!=1?"s":""%></span>
             </div>
 
             <%if(totalReviews > 0){%>
@@ -682,7 +682,7 @@
                         <span style="color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;font-size:14px;">★</span>
                         <%}%>
                     </div>
-                    <div style="font-size:.72rem;color:var(--text-s);"><%=totalReviews%> đánh giá</div>
+                    <div style="font-size:.72rem;color:var(--text-s);"><%=totalReviews%> review<%=totalReviews!=1?"s":""%></div>
                 </div>
                 <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
                     <%for(int s=5;s>=1;s--){
@@ -715,7 +715,7 @@
                         <div style="font-size:.85rem;font-weight:600;color:var(--text-h);"><%=rv.customerName%></div>
                         <div style="font-size:.72rem;color:var(--text-s);"><%=rvSdf.format(rv.createdAt)%></div>
                     </div>
-                    <span style="margin-left:auto;background:#d1fae5;color:var(--green);font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;">✓ Đã mua hàng</span>
+                    <span style="margin-left:auto;background:#d1fae5;color:var(--green);font-size:.68rem;font-weight:600;padding:2px 10px;border-radius:20px;">✓ Verified Purchase</span>
                 </div>
                 <div style="margin-bottom:6px;">
                     <%for(int s=1;s<=5;s++){%>
@@ -738,14 +738,14 @@
             <%}else{%>
             <div style="text-align:center;padding:32px;color:var(--text-s);">
                 <div style="font-size:2rem;margin-bottom:8px;">💬</div>
-                <div style="font-size:.88rem;">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>
+                <div style="font-size:.88rem;">No reviews yet. Be the first to share your experience!</div>
             </div>
             <%}%>
 
             <%-- Write review form --%>
             <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light2);">
                 <h4 style="font-size:.95rem;font-weight:700;color:var(--text-h);margin-bottom:16px;">
-                    <%=hasReviewed ? "Bạn đã đánh giá sản phẩm này" : "Viết đánh giá của bạn"%>
+                    <%=hasReviewed ? "You have already reviewed this product" : "Write your review"%>
                 </h4>
 
                 <%if(!hasReviewed){%>
@@ -756,7 +756,7 @@
                     <input type="hidden" name="rating"   id="ratingInput" value="0">
 
                     <div style="margin-bottom:14px;">
-                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Đánh giá của bạn</label>
+                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Your rating</label>
                         <div id="starPicker" style="display:flex;gap:6px;cursor:pointer;">
                             <span class="rv-star" data-val="1" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
                             <span class="rv-star" data-val="2" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
@@ -764,13 +764,13 @@
                             <span class="rv-star" data-val="4" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
                             <span class="rv-star" data-val="5" style="font-size:28px;color:#e5e7eb;transition:color .1s;">★</span>
                         </div>
-                        <p id="starLabel" style="font-size:.75rem;color:var(--text-s);margin-top:4px;">Chọn số sao</p>
+                        <p id="starLabel" style="font-size:.75rem;color:var(--text-s);margin-top:4px;">Select a rating</p>
                     </div>
 
                     <div style="margin-bottom:14px;">
-                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Nhận xét</label>
+                        <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">Comment</label>
                         <textarea name="comment" maxlength="500" required
-                            placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."
+                            placeholder="Share your experience with this product..."
                             style="width:100%;padding:10px 12px;font-family:'Sora',sans-serif;font-size:.84rem;color:var(--text-b);background:#f9fafb;border:1px solid var(--border-light);border-radius:10px;resize:vertical;min-height:88px;outline:none;"
                             onfocus="this.style.borderColor='var(--green)'"
                             onblur="this.style.borderColor='var(--border-light)'"></textarea>
@@ -779,7 +779,7 @@
                     <%-- [THÊM MỚI] Upload ảnh từ máy thay vì nhập URL --%>
                     <div style="margin-bottom:16px;">
                         <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">
-                            Hình ảnh <span style="color:var(--text-s)">(tùy chọn · JPG, PNG, WEBP · tối đa 5MB)</span>
+                            Photo <span style="color:var(--text-s)">(optional · JPG, PNG, WEBP · max 5MB)</span>
                         </label>
                         <%-- Vùng kéo thả / click chọn ảnh --%>
                         <div id="rvUploadArea"
@@ -790,8 +790,8 @@
                              ondrop="handleDrop(event)">
                             <div id="rvUploadHint">
                                 <div style="font-size:1.6rem;margin-bottom:6px;">📎</div>
-                                <div style="font-size:.82rem;color:var(--text-m);font-weight:600;">Nhấn để chọn ảnh</div>
-                                <div style="font-size:.73rem;color:var(--text-s);margin-top:3px;">hoặc kéo thả vào đây</div>
+                                <div style="font-size:.82rem;color:var(--text-m);font-weight:600;">Click to select a photo</div>
+                                <div style="font-size:.73rem;color:var(--text-s);margin-top:3px;">or drag and drop here</div>
                             </div>
                             <%-- Preview ảnh sau khi chọn --%>
                             <div id="rvPreviewWrap" style="display:none;">
@@ -801,7 +801,7 @@
                                     <span id="rvFileName" style="font-size:.75rem;color:var(--text-m);"></span>
                                     <button type="button" onclick="clearImage(event)"
                                         style="margin-left:10px;font-size:.72rem;color:var(--red);background:none;border:none;cursor:pointer;text-decoration:underline;">
-                                        Xóa ảnh
+                                        Remove photo
                                     </button>
                                 </div>
                             </div>
@@ -816,12 +816,12 @@
 
                     <button type="submit" id="rvSubmit"
                         style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;opacity:.5;pointer-events:none;transition:all .2s;">
-                        <i class="fas fa-paper-plane"></i> Gửi đánh giá
+                        <i class="fas fa-paper-plane"></i> Submit Review
                     </button>
                 </form>
                 <%}else{%>
                 <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
-                    <i class="fas fa-check-circle"></i> Bạn đã gửi đánh giá cho sản phẩm này rồi.
+                    <i class="fas fa-check-circle"></i> You have already submitted a review for this product.
                 </div>
                 <%}%>
             </div>
@@ -890,7 +890,7 @@
     // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────
     (function(){
         var selected = 0;
-        var labels = ['','Rất tệ','Tệ','Bình thường','Tốt','Rất tốt'];
+        var labels = ['','Very bad','Bad','Average','Good','Excellent'];
         var stars = document.querySelectorAll('.rv-star');
         if (!stars.length) return; // không render nếu đã review rồi
         stars.forEach(function(s){
@@ -945,7 +945,7 @@
          onclick="event.stopPropagation()">
     <%-- Caption nhỏ bên dưới --%>
     <div style="position:absolute;bottom:18px;color:rgba(255,255,255,0.5);font-size:.75rem;">
-        Nhấn ra ngoài hoặc nhấn ESC để đóng
+        Click outside or press ESC to close
     </div>
 </div>
 

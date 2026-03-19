@@ -611,3 +611,6 @@ CREATE TABLE IF NOT EXISTS product_reviews (
     created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES users(id)
 );
+
+ALTER TABLE customer_equipment 
+ADD COLUMN custom_image_url VARCHAR(500) DEFAULT NULL;
