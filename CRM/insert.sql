@@ -765,3 +765,163 @@ UPDATE users SET avatar_url = '/uploads/avatar/meo1.webp' WHERE id = 5;
 UPDATE users SET avatar_url = '/uploads/avatar/ngua.webp' WHERE id = 6;
 UPDATE users SET avatar_url = '/uploads/avatar/OIP.webp' WHERE id = 7;
 UPDATE users SET avatar_url = '/uploads/avatar/vit.webp' WHERE id = 8;
+
+INSERT INTO product_reviews (customer_id, item_type, item_id, rating, comment, image_url) VALUES
+
+-- Customer 5 (Pham Thi Customer)
+(5, 'EQUIPMENT', 1, 5, 'The Daikin VRV IV runs extremely stable, cools fast and saves a lot of electricity. Very satisfied with this product!', NULL),
+(5, 'EQUIPMENT', 4, 4, 'ABB ACH580 runs quietly, pump speed adjustment is smooth. Easy to install, technician was very supportive.', NULL),
+(5, 'EQUIPMENT', 7, 5, 'Grundfos CR32-4 delivers stable water supply with consistent pressure. Great quality, exactly as described.', NULL),
+(5, 'EQUIPMENT', 9, 4, 'Hochiki Fire Panel installs quickly, interface is clear and easy to monitor each zone. Minus one star because the manual is English-only.', NULL),
+(5, 'EQUIPMENT', 5, 3, 'APC Symmetra works fine but is a bit noisy when switching to battery mode. Hope to see improvements.', NULL),
+
+-- Customer 7 (Nguyen Van Binh)
+(7, 'EQUIPMENT', 1, 4, 'VRV IV cools evenly across the entire floor, inverter technology noticeably reduces electricity bills compared to the old unit. Delivery and installation were on time.', NULL),
+(7, 'EQUIPMENT', 7, 5, 'Grundfos CR32 pump runs quietly without vibration, water pressure stays consistent all day. Definitely worth the price.', NULL),
+(7, 'EQUIPMENT', 9, 5, 'Hochiki FP-002 detects accurately, not a single false alarm since installation. Very reassuring for our fire protection system.', NULL),
+(7, 'EQUIPMENT', 10, 3, 'Honeywell Pro-Watch has great features but the management software is quite complex. Needed technician support in the beginning.', NULL),
+
+-- Customer 5 - Parts
+(5, 'PART', 1, 5, 'After replacing the HEPA filter, the air in the room is noticeably cleaner, less dust, no more odors. Will buy again.', NULL),
+(5, 'PART', 7, 4, 'Mechanical Seal is great quality, pump stopped leaking after replacement. Well packaged and delivered on time.', NULL),
+
+-- Customer 7 - Parts
+(7, 'PART', 6, 5, 'Stainless steel Pump Impeller is solid, pump runs smoothly again and reaches required pressure after replacement. Genuine part, peace of mind.', NULL),
+(7, 'PART', 8, 4, 'Pump Motor Bearing was easy to install, vibration completely gone afterwards. Good quality, reasonable price.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 1: Daikin VRV IV
+-- ================================================================
+(5,  'EQUIPMENT', 1, 5, 'Daikin VRV IV runs extremely stable, cools fast and is energy efficient. Very satisfied!', NULL),
+(7,  'EQUIPMENT', 1, 4, 'VRV IV cools evenly, inverter noticeably saves electricity compared to old unit. Delivery was on time.', NULL),
+(8,  'EQUIPMENT', 1, 5, 'Runs whisper-quiet, the entire 5-floor office is evenly cooled. Installation team was fast and professional.', NULL),
+(9,  'EQUIPMENT', 1, 4, 'Great cooling quality and energy efficiency. Only downside is the remote was a bit confusing at first.', NULL),
+(10, 'EQUIPMENT', 1, 3, 'Unit works fine but made a strange noise on first startup. Called technician and it was resolved. Hope QC is stricter.', NULL),
+(11, 'EQUIPMENT', 1, 5, 'Been using it for 2 years and it still cools like new. Power consumption is 30% lower than our old system. Excellent!', NULL),
+(12, 'EQUIPMENT', 1, 4, 'VRV system distributes cooling evenly across all rooms. Installation was complex but the team handled it well.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 2: Carrier 30XA
+-- ================================================================
+(8,  'EQUIPMENT', 2, 5, 'Carrier 30XA chiller operated flawlessly through the hottest summer. Cooling performance is outstanding.', NULL),
+(9,  'EQUIPMENT', 2, 4, 'High-quality industrial equipment, well-suited for large buildings. Periodic maintenance is straightforward.', NULL),
+(12, 'EQUIPMENT', 2, 5, 'Money well spent — the chiller ran 24/7 without a single issue in the first year.', NULL),
+(13, 'EQUIPMENT', 2, 3, 'Good capacity but gets quite noisy at full load. Recommend soundproofing the machine room.', NULL),
+(14, 'EQUIPMENT', 2, 4, 'Carrier 30XA meets our cooling needs for a 10-story building perfectly. Satisfied with the overall quality.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 4: ABB ACH580
+-- ================================================================
+(5,  'EQUIPMENT', 4, 4, 'ABB ACH580 runs quietly, smooth pump speed control. Technician support was excellent throughout.', NULL),
+(10, 'EQUIPMENT', 4, 5, 'Top-tier ABB drive, noticeably reduces pump energy consumption. Parameter setup is easy and intuitive.', NULL),
+(11, 'EQUIPMENT', 4, 4, 'Precise speed control and solid motor protection. Programming interface is user-friendly.', NULL),
+(13, 'EQUIPMENT', 4, 5, 'Replaced our old VFD with ACH580 and energy consumption dropped by 25%. Absolutely worth the investment!', NULL),
+(15, 'EQUIPMENT', 4, 3, 'Quality is fine but the Vietnamese documentation is lacking. Had to rely on technician support quite a bit.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 5: APC Symmetra 20KVA
+-- ================================================================
+(5,  'EQUIPMENT', 5, 3, 'Works well but a bit noisy when switching to battery. Hope they improve this in future versions.', NULL),
+(8,  'EQUIPMENT', 5, 5, 'Symmetra UPS protects our entire server room during power outages. Switchover is instant with zero interruption.', NULL),
+(12, 'EQUIPMENT', 5, 4, 'Battery backup is solid, gives enough time for a safe shutdown. Web-based management interface is very convenient.', NULL),
+(14, 'EQUIPMENT', 5, 4, 'APC Symmetra proved its reliability through several sudden power cuts — systems kept running without issue.', NULL),
+(16, 'EQUIPMENT', 5, 5, 'Investing in this premium UPS was absolutely the right call. Protects all equipment from voltage instability.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 7: Grundfos CR32-4
+-- ================================================================
+(5,  'EQUIPMENT', 7, 5, 'Grundfos CR32-4 delivers stable water supply with consistent pressure. Quality matches the description perfectly.', NULL),
+(7,  'EQUIPMENT', 7, 5, 'Pump runs quietly without vibration, water pressure stays consistent all day. Totally worth the price.', NULL),
+(9,  'EQUIPMENT', 7, 4, 'Stable performance with minimal maintenance. Low noise level, ideal for residential buildings.', NULL),
+(11, 'EQUIPMENT', 7, 5, 'Still running strong after 18 months. Consistent pressure across all floors. Grundfos truly lives up to its reputation.', NULL),
+(13, 'EQUIPMENT', 7, 4, 'Quick and clean installation. Pump runs silently and cuts electricity usage by around 20% vs. the old one.', NULL),
+(15, 'EQUIPMENT', 7, 3, 'Pump performs well but spare parts are pricey. Hope they introduce better spare parts pricing policies.', NULL),
+(16, 'EQUIPMENT', 7, 5, 'Grundfos CR32-4 serves our 10-story building perfectly. Consistent water pressure from floor 1 to floor 10.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 9: Hochiki Fire Panel
+-- ================================================================
+(5,  'EQUIPMENT', 9, 4, 'Hochiki Fire Panel installs quickly with a clear interface. Easy to monitor each individual zone.', NULL),
+(7,  'EQUIPMENT', 9, 5, 'Hochiki FP-002 detects accurately — not a single false alarm since installation. Excellent peace of mind for fire safety.', NULL),
+(8,  'EQUIPMENT', 9, 5, 'Central fire alarm panel runs stably, smoothly managing all 256 zones. Technician configuration was professional.', NULL),
+(10, 'EQUIPMENT', 9, 4, 'Zone management software is intuitive with fast, accurate alerts. Ideal for commercial buildings.', NULL),
+(14, 'EQUIPMENT', 9, 5, 'Hochiki is the most reliable in its class. I have tried other brands but Hochiki clearly stands out.', NULL),
+(16, 'EQUIPMENT', 9, 3, 'Good features but Vietnamese documentation is sparse. Needed extra technician support during initial operation.', NULL),
+
+-- ================================================================
+-- EQUIPMENT 10: Honeywell Pro-Watch
+-- ================================================================
+(7,  'EQUIPMENT', 10, 3, 'Pro-Watch has great features but the management software has a steep learning curve. Required a lot of support upfront.', NULL),
+(9,  'EQUIPMENT', 10, 4, 'Accurate access control, managing 64 doors is easy. Camera integration works well.', NULL),
+(11, 'EQUIPMENT', 10, 5, 'Pro-Watch manages staff entry/exit very efficiently with detailed reports per door and per person.', NULL),
+(13, 'EQUIPMENT', 10, 4, 'Card readers are responsive with very few errors. Software is powerful and flexible once you get used to it.', NULL),
+(15, 'EQUIPMENT', 10, 5, 'Honeywell Pro-Watch offers excellent security and integrates seamlessly with our HR system for attendance tracking.', NULL),
+
+-- ================================================================
+-- PART 1: Air Filter HEPA
+-- ================================================================
+(5,  'PART', 1, 5, 'After replacing the HEPA filter, the air is noticeably cleaner — less dust and no more odors. Will definitely buy again.', NULL),
+(8,  'PART', 1, 5, 'Filters fine dust extremely well. Air quality improved noticeably right after replacement. Genuine product guaranteed.', NULL),
+(10, 'PART', 1, 4, 'Good quality filter, fits the Daikin unit perfectly. Fast delivery and well packaged.', NULL),
+(12, 'PART', 1, 4, 'High filtration efficiency, lasted 6 months before needing replacement. Reasonable price for a genuine part.', NULL),
+(14, 'PART', 1, 5, 'Genuine HEPA filter, excellent PM2.5 filtration. We use it across all our Daikin units. Highly recommended.', NULL),
+(16, 'PART', 1, 3, 'Quality is acceptable but the price is a bit high compared to the open market. Would appreciate bulk purchase discounts.', NULL),
+
+-- ================================================================
+-- PART 2: Compressor Motor
+-- ================================================================
+(9,  'PART', 2, 5, 'Genuine compressor motor, AC runs quietly and cools like new after replacement. Technician consultation was very helpful.', NULL),
+(11, 'PART', 2, 4, 'Good motor quality, unit has been running stably since the swap. Correct item delivered on time.', NULL),
+(13, 'PART', 2, 5, '3HP compressor motor matches the specs exactly, works perfectly in the Daikin unit. Much cheaper than buying a new machine.', NULL),
+(15, 'PART', 2, 4, 'Genuine part with clear warranty. The unit performs like brand new after the motor replacement.', NULL),
+
+-- ================================================================
+-- PART 3: Evaporator Coil
+-- ================================================================
+(8,  'PART', 3, 4, 'Good quality copper coil, fully sealed with no refrigerant leaks. AC is cooling efficiently again after replacement.', NULL),
+(10, 'PART', 3, 5, 'Genuine evaporator coil, AC cools significantly faster after installation. Installation team did a clean, professional job.', NULL),
+(14, 'PART', 3, 4, 'Coil fits perfectly to size. Still performing well after 3 months with no gas leaks.', NULL),
+(16, 'PART', 3, 3, 'Item matches the description but delivery took longer than expected. Quality is fine, unit runs well after installation.', NULL),
+
+-- ================================================================
+-- PART 6: Pump Impeller
+-- ================================================================
+(7,  'PART', 6, 5, 'Stainless steel impeller is rock solid. Pump runs smoothly again and reaches full pressure after replacement.', NULL),
+(9,  'PART', 6, 5, 'Grade 304 stainless steel, corrosion-resistant and durable. Pump reaches design pressure perfectly after the swap.', NULL),
+(11, 'PART', 6, 4, 'Fits the Grundfos pump perfectly, quick to install. Pressure is significantly higher compared to the worn-out old impeller.', NULL),
+(13, 'PART', 6, 4, 'Great stainless quality, no rust after months of use. Much more cost-effective than replacing the entire pump.', NULL),
+(15, 'PART', 6, 5, 'Genuine Grundfos impeller — pump runs quietly and delivers 100% capacity after replacement. Very satisfied!', NULL),
+
+-- ================================================================
+-- PART 7: Mechanical Seal
+-- ================================================================
+(5,  'PART', 7, 4, 'High-quality mechanical seal, pump stopped leaking after replacement. Careful packaging, delivered on time.', NULL),
+(8,  'PART', 7, 5, 'High-pressure seal holds up perfectly under operating conditions. Still leak-free after more than a year of use.', NULL),
+(10, 'PART', 7, 4, 'Correct spec, easy to replace. Shaft leakage completely stopped after installation.', NULL),
+(12, 'PART', 7, 5, 'Premium quality seal, handles heat and pressure well. Bought it twice now and it is just as good as the first time.', NULL),
+(16, 'PART', 7, 3, 'Quality is acceptable but price is slightly above market rate. At least warranty and authenticity are guaranteed.', NULL),
+
+-- ================================================================
+-- PART 8: Pump Motor Bearing
+-- ================================================================
+(7,  'PART', 8, 4, 'Easy to install, vibration completely eliminated after fitting. Good quality at a reasonable price.', NULL),
+(9,  'PART', 8, 5, 'Heavy-duty bearing handles the load well. Pump vibration and noise dropped significantly. Buying genuine is absolutely worth it.', NULL),
+(11, 'PART', 8, 4, 'Quality bearing, motor runs smoothly right after installation. Fast delivery and solid packaging.', NULL),
+(13, 'PART', 8, 5, 'Heavy-duty bearing exactly as described — handles heavy loads and high temperatures without issue. Very happy!', NULL),
+(15, 'PART', 8, 4, 'Pump runs smoothly after bearing replacement, no more noise. Will keep buying from here.', NULL),
+
+-- ================================================================
+-- PART 11: Circuit Breaker 3P
+-- ================================================================
+(8,  'PART', 11, 5, 'Genuine 3-phase 100A circuit breaker, excellent motor protection. Trips quickly on overload exactly as rated.', NULL),
+(10, 'PART', 11, 4, 'High-quality circuit breaker, installed correctly and operating reliably. Trust this brand completely.', NULL),
+(12, 'PART', 11, 5, 'Genuine CB, protects our 3-phase electrical system superbly. Survived 2 overload events and still works perfectly.', NULL),
+(14, 'PART', 11, 4, 'Reliable quality, trips at the right point. Fast delivery with authentic brand label clearly visible.', NULL),
+
+-- ================================================================
+-- PART 13: V-Belt Drive
+-- ================================================================
+(9,  'PART', 13, 4, 'Durable industrial V-belt, fan runs smoother after replacement. No slipping under full load and very low vibration.', NULL),
+(11, 'PART', 13, 5, 'Genuine V-belt, noticeably more durable than generic alternatives. Almost a year in and no replacement needed yet.', NULL),
+(13, 'PART', 13, 4, 'Belt fits the pulley perfectly. Machine runs more stably after the swap.', NULL),
+(15, 'PART', 13, 3, 'Quality is fine but delivery was slow. Belt performs well and does not stretch quickly like cheaper alternatives.', NULL);
