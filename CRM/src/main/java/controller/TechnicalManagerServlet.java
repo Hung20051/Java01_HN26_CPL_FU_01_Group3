@@ -1,21 +1,31 @@
 package controller;
 
 import dao.ServiceRequestDAO;
+import dao.TechnicianWorkloadDAO;
 import dao.UserDAO;
+import dao.WorkAssignmentDAO;
+import dao.WorkTaskDAO;
 import model.ServiceRequest;
+import model.TechnicianWorkload;
 import model.User;
+import model.WorkAssignment;
+import model.WorkTask;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class TechnicalManagerServlet extends HttpServlet {
 
-    private final ServiceRequestDAO srDAO  = new ServiceRequestDAO();
-    private final UserDAO            userDAO = new UserDAO();
+    private final ServiceRequestDAO     srDAO  = new ServiceRequestDAO();
+    private final UserDAO               userDAO = new UserDAO();
+    private final WorkTaskDAO           wtDAO   = new WorkTaskDAO();
+    private final WorkAssignmentDAO     waDAO   = new WorkAssignmentDAO();
+    private final TechnicianWorkloadDAO twDAO   = new TechnicianWorkloadDAO();
     private static final int PAGE_SIZE = 10;
 
-    // ── GET ──────────────────────────────────────────────────────────────
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -28,7 +38,7 @@ public class TechnicalManagerServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
-        // ── detail view ──────────────────────────────────────────────────
+        // ── Detail view ──────────────────────────────────────────────────
         if ("detail".equals(action)) {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
@@ -37,10 +47,17 @@ public class TechnicalManagerServlet extends HttpServlet {
                     resp.sendRedirect(req.getContextPath() + "/tmServiceRequests");
                     return;
                 }
-                // Load list of technicians for assign dropdown
+                // Technicians for dropdown
                 List<User> technicians = userDAO.findWithFilter(null, "1", "TECHNICIAN", 1, 200);
-                req.setAttribute("sr", sr);
-                req.setAttribute("technicians", technicians);
+                // Workload for availability panel
+                List<TechnicianWorkload> workloads = twDAO.findAllTechnicians();
+                // Assignment history for this request
+                List<WorkTask> assignedTasks = wtDAO.findByRequestId(id);
+
+                req.setAttribute("sr",            sr);
+                req.setAttribute("technicians",   technicians);
+                req.setAttribute("workloads",     workloads);
+                req.setAttribute("assignedTasks", assignedTasks);
                 req.getRequestDispatcher("/tmServiceRequestDetail.jsp").forward(req, resp);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -49,30 +66,7 @@ public class TechnicalManagerServlet extends HttpServlet {
             return;
         }
 
-        // ── AJAX: get technicians JSON ───────────────────────────────────
-        if ("getTechnicians".equals(action)) {
-            resp.setContentType("application/json;charset=UTF-8");
-            try {
-                List<User> technicians = userDAO.findWithFilter(null, "1", "TECHNICIAN", 1, 200);
-                StringBuilder sb = new StringBuilder("[");
-                for (int i = 0; i < technicians.size(); i++) {
-                    User t = technicians.get(i);
-                    if (i > 0) sb.append(",");
-                    sb.append("{")
-                      .append("\"id\":").append(t.getId()).append(",")
-                      .append("\"name\":").append(jsonStr(t.getFullName())).append(",")
-                      .append("\"email\":").append(jsonStr(t.getEmail()))
-                      .append("}");
-                }
-                sb.append("]");
-                resp.getWriter().write(sb.toString());
-            } catch (Exception e) {
-                resp.getWriter().write("[]");
-            }
-            return;
-        }
-
-        // ── list page ────────────────────────────────────────────────────
+        // ── List view (default) ──────────────────────────────────────────
         try {
             String keyword      = req.getParameter("keyword");
             String status       = req.getParameter("status");
@@ -85,20 +79,17 @@ public class TechnicalManagerServlet extends HttpServlet {
             List<ServiceRequest> requests = srDAO.getTMFiltered(keyword, status, priority, contractType, page, PAGE_SIZE);
             int total      = srDAO.countTMFiltered(keyword, status, priority, contractType);
             int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+            Map<String, Integer> stats = srDAO.getSRDashboardStats();
 
-            // stats for dashboard cards
-            java.util.Map<String, Integer> stats = srDAO.getSRDashboardStats();
-
-            req.setAttribute("requests",      requests);
-            req.setAttribute("total",         total);
-            req.setAttribute("page",          page);
-            req.setAttribute("totalPages",    totalPages);
-            req.setAttribute("keyword",       keyword);
-            req.setAttribute("filterStatus",  status);
-            req.setAttribute("filterPriority",priority);
-            req.setAttribute("filterType",    contractType);
-            req.setAttribute("stats",         stats);
-
+            req.setAttribute("requests",       requests);
+            req.setAttribute("total",          total);
+            req.setAttribute("page",           page);
+            req.setAttribute("totalPages",     totalPages);
+            req.setAttribute("keyword",        keyword);
+            req.setAttribute("filterStatus",   status);
+            req.setAttribute("filterPriority", priority);
+            req.setAttribute("filterType",     contractType);
+            req.setAttribute("stats",          stats);
             req.getRequestDispatcher("/tmServiceRequests.jsp").forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,7 +97,6 @@ public class TechnicalManagerServlet extends HttpServlet {
         }
     }
 
-    // ── POST ─────────────────────────────────────────────────────────────
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -119,18 +109,16 @@ public class TechnicalManagerServlet extends HttpServlet {
         }
 
         String action = req.getParameter("action");
+        String ctx    = req.getContextPath();
 
         try {
             // ── APPROVE ──────────────────────────────────────────────────
             if ("approve".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 boolean ok = srDAO.approve(id, me.getId());
-                if (ok) {
-                    req.getSession().setAttribute("flash_success", "Request approved successfully.");
-                } else {
-                    req.getSession().setAttribute("flash_error", "Cannot approve: request may not be PENDING.");
-                }
-                resp.sendRedirect(req.getContextPath() + "/tmServiceRequests?action=detail&id=" + id);
+                req.getSession().setAttribute(ok ? "flash_success" : "flash_error",
+                    ok ? "Request approved successfully." : "Cannot approve: request may not be PENDING.");
+                resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                 return;
             }
 
@@ -140,30 +128,114 @@ public class TechnicalManagerServlet extends HttpServlet {
                 String reason = req.getParameter("rejectReason");
                 if (reason == null || reason.trim().isEmpty()) {
                     req.getSession().setAttribute("flash_error", "Please provide a rejection reason.");
-                    resp.sendRedirect(req.getContextPath() + "/tmServiceRequests?action=detail&id=" + id);
+                    resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                     return;
                 }
                 boolean ok = srDAO.reject(id, me.getId(), reason.trim());
-                if (ok) {
-                    req.getSession().setAttribute("flash_success", "Request rejected.");
-                } else {
-                    req.getSession().setAttribute("flash_error", "Cannot reject: request may not be PENDING.");
-                }
-                resp.sendRedirect(req.getContextPath() + "/tmServiceRequests?action=detail&id=" + id);
+                req.getSession().setAttribute(ok ? "flash_success" : "flash_error",
+                    ok ? "Request rejected." : "Cannot reject: request may not be PENDING.");
+                resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                 return;
             }
 
-            // ── ASSIGN TECHNICIAN ────────────────────────────────────────
+            // ── ASSIGN TECHNICIAN ─────────────────────────────────────────
             if ("assign".equals(action)) {
-                int id           = Integer.parseInt(req.getParameter("id"));
-                int technicianId = Integer.parseInt(req.getParameter("technicianId"));
-                boolean ok = srDAO.assignTechnician(id, technicianId, me.getId());
-                if (ok) {
-                    req.getSession().setAttribute("flash_success", "Technician assigned successfully.");
-                } else {
-                    req.getSession().setAttribute("flash_error", "Cannot assign: request must be APPROVED first.");
+                int id = Integer.parseInt(req.getParameter("id"));
+
+                // Hỗ trợ cả single technicianId và multi technicianIds[]
+                String[] techIds = req.getParameterValues("technicianIds");
+                if (techIds == null || techIds.length == 0) {
+                    String single = req.getParameter("technicianId");
+                    if (single != null && !single.trim().isEmpty()) {
+                        techIds = new String[]{single.trim()};
+                    }
                 }
-                resp.sendRedirect(req.getContextPath() + "/tmServiceRequests?action=detail&id=" + id);
+
+                if (techIds == null || techIds.length == 0) {
+                    req.getSession().setAttribute("flash_error", "Please select at least one technician.");
+                    resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
+                    return;
+                }
+
+                String durationStr = req.getParameter("estimatedDuration");
+                String reqSkills   = req.getParameter("requiredSkills");
+                String priority    = req.getParameter("priority");
+                if (priority == null || priority.isEmpty()) priority = "MEDIUM";
+
+                int    successCount      = 0;
+                int    firstSuccessTechId = -1;
+                StringBuilder errors     = new StringBuilder();
+
+                for (String techIdStr : techIds) {
+                    int technicianId;
+                    try { technicianId = Integer.parseInt(techIdStr.trim()); }
+                    catch (NumberFormatException e) { continue; }
+
+                    // 1. Kiểm tra duplicate
+                    if (wtDAO.hasActiveTaskForTechnician(id, technicianId)) {
+                        errors.append("Technician #").append(technicianId)
+                              .append(" already has an active task for this request. ");
+                        continue;
+                    }
+
+                    // 2. Kiểm tra workload
+                    twDAO.ensureExists(technicianId);
+                    TechnicianWorkload wl = twDAO.findByTechnicianId(technicianId);
+                    int points = calcPoints(priority);
+                    if (wl != null && wl.getCurrentActiveTasks() + points > wl.getMaxConcurrentTasks()) {
+                        errors.append("Technician ")
+                              .append(wl.getTechnicianName() != null ? wl.getTechnicianName() : "#" + technicianId)
+                              .append(" is overloaded (")
+                              .append(wl.getCurrentActiveTasks()).append("/")
+                              .append(wl.getMaxConcurrentTasks()).append(" tasks). ");
+                        continue;
+                    }
+
+                    // 3. Tạo WorkTask
+                    WorkTask task = new WorkTask();
+                    task.setRequestId(id);
+                    task.setTechnicianId(technicianId);
+                    task.setTaskType("Request");
+                    task.setTaskDetails("Assigned to service request #" + id);
+                    task.setStatus("Assigned");
+                    int taskId = wtDAO.create(task);
+
+                    if (taskId <= 0) {
+                        errors.append("Failed to create task for technician #").append(technicianId).append(". ");
+                        continue;
+                    }
+
+                    // 4. Tạo WorkAssignment
+                    WorkAssignment wa = new WorkAssignment();
+                    wa.setTaskId(taskId);
+                    wa.setAssignedBy(me.getId());
+                    wa.setAssignedTo(technicianId);
+                    if (durationStr != null && !durationStr.trim().isEmpty()) {
+                        try { wa.setEstimatedDuration(new BigDecimal(durationStr.trim())); }
+                        catch (NumberFormatException ignored) {}
+                    }
+                    wa.setRequiredSkills(reqSkills);
+                    wa.setPriority(priority);
+                    waDAO.create(wa);
+
+                    // 5. Cập nhật workload
+                    twDAO.increment(technicianId, points);
+
+                    if (firstSuccessTechId < 0) firstSuccessTechId = technicianId;
+                    successCount++;
+                }
+
+                if (successCount > 0) {
+                    // Cập nhật service_request → IN_PROGRESS
+                    srDAO.assignTechnician(id, firstSuccessTechId, me.getId());
+                    req.getSession().setAttribute("flash_success",
+                        successCount + " technician(s) assigned successfully.");
+                }
+                if (errors.length() > 0) {
+                    req.getSession().setAttribute("flash_error", errors.toString().trim());
+                }
+
+                resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                 return;
             }
 
@@ -172,11 +244,16 @@ public class TechnicalManagerServlet extends HttpServlet {
             req.getSession().setAttribute("flash_error", "Error: " + e.getMessage());
         }
 
-        resp.sendRedirect(req.getContextPath() + "/tmServiceRequests");
+        resp.sendRedirect(ctx + "/tmServiceRequests");
     }
 
-    private String jsonStr(String s) {
-        if (s == null) return "null";
-        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+    // Priority → workload points (Urgent=3, High=2, Medium/Low=1)
+    private int calcPoints(String priority) {
+        if (priority == null) return 1;
+        return switch (priority.toUpperCase()) {
+            case "URGENT" -> 3;
+            case "HIGH"   -> 2;
+            default       -> 1;
+        };
     }
 }

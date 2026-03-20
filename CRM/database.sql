@@ -614,3 +614,41 @@ CREATE TABLE IF NOT EXISTS product_reviews (
 
 ALTER TABLE customer_equipment 
 ADD COLUMN custom_image_url VARCHAR(500) DEFAULT NULL;
+
+-- ================================================================
+-- TECHNICAL MANAGER MODULE
+-- ================================================================
+CREATE TABLE IF NOT EXISTS work_tasks (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    request_id      INT,
+    technician_id   INT NOT NULL,
+    task_type       VARCHAR(50)  DEFAULT 'Request',
+    task_details    TEXT,
+    status          VARCHAR(30)  DEFAULT 'Assigned',
+    created_at      DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (request_id)    REFERENCES service_requests(id) ON DELETE SET NULL,
+    FOREIGN KEY (technician_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS work_assignments (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    task_id             INT NOT NULL,
+    assigned_by         INT NOT NULL,
+    assigned_to         INT NOT NULL,
+    estimated_duration  DECIMAL(5,2),
+    required_skills     TEXT,
+    priority            VARCHAR(20) DEFAULT 'MEDIUM',
+    created_at          DATETIME    DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (task_id)     REFERENCES work_tasks(id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_by) REFERENCES users(id),
+    FOREIGN KEY (assigned_to) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS technician_workload (
+    id                    INT AUTO_INCREMENT PRIMARY KEY,
+    technician_id         INT NOT NULL UNIQUE,
+    current_active_tasks  INT      DEFAULT 0,
+    max_concurrent_tasks  INT      DEFAULT 5,
+    last_assigned_date    DATETIME DEFAULT NULL,
+    FOREIGN KEY (technician_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
