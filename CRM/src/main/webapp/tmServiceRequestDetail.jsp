@@ -129,7 +129,20 @@
             display:flex;align-items:center;gap:9px}
         .topbar-title i{color:var(--primary-2);font-size:1rem}
         .topbar-sub{color:var(--text-s);font-size:.78rem;margin-top:2px}
-        .content{padding:24px 28px;flex:1;max-width:960px}
+
+        /* ═══ 2-COLUMN LAYOUT ═══ */
+        .content{padding:24px 28px;flex:1}
+        .layout-grid{
+            display:grid;
+            grid-template-columns:7fr 5fr;
+            gap:20px;
+            align-items:start;
+        }
+        .col-left{}
+        .col-right{
+            position:sticky;
+            top:88px; /* topbar height + gap */
+        }
 
         /* Alert */
         @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
@@ -222,31 +235,59 @@
         .action-bar{display:flex;gap:10px;flex-wrap:wrap}
 
         /* ══ WORKLOAD PANEL ══ */
-        .wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:12px;padding:4px 0}
-        .wl-card{border:1px solid var(--border-light);border-radius:12px;padding:14px;
-            background:var(--bg-card);transition:box-shadow .18s;cursor:default}
-        .wl-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
-        .wl-ava{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);
-            display:flex;align-items:center;justify-content:center;color:#fff;font-size:.82rem;
-            font-weight:700;margin-bottom:8px}
-        .wl-name{font-size:.82rem;font-weight:700;color:var(--text-h);margin-bottom:2px;
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .wl-email{font-size:.68rem;color:var(--text-s);margin-bottom:8px;
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .wl-status{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
-            border-radius:20px;font-size:.67rem;font-weight:700;margin-bottom:8px}
+        .wl-list{display:flex;flex-direction:column;gap:6px;padding:2px 0}
+        .wl-card{
+            border:1px solid var(--border-light);border-radius:14px;
+            padding:11px 14px;background:var(--bg-card);
+            display:flex;align-items:center;gap:12px;
+            transition:all .18s;position:relative;overflow:hidden;
+        }
+        .wl-card::before{
+            content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+            border-radius:3px 0 0 3px;background:var(--wl-accent,#e5e7eb);
+        }
+        .wl-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.09);transform:translateY(-1px)}
+        .wl-card.is-avail{--wl-accent:#22c55e;background:linear-gradient(to right,#f0fdf4,#fff 60%)}
+        .wl-card.is-mod  {--wl-accent:#f59e0b;background:linear-gradient(to right,#fffbeb,#fff 60%)}
+        .wl-card.is-busy {--wl-accent:#f97316;background:linear-gradient(to right,#fff7ed,#fff 60%)}
+        .wl-card.is-full {--wl-accent:#ef4444;background:linear-gradient(to right,#fef2f2,#fff 60%);opacity:.7}
+        .wl-ava-wrap{position:relative;flex-shrink:0}
+        .wl-ava{
+            width:40px;height:40px;border-radius:50%;
+            background:linear-gradient(135deg,#818cf8,#a78bfa);
+            display:flex;align-items:center;justify-content:center;
+            color:#fff;font-size:.9rem;font-weight:700;
+            border:2px solid #fff;
+            box-shadow:0 0 0 2px var(--wl-accent,#e5e7eb);
+            overflow:hidden;transition:box-shadow .18s;
+        }
+        .wl-ava img{width:40px;height:40px;object-fit:cover;border-radius:50%}
+        .wl-dot{
+            position:absolute;bottom:1px;right:1px;
+            width:10px;height:10px;border-radius:50%;
+            background:var(--wl-accent,#9ca3af);border:2px solid #fff;
+        }
+        .wl-info{flex:1;min-width:0}
+        .wl-name{font-size:.83rem;font-weight:700;color:var(--text-h);
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:1px}
+        .wl-email{font-size:.67rem;color:var(--text-s);
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:5px}
+        .wl-status{display:inline-flex;align-items:center;gap:4px;
+            padding:2px 8px;border-radius:20px;font-size:.63rem;font-weight:700}
         .wl-avail{background:#dcfce7;color:#166534}
         .wl-mod  {background:#fef3c7;color:#92400e}
         .wl-busy {background:#ffedd5;color:#9a3412}
         .wl-full {background:#fee2e2;color:#991b1b}
-        .wl-bar-bg{height:5px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin-bottom:4px}
-        .wl-bar   {height:100%;border-radius:4px;transition:width .3s}
-        .wl-bar-g {background:#22c55e}
-        .wl-bar-a {background:#f59e0b}
-        .wl-bar-o {background:#f97316}
-        .wl-bar-r {background:#ef4444}
-        .wl-count{font-size:.7rem;color:var(--text-s);text-align:right}
-        .wl-empty{text-align:center;padding:28px;color:var(--text-s);font-size:.82rem}
+        .wl-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;min-width:76px}
+        .wl-count{font-size:.72rem;font-weight:700;color:var(--text-m)}
+        .wl-bar-bg{width:76px;height:6px;background:rgba(0,0,0,.07);border-radius:6px;overflow:hidden}
+        .wl-bar{height:100%;border-radius:6px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+        .wl-bar-g{background:linear-gradient(to right,#4ade80,#22c55e)}
+        .wl-bar-a{background:linear-gradient(to right,#fbbf24,#f59e0b)}
+        .wl-bar-o{background:linear-gradient(to right,#fb923c,#f97316)}
+        .wl-bar-r{background:linear-gradient(to right,#f87171,#ef4444)}
+        .wl-pct{font-size:.65rem;color:var(--text-s)}
+        .wl-empty{text-align:center;padding:24px;color:var(--text-s);font-size:.82rem}
         .wl-empty i{font-size:1.6rem;display:block;margin-bottom:8px;opacity:.3}
 
         /* ══ ASSIGNED TASKS TABLE ══ */
@@ -258,13 +299,13 @@
         .task-cancelled {background:#f3f4f6;color:#6b7280}
 
         /* ══ INLINE ASSIGN FORM ══ */
-        .assign-form-wrap{padding:20px}
+        .assign-form-wrap{padding:16px}
         .form-row{margin-bottom:12px}
         .form-row label{display:block;font-size:.72rem;font-weight:700;color:var(--text-s);
             text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
         .form-row input,
-        .form-row select{width:100%;padding:9px 12px;border:1.5px solid var(--border-light);
-            border-radius:9px;font-size:.83rem;font-family:'Sora',sans-serif;color:var(--text-b);
+        .form-row select{width:100%;padding:8px 11px;border:1.5px solid var(--border-light);
+            border-radius:9px;font-size:.82rem;font-family:'Sora',sans-serif;color:var(--text-b);
             background:var(--bg-card);outline:none;transition:all .2s}
         .form-row input:focus,
         .form-row select:focus{border-color:rgba(79,70,229,.4);background:#faf9ff;
@@ -272,19 +313,18 @@
         .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
         /* Technician checkbox list */
         .tech-pick-list{border:1.5px solid var(--border-light);border-radius:10px;overflow:hidden;
-            max-height:320px;overflow-y:auto}
-        .tech-pick-item{display:flex;align-items:center;gap:10px;padding:10px 14px;
+            max-height:260px;overflow-y:auto}
+        .tech-pick-item{display:flex;align-items:center;gap:10px;padding:9px 12px;
             border-bottom:1px solid var(--border-light2);cursor:pointer;transition:background .12s}
         .tech-pick-item:last-child{border-bottom:none}
         .tech-pick-item:hover{background:#f7f8ff}
         .tech-pick-item.overloaded{opacity:.45;pointer-events:none}
-        .tech-pick-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary);flex-shrink:0}
+        .tech-pick-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--primary);flex-shrink:0}
         .tech-pick-info{flex:1;min-width:0}
-        .tech-pick-name{font-size:.82rem;font-weight:600;color:var(--text-h)}
-        .tech-pick-sub{font-size:.7rem;color:var(--text-s);margin-top:1px}
-        .full-label{color:var(--red);font-size:.67rem;font-weight:700;margin-left:5px}
-        .mini-bar-bg{width:56px;height:5px;background:rgba(0,0,0,.08);border-radius:4px;
-            overflow:hidden;flex-shrink:0}
+        .tech-pick-name{font-size:.8rem;font-weight:600;color:var(--text-h)}
+        .tech-pick-sub{font-size:.68rem;color:var(--text-s);margin-top:1px}
+        .full-label{color:var(--red);font-size:.65rem;font-weight:700;margin-left:5px}
+        .mini-bar-bg{width:48px;height:5px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;flex-shrink:0}
         .mini-bar{height:100%;border-radius:4px}
         .btn-full{width:100%;justify-content:center}
 
@@ -310,6 +350,12 @@
             box-shadow:0 0 0 3px rgba(79,70,229,.07)}
         .modal textarea::placeholder{color:var(--text-s)}
         .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+        /* Responsive: collapse to 1 column on small screens */
+        @media(max-width:900px){
+            .layout-grid{grid-template-columns:1fr}
+            .col-right{position:static}
+        }
     </style>
 </head>
 <body>
@@ -385,401 +431,418 @@
         else if("URGENT".equals(sr.getPriority()))     bPr="b-urgent";
         %>
 
-        <%-- ── Request Info Card ── --%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:var(--primary-light);color:var(--primary-2)">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="card-hd-title"><%=sr.getRequestCode()%></div>
-                <div class="card-hd-badge"><span class="b <%=bSt%>"><%=sr.getStatusLabel()%></span></div>
-            </div>
-            <div class="card-body">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Request Code</label>
-                        <div class="val mono"><%=sr.getRequestCode()%></div>
-                    </div>
-                    <div class="info-item">
-                        <label>Customer</label>
-                        <div class="val"><%=sr.getCustomerName()%></div>
-                    </div>
-                    <div class="info-item">
-                        <label>Contract</label>
-                        <div class="val" style="display:flex;align-items:center;gap:7px">
-                            <span style="font-family:'Courier New',monospace;font-size:.82rem;color:var(--primary-2);font-weight:700">
-                                <%=sr.getContractCode()%>
-                            </span>
-                            <span class="ct-badge <%="WARRANTY".equals(sr.getContractType())?"ct-wr":"ct-mt"%>">
-                                <%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <label>Priority</label>
-                        <div class="val"><span class="b <%=bPr%>"><%=sr.getPriority()%></span></div>
-                    </div>
-                    <div class="info-item">
-                        <label>Title</label>
-                        <div class="val"><%=sr.getTitle()%></div>
-                    </div>
-                    <div class="info-item">
-                        <label>Created At</label>
-                        <div class="val td-muted">
-                            <%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                        </div>
-                    </div>
-                </div>
-                <div class="sub-lbl">Description</div>
-                <div class="desc-box"><%=sr.getDescription()%></div>
-            </div>
-        </div>
+        <%-- ═══ 2-COLUMN GRID ═══ --%>
+        <div class="layout-grid">
 
-        <%-- ── Equipment Card ── --%>
-        <%if(!equips.isEmpty()){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
-                    <i class="fas fa-desktop"></i>
-                </div>
-                <div class="card-hd-title">Equipment
-                    <span style="color:var(--text-s);font-weight:400"> (<%=equips.size()%>)</span>
-                </div>
-            </div>
-            <table>
-                <thead>
-                    <tr><th>#</th><th>Name</th><th>Serial</th><th>Source</th><th>Issue</th></tr>
-                </thead>
-                <tbody>
-                <%int idx=1;for(ServiceRequestEquipment e:equips){%>
-                <tr>
-                    <td class="td-muted"><%=idx++%></td>
-                    <td style="font-weight:600;color:var(--text-h)"><%=e.getDisplayName()!=null?e.getDisplayName():"-"%></td>
-                    <td class="td-code"><%=e.getDisplaySerial()!=null?e.getDisplaySerial():"-"%></td>
-                    <td><span class="src-badge"><%=e.getSource()!=null?e.getSource():"-"%></span></td>
-                    <td class="td-muted"><%=e.getIssueDescription()!=null?e.getIssueDescription():"-"%></td>
-                </tr>
-                <%}%>
-                </tbody>
-            </table>
-        </div>
-        <%}%>
+            <%-- ══════════ LEFT COLUMN ══════════ --%>
+            <div class="col-left">
 
-        <%-- ── Review Info Card ── --%>
-        <%if(sr.getReviewedBy()!=null){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#d1fae5;color:var(--green)">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="card-hd-title">Review Info</div>
-            </div>
-            <div class="card-body">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Reviewed By</label>
-                        <div class="val"><%=sr.getReviewedByName()!=null?sr.getReviewedByName():"-"%></div>
+                <%-- ── Request Info Card ── --%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:var(--primary-light);color:var(--primary-2)">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="card-hd-title"><%=sr.getRequestCode()%></div>
+                        <div class="card-hd-badge"><span class="b <%=bSt%>"><%=sr.getStatusLabel()%></span></div>
                     </div>
-                    <div class="info-item">
-                        <label>Reviewed At</label>
-                        <div class="val td-muted">
-                            <%=sr.getReviewedAt()!=null?sr.getReviewedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Request Code</label>
+                                <div class="val mono"><%=sr.getRequestCode()%></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Customer</label>
+                                <div class="val"><%=sr.getCustomerName()%></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Contract</label>
+                                <div class="val" style="display:flex;align-items:center;gap:7px">
+                                    <span style="font-family:'Courier New',monospace;font-size:.82rem;color:var(--primary-2);font-weight:700">
+                                        <%=sr.getContractCode()%>
+                                    </span>
+                                    <span class="ct-badge <%="WARRANTY".equals(sr.getContractType())?"ct-wr":"ct-mt"%>">
+                                        <%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Priority</label>
+                                <div class="val"><span class="b <%=bPr%>"><%=sr.getPriority()%></span></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Title</label>
+                                <div class="val"><%=sr.getTitle()%></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Created At</label>
+                                <div class="val td-muted">
+                                    <%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-lbl">Description</div>
+                        <div class="desc-box"><%=sr.getDescription()%></div>
+                    </div>
+                </div>
+
+                <%-- ── Equipment Card ── --%>
+                <%if(!equips.isEmpty()){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="card-hd-title">Equipment
+                            <span style="color:var(--text-s);font-weight:400"> (<%=equips.size()%>)</span>
                         </div>
                     </div>
-                </div>
-                <%if(sr.getRejectReason()!=null&&!sr.getRejectReason().isEmpty()){%>
-                <div class="reject-box">
-                    <div class="reject-box-title"><i class="fas fa-times-circle"></i> Rejection Reason</div>
-                    <div class="reject-box-body"><%=sr.getRejectReason()%></div>
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Name</th><th>Serial</th><th>Source</th><th>Issue</th></tr>
+                        </thead>
+                        <tbody>
+                        <%int idx=1;for(ServiceRequestEquipment e:equips){%>
+                        <tr>
+                            <td class="td-muted"><%=idx++%></td>
+                            <td style="font-weight:600;color:var(--text-h)"><%=e.getDisplayName()!=null?e.getDisplayName():"-"%></td>
+                            <td class="td-code"><%=e.getDisplaySerial()!=null?e.getDisplaySerial():"-"%></td>
+                            <td><span class="src-badge"><%=e.getSource()!=null?e.getSource():"-"%></span></td>
+                            <td class="td-muted"><%=e.getIssueDescription()!=null?e.getIssueDescription():"-"%></td>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
                 </div>
                 <%}%>
-            </div>
-        </div>
-        <%}%>
 
-        <%-- ── Assignment Card (nếu đã assign) ── --%>
-        <%if(sr.getAssignedTo()!=null){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
-                    <i class="fas fa-hard-hat"></i>
-                </div>
-                <div class="card-hd-title">Assignment</div>
-            </div>
-            <div class="card-body">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Assigned To</label>
-                        <div class="val"><%=sr.getAssignedToName()!=null?sr.getAssignedToName():"-"%></div>
+                <%-- ── Review Info Card ── --%>
+                <%if(sr.getReviewedBy()!=null){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#d1fae5;color:var(--green)">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="card-hd-title">Review Info</div>
                     </div>
-                    <div class="info-item">
-                        <label>Assigned At</label>
-                        <div class="val td-muted">
-                            <%=sr.getAssignedAt()!=null?sr.getAssignedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Reviewed By</label>
+                                <div class="val"><%=sr.getReviewedByName()!=null?sr.getReviewedByName():"-"%></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Reviewed At</label>
+                                <div class="val td-muted">
+                                    <%=sr.getReviewedAt()!=null?sr.getReviewedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                                </div>
+                            </div>
                         </div>
+                        <%if(sr.getRejectReason()!=null&&!sr.getRejectReason().isEmpty()){%>
+                        <div class="reject-box">
+                            <div class="reject-box-title"><i class="fas fa-times-circle"></i> Rejection Reason</div>
+                            <div class="reject-box-body"><%=sr.getRejectReason()%></div>
+                        </div>
+                        <%}%>
                     </div>
-                </div>
-            </div>
-        </div>
-        <%}%>
-
-        <%-- ── Actions Card ── --%>
-        <%if(isPending||isApproved){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#fef3c7;color:var(--amber)">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <div class="card-hd-title">Actions</div>
-            </div>
-            <div class="card-body">
-                <div class="action-bar">
-                    <%if(isPending){%>
-                    <button class="btn btn-success"
-                            onclick="document.getElementById('modalApprove').classList.add('show')">
-                        <i class="fas fa-check"></i> Approve
-                    </button>
-                    <button class="btn btn-danger"
-                            onclick="document.getElementById('modalReject').classList.add('show')">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                    <%}%>
-                    <%if(isApproved){%>
-                    <button class="btn btn-primary"
-                            onclick="document.getElementById('assignSection').scrollIntoView({behavior:'smooth'})">
-                        <i class="fas fa-user-plus"></i> Assign Technician
-                    </button>
-                    <%}%>
-                </div>
-            </div>
-        </div>
-        <%}%>
-
-        <%-- ════════════════════════════════════════════════════════════════
-             ── Technician Workload & Assign Section (điền vào khoảng trống) ──
-             ════════════════════════════════════════════════════════════════ --%>
-
-        <%-- ── Technician Availability Panel ── --%>
-        <div class="card" id="assignSection">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#ede9fe;color:var(--purple)">
-                    <i class="fas fa-users-cog"></i>
-                </div>
-                <div class="card-hd-title">Technician Availability</div>
-                <div class="card-hd-badge">
-                    <%
-                        long availCnt = 0, fullCnt = 0;
-                        for(TechnicianWorkload tw : workloads){
-                            if(tw.isAvailable()) availCnt++; else fullCnt++;
-                        }
-                    %>
-                    <span class="b b-approved"><%=availCnt%> available</span>
-                    <%if(fullCnt>0){%>
-                    <span class="b b-rejected"><%=fullCnt%> full</span>
-                    <%}%>
-                </div>
-            </div>
-            <div class="card-body" style="padding:16px 20px">
-                <%if(workloads.isEmpty()){%>
-                <div class="wl-empty">
-                    <i class="fas fa-user-slash"></i>
-                    No technician workload data found. Run the SQL script to initialize.
-                </div>
-                <%}else{%>
-                <div class="wl-grid">
-                <%for(TechnicianWorkload tw : workloads){
-                    int cur = tw.getCurrentActiveTasks();
-                    int max = tw.getMaxConcurrentTasks();
-                    double ratio = max>0?(double)cur/max:1.0;
-                    int pct = Math.min(100,(int)(ratio*100));
-                    String wlStatus, wlClass, wlBar;
-                    if(ratio>=1.0)      {wlStatus="Overloaded"; wlClass="wl-full"; wlBar="wl-bar-r";}
-                    else if(ratio>=0.7) {wlStatus="Busy";       wlClass="wl-busy"; wlBar="wl-bar-o";}
-                    else if(ratio>=0.4) {wlStatus="Moderate";   wlClass="wl-mod";  wlBar="wl-bar-a";}
-                    else                {wlStatus="Available";  wlClass="wl-avail";wlBar="wl-bar-g";}
-                    String twInit=(tw.getTechnicianName()!=null&&!tw.getTechnicianName().isEmpty())
-                        ?tw.getTechnicianName().substring(0,1).toUpperCase():"T";
-                %>
-                    <div class="wl-card">
-                        <div class="wl-ava"><%=twInit%></div>
-                        <div class="wl-name" title="<%=tw.getTechnicianName()!=null?tw.getTechnicianName():""%>">
-                            <%=tw.getTechnicianName()!=null?tw.getTechnicianName():"Technician #"+tw.getTechnicianId()%>
-                        </div>
-                        <div class="wl-email" title="<%=tw.getTechnicianEmail()!=null?tw.getTechnicianEmail():""%>">
-                            <%=tw.getTechnicianEmail()!=null?tw.getTechnicianEmail():"—"%>
-                        </div>
-                        <span class="wl-status <%=wlClass%>">
-                            <%if("Available".equals(wlStatus)){%>
-                                <i class="fas fa-circle" style="font-size:.45rem"></i>
-                            <%}else if("Overloaded".equals(wlStatus)){%>
-                                <i class="fas fa-exclamation-triangle" style="font-size:.6rem"></i>
-                            <%}else{%>
-                                <i class="fas fa-clock" style="font-size:.55rem"></i>
-                            <%}%>
-                            <%=wlStatus%>
-                        </span>
-                        <div class="wl-bar-bg">
-                            <div class="wl-bar <%=wlBar%>" style="width:<%=pct%>%"></div>
-                        </div>
-                        <div class="wl-count"><%=cur%>/<%=max%> tasks &nbsp;&middot;&nbsp; <%=pct%>%</div>
-                    </div>
-                <%}%>
                 </div>
                 <%}%>
-            </div>
-        </div>
 
-        <%-- ── Assigned Tasks on this Request ── --%>
-        <%if(!assignedTasks.isEmpty()){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#d1fae5;color:var(--teal)">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="card-hd-title">Assigned Technicians
-                    <span style="color:var(--text-s);font-weight:400"> (<%=assignedTasks.size()%>)</span>
-                </div>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Technician</th>
-                        <th>Task Type</th>
-                        <th>Status</th>
-                        <th>Assigned At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <%int ti=1;for(WorkTask wt : assignedTasks){
-                    String tsCls = "task-assigned";
-                    if("In Progress".equals(wt.getStatus())) tsCls="task-inprogress";
-                    else if("Completed".equals(wt.getStatus())) tsCls="task-completed";
-                    else if("Cancelled".equals(wt.getStatus())) tsCls="task-cancelled";
-                %>
-                <tr>
-                    <td class="td-muted"><%=ti++%></td>
-                    <td style="font-weight:600;color:var(--text-h)">
-                        <%=wt.getTechnicianName()!=null?wt.getTechnicianName():"Technician #"+wt.getTechnicianId()%>
-                    </td>
-                    <td class="td-muted"><%=wt.getTaskType()%></td>
-                    <td><span class="task-badge <%=tsCls%>"><%=wt.getStatus()%></span></td>
-                    <td class="td-muted">
-                        <%=wt.getCreatedAt()!=null?wt.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                    </td>
-                </tr>
-                <%}%>
-                </tbody>
-            </table>
-        </div>
-        <%}%>
-
-        <%-- ── Inline Assign Form (chỉ khi APPROVED và có technician) ── --%>
-        <%if(isApproved&&!technicians.isEmpty()){%>
-        <div class="card">
-            <div class="card-hd">
-                <div class="card-hd-icon" style="background:#dbeafe;color:var(--blue)">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <div class="card-hd-title">Assign Technician(s) to this Request</div>
-            </div>
-            <div class="assign-form-wrap">
-                <form method="post" action="<%=ctx%>/tmServiceRequests" id="assignForm">
-                    <input type="hidden" name="action" value="assign">
-                    <input type="hidden" name="id" value="<%=sr.getId()%>">
-
-                    <%-- Workload info legend --%>
-                    <div style="background:#f8f9fc;border:1px solid var(--border-light);border-radius:10px;
-                                padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--text-m);
-                                display:flex;flex-wrap:wrap;gap:12px;align-items:center">
-                        <span><i class="fas fa-circle" style="color:#22c55e;font-size:.5rem"></i> Available</span>
-                        <span><i class="fas fa-clock" style="color:#f59e0b;font-size:.6rem"></i> Moderate (≥40%)</span>
-                        <span><i class="fas fa-clock" style="color:#f97316;font-size:.6rem"></i> Busy (≥70%)</span>
-                        <span><i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:.6rem"></i> Overloaded — cannot assign</span>
-                        <span style="margin-left:auto;color:var(--text-s)">Urgent=3pts · High=2pts · Medium/Low=1pt per technician slot</span>
+                <%-- ── Assignment Card ── --%>
+                <%if(sr.getAssignedTo()!=null){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
+                            <i class="fas fa-hard-hat"></i>
+                        </div>
+                        <div class="card-hd-title">Assignment</div>
                     </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Assigned To</label>
+                                <div class="val"><%=sr.getAssignedToName()!=null?sr.getAssignedToName():"-"%></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Assigned At</label>
+                                <div class="val td-muted">
+                                    <%=sr.getAssignedAt()!=null?sr.getAssignedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%}%>
 
-                    <%-- Technician select --%>
-                    <div class="form-row">
-                        <label>Select Technician(s) <span style="color:var(--red)">*</span>
-                            <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-s)">
-                                — check one or more
-                            </span>
-                        </label>
-                        <div class="tech-pick-list">
-                        <%for(User t : technicians){
-                            TechnicianWorkload tw2 = null;
-                            for(TechnicianWorkload w : workloads){
-                                if(w.getTechnicianId()==t.getId()){ tw2=w; break; }
-                            }
-                            boolean overloaded = (tw2!=null&&!tw2.isAvailable());
-                            int cur2 = tw2!=null?tw2.getCurrentActiveTasks():0;
-                            int max2 = tw2!=null?tw2.getMaxConcurrentTasks():5;
-                            double r2 = max2>0?(double)cur2/max2:0;
-                            int p2 = Math.min(100,(int)(r2*100));
-                            String bar2 = r2>=1.0?"wl-bar-r":r2>=0.7?"wl-bar-o":r2>=0.4?"wl-bar-a":"wl-bar-g";
-                            String slots2 = tw2!=null
-                                ? cur2+"/"+max2+" tasks · "+tw2.getAvailableSlots()+" slot(s) free"
-                                : "no workload data";
+                <%-- ── Actions Card (chỉ hiện khi PENDING) ── --%>
+                <%if(isPending){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#fef3c7;color:var(--amber)">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="card-hd-title">Actions</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="action-bar">
+                            <button class="btn btn-success"
+                                    onclick="document.getElementById('modalApprove').classList.add('show')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-danger"
+                                    onclick="document.getElementById('modalReject').classList.add('show')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <%}%>
+
+                <%-- ── Assigned Tasks Table ── --%>
+                <%if(!assignedTasks.isEmpty()){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#d1fae5;color:var(--teal)">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="card-hd-title">Assigned Technicians
+                            <span style="color:var(--text-s);font-weight:400"> (<%=assignedTasks.size()%>)</span>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Technician</th>
+                                <th>Task Type</th>
+                                <th>Status</th>
+                                <th>Assigned At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <%int ti=1;for(WorkTask wt : assignedTasks){
+                            String tsCls = "task-assigned";
+                            if("In Progress".equals(wt.getStatus())) tsCls="task-inprogress";
+                            else if("Completed".equals(wt.getStatus())) tsCls="task-completed";
+                            else if("Cancelled".equals(wt.getStatus())) tsCls="task-cancelled";
                         %>
-                        <label class="tech-pick-item <%=overloaded?"overloaded":""%>">
-                            <input type="checkbox" name="technicianIds" value="<%=t.getId()%>" <%=overloaded?"disabled":""%>>
-                            <div class="tech-pick-info">
-                                <div class="tech-pick-name">
-                                    <%=t.getFullName()%>
-                                    <%if(overloaded){%><span class="full-label">FULL</span><%}%>
+                        <tr>
+                            <td class="td-muted"><%=ti++%></td>
+                            <td style="font-weight:600;color:var(--text-h)">
+                                <%=wt.getTechnicianName()!=null?wt.getTechnicianName():"Technician #"+wt.getTechnicianId()%>
+                            </td>
+                            <td class="td-muted"><%=wt.getTaskType()%></td>
+                            <td><span class="task-badge <%=tsCls%>"><%=wt.getStatus()%></span></td>
+                            <td class="td-muted">
+                                <%=wt.getCreatedAt()!=null?wt.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                            </td>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
+                </div>
+                <%}%>
+
+            </div><%-- end col-left --%>
+
+            <%-- ══════════ RIGHT COLUMN ══════════ --%>
+            <div class="col-right" id="assignSection">
+
+                <%-- ── Technician Availability ── --%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#ede9fe;color:var(--purple)">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="card-hd-title">Technician Availability</div>
+                        <div class="card-hd-badge">
+                            <%
+                                long availCnt = 0, fullCnt = 0;
+                                for(User tech : technicians){
+                                    TechnicianWorkload tw = null;
+                                    for(TechnicianWorkload w : workloads){
+                                        if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
+                                    }
+                                    boolean avail = tw==null || tw.isAvailable();
+                                    if(avail) availCnt++; else fullCnt++;
+                                }
+                            %>
+                            <span class="b b-approved"><%=availCnt%> avail</span>
+                            <%if(fullCnt>0){%>
+                            <span class="b b-rejected"><%=fullCnt%> full</span>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding:14px 16px">
+                        <%if(technicians.isEmpty()){%>
+                        <div class="wl-empty">
+                            <i class="fas fa-user-slash"></i>
+                            No technicians found.
+                        </div>
+                        <%}else{%>
+                        <div class="wl-list">
+                        <%for(User tech : technicians){
+                            // Tìm workload tương ứng (có thể null nếu chưa có record)
+                            TechnicianWorkload tw = null;
+                            for(TechnicianWorkload w : workloads){
+                                if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
+                            }
+                            int cur = tw!=null?tw.getCurrentActiveTasks():0;
+                            int max = tw!=null?tw.getMaxConcurrentTasks():5;
+                            double ratio = max>0?(double)cur/max:0.0;
+                            int pct = Math.min(100,(int)(ratio*100));
+                            String wlStatus, wlClass, wlBar;
+                            if(ratio>=1.0)      {wlStatus="Overloaded"; wlClass="wl-full"; wlBar="wl-bar-r";}
+                            else if(ratio>=0.7) {wlStatus="Busy";       wlClass="wl-busy"; wlBar="wl-bar-o";}
+                            else if(ratio>=0.4) {wlStatus="Moderate";   wlClass="wl-mod";  wlBar="wl-bar-a";}
+                            else                {wlStatus="Available";  wlClass="wl-avail";wlBar="wl-bar-g";}
+                            String twInit = tech.getFullName()!=null&&!tech.getFullName().isEmpty()
+                                ? tech.getFullName().substring(0,1).toUpperCase() : "T";
+                        %>
+                            <%
+                                String cardCls = ratio>=1.0?"is-full":ratio>=0.7?"is-busy":ratio>=0.4?"is-mod":"is-avail";
+                            %>
+                            <div class="wl-card <%=cardCls%>">
+                                <div class="wl-ava-wrap">
+                                    <div class="wl-ava">
+                                        <%if(tech.getAvatarUrl()!=null&&!tech.getAvatarUrl().isEmpty()){%>
+                                        <img src="<%=ctx%><%=tech.getAvatarUrl()%>" alt="<%=twInit%>">
+                                        <%}else{%><%=twInit%><%}%>
+                                    </div>
+                                    <span class="wl-dot"></span>
                                 </div>
-                                <div class="tech-pick-sub">
-                                    <%=t.getEmail()!=null?t.getEmail():""%>
-                                    &nbsp;&middot;&nbsp; <%=slots2%>
+                                <div class="wl-info">
+                                    <div class="wl-name" title="<%=tech.getFullName()!=null?tech.getFullName():""%>">
+                                        <%=tech.getFullName()!=null?tech.getFullName():"Technician #"+tech.getId()%>
+                                    </div>
+                                    <div class="wl-email" title="<%=tech.getEmail()!=null?tech.getEmail():""%>">
+                                        <%=tech.getEmail()!=null?tech.getEmail():"—"%>
+                                    </div>
+                                    <span class="wl-status <%=wlClass%>">
+                                        <%if("Available".equals(wlStatus)){%>
+                                            <i class="fas fa-circle" style="font-size:.4rem"></i>
+                                        <%}else if("Overloaded".equals(wlStatus)){%>
+                                            <i class="fas fa-exclamation-triangle" style="font-size:.52rem"></i>
+                                        <%}else{%>
+                                            <i class="fas fa-clock" style="font-size:.48rem"></i>
+                                        <%}%>
+                                        <%=wlStatus%>
+                                    </span>
+                                </div>
+                                <div class="wl-right">
+                                    <div class="wl-count"><%=cur%>/<%=max%></div>
+                                    <div class="wl-bar-bg">
+                                        <div class="wl-bar <%=wlBar%>" style="width:<%=pct%>%"></div>
+                                    </div>
+                                    <div class="wl-pct"><%=pct%>%</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="mini-bar-bg">
-                                    <div class="mini-bar <%=bar2%>" style="width:<%=p2%>%"></div>
-                                </div>
-                                <div style="font-size:.66rem;color:var(--text-s);text-align:right"><%=p2%>%</div>
-                            </div>
-                        </label>
                         <%}%>
                         </div>
+                        <%}%>
                     </div>
+                </div>
 
-                    <%-- Priority + Duration --%>
-                    <div class="form-row-2">
-                        <div>
-                            <label>Assignment Priority</label>
-                            <select name="priority">
-                                <option value="LOW">Low (1 workload point)</option>
-                                <option value="MEDIUM" selected>Medium (1 workload point)</option>
-                                <option value="HIGH">High (2 workload points)</option>
-                                <option value="URGENT">Urgent (3 workload points)</option>
-                            </select>
+                <%-- ── Inline Assign Form (chỉ khi APPROVED) ── --%>
+                <%if(isApproved&&!technicians.isEmpty()){%>
+                <div class="card">
+                    <div class="card-hd">
+                        <div class="card-hd-icon" style="background:#dbeafe;color:var(--blue)">
+                            <i class="fas fa-user-plus"></i>
                         </div>
-                        <div>
-                            <label>Estimated Duration (hours)</label>
-                            <input type="number" name="estimatedDuration"
-                                   min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                        <div class="card-hd-title">Assign Technician(s)</div>
+                    </div>
+                    <div class="assign-form-wrap">
+                        <%-- Legend --%>
+                        <div style="background:#f8f9fc;border:1px solid var(--border-light);border-radius:9px;
+                                    padding:9px 12px;margin-bottom:12px;font-size:.73rem;color:var(--text-m);
+                                    display:flex;flex-wrap:wrap;gap:8px">
+                            <span><i class="fas fa-circle" style="color:#22c55e;font-size:.45rem"></i> Available</span>
+                            <span><i class="fas fa-clock" style="color:#f59e0b;font-size:.55rem"></i> Moderate</span>
+                            <span><i class="fas fa-clock" style="color:#f97316;font-size:.55rem"></i> Busy</span>
+                            <span><i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:.55rem"></i> Full</span>
                         </div>
+
+                        <form method="post" action="<%=ctx%>/tmServiceRequests" id="assignForm">
+                            <input type="hidden" name="action" value="assign">
+                            <input type="hidden" name="id" value="<%=sr.getId()%>">
+
+                            <div class="form-row">
+                                <label>Select Technician(s) <span style="color:var(--red)">*</span></label>
+                                <div class="tech-pick-list">
+                                <%for(User t : technicians){
+                                    TechnicianWorkload tw2 = null;
+                                    for(TechnicianWorkload w : workloads){
+                                        if(w.getTechnicianId()==t.getId()){ tw2=w; break; }
+                                    }
+                                    boolean overloaded = (tw2!=null&&!tw2.isAvailable());
+                                    int cur2 = tw2!=null?tw2.getCurrentActiveTasks():0;
+                                    int max2 = tw2!=null?tw2.getMaxConcurrentTasks():5;
+                                    double r2 = max2>0?(double)cur2/max2:0;
+                                    int p2 = Math.min(100,(int)(r2*100));
+                                    String bar2 = r2>=1.0?"wl-bar-r":r2>=0.7?"wl-bar-o":r2>=0.4?"wl-bar-a":"wl-bar-g";
+                                    String slots2 = tw2!=null
+                                        ? cur2+"/"+max2+" · "+tw2.getAvailableSlots()+" free"
+                                        : "no data";
+                                %>
+                                <label class="tech-pick-item <%=overloaded?"overloaded":""%>">
+                                    <input type="checkbox" name="technicianIds" value="<%=t.getId()%>" <%=overloaded?"disabled":""%>>
+                                    <div class="tech-pick-info">
+                                        <div class="tech-pick-name">
+                                            <%=t.getFullName()%>
+                                            <%if(overloaded){%><span class="full-label">FULL</span><%}%>
+                                        </div>
+                                        <div class="tech-pick-sub"><%=slots2%></div>
+                                    </div>
+                                    <div>
+                                        <div class="mini-bar-bg">
+                                            <div class="mini-bar <%=bar2%>" style="width:<%=p2%>%"></div>
+                                        </div>
+                                        <div style="font-size:.64rem;color:var(--text-s);text-align:right"><%=p2%>%</div>
+                                    </div>
+                                </label>
+                                <%}%>
+                                </div>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div>
+                                    <label>Priority</label>
+                                    <select name="priority">
+                                        <option value="LOW">Low (1pt)</option>
+                                        <option value="MEDIUM" selected>Medium (1pt)</option>
+                                        <option value="HIGH">High (2pt)</option>
+                                        <option value="URGENT">Urgent (3pt)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Est. Duration (h)</label>
+                                    <input type="number" name="estimatedDuration"
+                                           min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <label>Required Skills <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-s)">— optional</span></label>
+                                <input type="text" name="requiredSkills"
+                                       placeholder="e.g. HVAC, Electrical">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-full"
+                                    onclick="return validateAssign()">
+                                <i class="fas fa-paper-plane"></i> Assign Technician(s)
+                            </button>
+                        </form>
                     </div>
+                </div>
+                <%}%>
 
-                    <%-- Required Skills --%>
-                    <div class="form-row">
-                        <label>Required Skills <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-s)">— optional</span></label>
-                        <input type="text" name="requiredSkills"
-                               placeholder="e.g. HVAC, Electrical, Plumbing">
-                    </div>
+            </div><%-- end col-right --%>
 
-                    <button type="submit" class="btn btn-primary btn-full"
-                            onclick="return validateAssign()">
-                        <i class="fas fa-paper-plane"></i> Assign Technician(s)
-                    </button>
-                </form>
-            </div>
-        </div>
-        <%}%>
+        </div><%-- end layout-grid --%>
 
-    </div>
+    </div><%-- end content --%>
 </main>
 
 <%-- ════ MODAL: APPROVE ════ --%>
@@ -830,14 +893,12 @@
 </div>
 
 <script>
-    // Đóng modal khi click ra ngoài
     document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) overlay.classList.remove('show');
         });
     });
 
-    // Validate form assign trước khi submit
     function validateAssign() {
         var checks = document.querySelectorAll('input[name="technicianIds"]:checked');
         if (checks.length === 0) {

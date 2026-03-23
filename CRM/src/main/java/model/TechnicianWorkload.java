@@ -9,8 +9,9 @@ public class TechnicianWorkload {
     private int maxConcurrentTasks;
     private LocalDateTime lastAssignedDate;
     private LocalDateTime lastUpdated;
-    private String technicianName;  // joined
-    private String technicianEmail; // joined
+    private String technicianName;   // joined
+    private String technicianEmail;  // joined
+    private String avatarUrl;        // joined from users.avatar_url
 
     public TechnicianWorkload() {}
 
@@ -43,4 +44,6 @@ public class TechnicianWorkload {
     public void setTechnicianName(String technicianName) { this.technicianName = technicianName; }
     public String getTechnicianEmail() { return technicianEmail; }
     public void setTechnicianEmail(String technicianEmail) { this.technicianEmail = technicianEmail; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 }

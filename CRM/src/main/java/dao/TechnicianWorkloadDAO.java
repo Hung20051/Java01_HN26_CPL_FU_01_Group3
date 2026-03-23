@@ -21,13 +21,26 @@ public class TechnicianWorkloadDAO {
         }
     }
 
+    /**
+     * Lấy TẤT CẢ technician đang active, kể cả chưa có record trong technician_workload.
+     * Dùng LEFT JOIN từ users → technician_workload để không bỏ sót ai.
+     */
     public List<TechnicianWorkload> findAllTechnicians() throws Exception {
-        String sql = "SELECT tw.*, u.full_name AS technician_name, u.email AS technician_email "
-                   + "FROM technician_workload tw "
-                   + "JOIN users u ON u.id = tw.technician_id "
+        String sql = "SELECT "
+                   + "  COALESCE(tw.id, 0)                          AS id, "
+                   + "  u.id                                         AS technician_id, "
+                   + "  COALESCE(tw.current_active_tasks, 0)         AS current_active_tasks, "
+                   + "  COALESCE(tw.max_concurrent_tasks, 5)         AS max_concurrent_tasks, "
+                   + "  tw.last_assigned_date, "
+                   + "  u.full_name  AS technician_name, "
+                   + "  u.email      AS technician_email, "
+                   + "  u.avatar_url AS avatar_url "
+                   + "FROM users u "
                    + "JOIN roles r ON r.id = u.role_id "
+                   + "LEFT JOIN technician_workload tw ON tw.technician_id = u.id "
                    + "WHERE r.name = 'TECHNICIAN' AND u.active = 1 "
-                   + "ORDER BY (tw.max_concurrent_tasks - tw.current_active_tasks) DESC";
+                   + "ORDER BY (COALESCE(tw.max_concurrent_tasks, 5) - COALESCE(tw.current_active_tasks, 0)) DESC";
+
         List<TechnicianWorkload> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -77,8 +90,9 @@ public class TechnicianWorkloadDAO {
         tw.setMaxConcurrentTasks(rs.getInt("max_concurrent_tasks"));
         Timestamp la = rs.getTimestamp("last_assigned_date");
         if (la != null) tw.setLastAssignedDate(la.toLocalDateTime());
-        try { tw.setTechnicianName(rs.getString("technician_name")); }  catch (Exception ignored) {}
+        try { tw.setTechnicianName(rs.getString("technician_name")); }   catch (Exception ignored) {}
         try { tw.setTechnicianEmail(rs.getString("technician_email")); } catch (Exception ignored) {}
+        try { tw.setAvatarUrl(rs.getString("avatar_url")); }             catch (Exception ignored) {}
         return tw;
     }
 }
