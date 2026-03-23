@@ -549,31 +549,6 @@
                 </div>
                 <%}%>
 
-                <%-- ── Assignment Card ── --%>
-                <%if(sr.getAssignedTo()!=null){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
-                            <i class="fas fa-hard-hat"></i>
-                        </div>
-                        <div class="card-hd-title">Assignment</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Assigned To</label>
-                                <div class="val"><%=sr.getAssignedToName()!=null?sr.getAssignedToName():"-"%></div>
-                            </div>
-                            <div class="info-item">
-                                <label>Assigned At</label>
-                                <div class="val td-muted">
-                                    <%=sr.getAssignedAt()!=null?sr.getAssignedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <%}%>
 
                 <%-- ── Actions Card (chỉ hiện khi PENDING) ── --%>
                 <%if(isPending){%>
