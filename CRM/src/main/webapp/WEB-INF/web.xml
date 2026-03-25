@@ -521,5 +521,44 @@
     <servlet-name>ReviewImageServlet</servlet-name>
     <url-pattern>/review-images/*</url-pattern>
 </servlet-mapping>   
+<!-- ================================================================ -->
+<!-- TECHNICIAN MODULE   -->
+<!-- ================================================================ -->
+
+<!-- FILTER -->
+<filter>
+    <filter-name>TechnicianFilter</filter-name>
+    <filter-class>filter.TechnicianFilter</filter-class>
+</filter>
+<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianDashboard</url-pattern></filter-mapping>
+<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianTasks</url-pattern></filter-mapping>
+<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianWorkHistory</url-pattern></filter-mapping>
+<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianContracts</url-pattern></filter-mapping>
+
+<!-- SERVLETS -->
+<servlet>
+    <servlet-name>TechnicianDashboardServlet</servlet-name>
+    <servlet-class>controller.TechnicianDashboardServlet</servlet-class>
+</servlet>
+<servlet-mapping><servlet-name>TechnicianDashboardServlet</servlet-name><url-pattern>/technicianDashboard</url-pattern></servlet-mapping>
+
+<servlet>
+    <servlet-name>TechnicianTaskServlet</servlet-name>
+    <servlet-class>controller.TechnicianTaskServlet</servlet-class>
+</servlet>
+<servlet-mapping><servlet-name>TechnicianTaskServlet</servlet-name><url-pattern>/technicianTasks</url-pattern></servlet-mapping>
+
+<servlet>
+    <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
+    <servlet-class>controller.TechnicianWorkHistoryServlet</servlet-class>
+</servlet>
+<servlet-mapping><servlet-name>TechnicianWorkHistoryServlet</servlet-name><url-pattern>/technicianWorkHistory</url-pattern></servlet-mapping>
+
+<servlet>
+    <servlet-name>TechnicianContractServlet</servlet-name>
+    <servlet-class>controller.TechnicianContractServlet</servlet-class>
+</servlet>
+<servlet-mapping><servlet-name>TechnicianContractServlet</servlet-name><url-pattern>/technicianContracts</url-pattern></servlet-mapping>
+
      
 </web-app>
