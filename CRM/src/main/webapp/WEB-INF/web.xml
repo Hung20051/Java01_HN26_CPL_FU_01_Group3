@@ -9,35 +9,33 @@
     </welcome-file-list>
 
     <!-- ===== FILTERS ===== -->
-
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>filter.AuthFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>filter.AdminFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>CustomerFilter</filter-name>
         <filter-class>filter.CustomerFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>StorekeeperFilter</filter-name>
         <filter-class>filter.StorekeeperFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>SupportFilter</filter-name>
         <filter-class>filter.SupportFilter</filter-class>
     </filter>
-
     <filter>
         <filter-name>TechnicalManagerFilter</filter-name>
         <filter-class>filter.TechnicalManagerFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>TechnicianFilter</filter-name>
+        <filter-class>filter.TechnicianFilter</filter-class>
     </filter>
 
     <!-- ── AuthFilter mappings ── -->
@@ -99,6 +97,10 @@
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/role/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/admin/finance</url-pattern>
+    </filter-mapping>
 
     <!-- ── CustomerFilter mappings ── -->
     <filter-mapping>
@@ -152,8 +154,8 @@
         <url-pattern>/numberPart.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/storekeeperPartDetail.jsp</url-pattern>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/storekeeperPartDetail.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
@@ -212,8 +214,25 @@
         <url-pattern>/tmServiceRequestDetail</url-pattern>
     </filter-mapping>
 
-    <!-- ===== SERVLETS ===== -->
+    <!-- ── TechnicianFilter mappings ── -->
+    <filter-mapping>
+        <filter-name>TechnicianFilter</filter-name>
+        <url-pattern>/technicianDashboard</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TechnicianFilter</filter-name>
+        <url-pattern>/technicianTasks</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TechnicianFilter</filter-name>
+        <url-pattern>/technicianWorkHistory</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TechnicianFilter</filter-name>
+        <url-pattern>/technicianContracts</url-pattern>
+    </filter-mapping>
 
+    <!-- ===== SERVLETS ===== -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
@@ -526,69 +545,56 @@
         <servlet-name>ReviewImageServlet</servlet-name>
         <url-pattern>/review-images/*</url-pattern>
     </servlet-mapping>
-    
+
     <!-- ── FINANCE (ADMIN) ── -->
-<servlet>
-    <servlet-name>FinanceServlet</servlet-name>
-    <servlet-class>controller.FinanceServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-<<<<<<< HEAD
-    <servlet-name>ReviewImageServlet</servlet-name>
-    <url-pattern>/review-images/*</url-pattern>
-</servlet-mapping>   
-<!-- ================================================================ -->
-<!-- TECHNICIAN MODULE   -->
-<!-- ================================================================ -->
+    <servlet>
+        <servlet-name>FinanceServlet</servlet-name>
+        <servlet-class>controller.FinanceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FinanceServlet</servlet-name>
+        <url-pattern>/admin/finance</url-pattern>
+    </servlet-mapping>
 
-<!-- FILTER -->
-<filter>
-    <filter-name>TechnicianFilter</filter-name>
-    <filter-class>filter.TechnicianFilter</filter-class>
-</filter>
-<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianDashboard</url-pattern></filter-mapping>
-<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianTasks</url-pattern></filter-mapping>
-<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianWorkHistory</url-pattern></filter-mapping>
-<filter-mapping><filter-name>TechnicianFilter</filter-name><url-pattern>/technicianContracts</url-pattern></filter-mapping>
+    <!-- ── TECHNICIAN MODULE ── -->
+    <servlet>
+        <servlet-name>TechnicianDashboardServlet</servlet-name>
+        <servlet-class>controller.TechnicianDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TechnicianDashboardServlet</servlet-name>
+        <url-pattern>/technicianDashboard</url-pattern>
+    </servlet-mapping>
 
-<!-- SERVLETS -->
-<servlet>
-    <servlet-name>TechnicianDashboardServlet</servlet-name>
-    <servlet-class>controller.TechnicianDashboardServlet</servlet-class>
-</servlet>
-<servlet-mapping><servlet-name>TechnicianDashboardServlet</servlet-name><url-pattern>/technicianDashboard</url-pattern></servlet-mapping>
+    <servlet>
+        <servlet-name>TechnicianTaskServlet</servlet-name>
+        <servlet-class>controller.TechnicianTaskServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TechnicianTaskServlet</servlet-name>
+        <url-pattern>/technicianTasks</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>TechnicianTaskServlet</servlet-name>
-    <servlet-class>controller.TechnicianTaskServlet</servlet-class>
-</servlet>
-<servlet-mapping><servlet-name>TechnicianTaskServlet</servlet-name><url-pattern>/technicianTasks</url-pattern></servlet-mapping>
+    <servlet>
+        <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
+        <servlet-class>controller.TechnicianWorkHistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
+        <url-pattern>/technicianWorkHistory</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
-    <servlet-class>controller.TechnicianWorkHistoryServlet</servlet-class>
-</servlet>
-<servlet-mapping><servlet-name>TechnicianWorkHistoryServlet</servlet-name><url-pattern>/technicianWorkHistory</url-pattern></servlet-mapping>
+    <servlet>
+        <servlet-name>TechnicianContractServlet</servlet-name>
+        <servlet-class>controller.TechnicianContractServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TechnicianContractServlet</servlet-name>
+        <url-pattern>/technicianContracts</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>TechnicianContractServlet</servlet-name>
-    <servlet-class>controller.TechnicianContractServlet</servlet-class>
-</servlet>
-<servlet-mapping><servlet-name>TechnicianContractServlet</servlet-name><url-pattern>/technicianContracts</url-pattern></servlet-mapping>
-
-     
-=======
-    <servlet-name>FinanceServlet</servlet-name>
-    <url-pattern>/admin/finance</url-pattern>
-</servlet-mapping>
-<filter-mapping>
-    <filter-name>AdminFilter</filter-name>
-    <url-pattern>/admin/finance</url-pattern>
-</filter-mapping>
-    
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
 
->>>>>>> c931c9e2fd9c1778dc3d5530325911911a6edb92
 </web-app>
