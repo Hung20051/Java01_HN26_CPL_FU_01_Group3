@@ -9,10 +9,38 @@
     </welcome-file-list>
 
     <!-- ===== FILTERS ===== -->
+
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>filter.AuthFilter</filter-class>
     </filter>
+
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>filter.AdminFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>CustomerFilter</filter-name>
+        <filter-class>filter.CustomerFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>StorekeeperFilter</filter-name>
+        <filter-class>filter.StorekeeperFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>SupportFilter</filter-name>
+        <filter-class>filter.SupportFilter</filter-class>
+    </filter>
+
+    <filter>
+        <filter-name>TechnicalManagerFilter</filter-name>
+        <filter-class>filter.TechnicalManagerFilter</filter-class>
+    </filter>
+
+    <!-- ── AuthFilter mappings ── -->
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/dashboard.jsp</url-pattern>
@@ -37,11 +65,28 @@
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/technical-manager.jsp</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/customerShop</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/customerShopParts.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/customerShopEquipment.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/customerCart.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/customerOrderSuccess.jsp</url-pattern>
+    </filter-mapping>
 
-    <filter>
-        <filter-name>AdminFilter</filter-name>
-        <filter-class>filter.AdminFilter</filter-class>
-    </filter>
+    <!-- ── AdminFilter mappings ── -->
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/admin.jsp</url-pattern>
@@ -54,35 +99,117 @@
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/role/*</url-pattern>
     </filter-mapping>
-    <filter>
-    <filter-name>SupportFilter</filter-name>
-    <filter-class>filter.SupportFilter</filter-class>
-</filter>
-<filter-mapping>
-    <filter-name>SupportFilter</filter-name>
-    <url-pattern>/supportDashboard</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>SupportFilter</filter-name>
-    <url-pattern>/supportCustomers</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>SupportFilter</filter-name>
-    <url-pattern>/supportContracts</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>SupportFilter</filter-name>
-    <url-pattern>/supportServiceRequests</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>SupportFilter</filter-name>
-    <url-pattern>/supportChat</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerAIChat</url-pattern>
-</filter-mapping>
+
+    <!-- ── CustomerFilter mappings ── -->
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerDashboard</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerServiceRequests</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerContracts</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerEquipment</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerInvoices</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerChat</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerPayment</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CustomerFilter</filter-name>
+        <url-pattern>/customerAIChat</url-pattern>
+    </filter-mapping>
+
+    <!-- ── StorekeeperFilter mappings ── -->
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/storekeeper</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/storekeeper.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/numberPart</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/numberPart.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/numberEquipment</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/numberEquipment.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/transactions</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/transactions.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/categoryManage</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/categoryManage.jsp</url-pattern>
+    </filter-mapping>
+
+    <!-- ── SupportFilter mappings ── -->
+    <filter-mapping>
+        <filter-name>SupportFilter</filter-name>
+        <url-pattern>/supportDashboard</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SupportFilter</filter-name>
+        <url-pattern>/supportCustomers</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SupportFilter</filter-name>
+        <url-pattern>/supportContracts</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SupportFilter</filter-name>
+        <url-pattern>/supportServiceRequests</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SupportFilter</filter-name>
+        <url-pattern>/supportChat</url-pattern>
+    </filter-mapping>
+
+    <!-- ── TechnicalManagerFilter mappings ── -->
+    <filter-mapping>
+        <filter-name>TechnicalManagerFilter</filter-name>
+        <url-pattern>/tmServiceRequests</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TechnicalManagerFilter</filter-name>
+        <url-pattern>/tmServiceRequestDetail</url-pattern>
+    </filter-mapping>
+
     <!-- ===== SERVLETS ===== -->
+
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
@@ -172,330 +299,199 @@
         <servlet-name>RoleServlet</servlet-name>
         <url-pattern>/role/*</url-pattern>
     </servlet-mapping>
-    <!-- ===== FILTERS ===== -->
-<filter>
-    <filter-name>StorekeeperFilter</filter-name>
-    <filter-class>filter.StorekeeperFilter</filter-class>
-</filter>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/storekeeper</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/numberPart</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/numberEquipment</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/storekeeper.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/numberPart.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/numberEquipment.jsp</url-pattern>
-</filter-mapping>
 
-<!-- ===== SERVLETS ===== -->
-<servlet>
-    <servlet-name>StorekeeperDashboard</servlet-name>
-    <servlet-class>controller.StorekeeperDashboardServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>StorekeeperDashboard</servlet-name>
-    <url-pattern>/storekeeper</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>StorekeeperDashboard</servlet-name>
+        <servlet-class>controller.StorekeeperDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StorekeeperDashboard</servlet-name>
+        <url-pattern>/storekeeper</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>PartServlet</servlet-name>
-    <servlet-class>controller.PartServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>PartServlet</servlet-name>
-    <url-pattern>/numberPart</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>PartServlet</servlet-name>
+        <servlet-class>controller.PartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PartServlet</servlet-name>
+        <url-pattern>/numberPart</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>EquipmentServlet</servlet-name>
-    <servlet-class>controller.EquipmentServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>EquipmentServlet</servlet-name>
-    <url-pattern>/numberEquipment</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>EquipmentServlet</servlet-name>
+        <servlet-class>controller.EquipmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EquipmentServlet</servlet-name>
+        <url-pattern>/numberEquipment</url-pattern>
+    </servlet-mapping>
 
-<!-- FILTERS cho transaction và category -->
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/transactions</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/categoryManage</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/transactions.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>StorekeeperFilter</filter-name>
-    <url-pattern>/categoryManage.jsp</url-pattern>
-</filter-mapping>
+    <servlet>
+        <servlet-name>TransactionServlet</servlet-name>
+        <servlet-class>controller.TransactionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TransactionServlet</servlet-name>
+        <url-pattern>/transactions</url-pattern>
+    </servlet-mapping>
 
-<!-- SERVLETS -->
-<servlet>
-    <servlet-name>TransactionServlet</servlet-name>
-    <servlet-class>controller.TransactionServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>TransactionServlet</servlet-name>
-    <url-pattern>/transactions</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>controller.CategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/categoryManage</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>CategoryServlet</servlet-name>
-    <servlet-class>controller.CategoryServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>CategoryServlet</servlet-name>
-    <url-pattern>/categoryManage</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>CustomerDashboardServlet</servlet-name>
+        <servlet-class>controller.CustomerDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerDashboardServlet</servlet-name>
+        <url-pattern>/customerDashboard</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CustomerServiceRequestServlet</servlet-name>
+        <servlet-class>controller.CustomerServiceRequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerServiceRequestServlet</servlet-name>
+        <url-pattern>/customerServiceRequests</url-pattern>
+    </servlet-mapping>
 
-  <!-- ── CUSTOMER FILTER ── -->
-  <filter>
-    <filter-name>CustomerFilter</filter-name>
-    <filter-class>filter.CustomerFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerDashboard</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerServiceRequests</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerContracts</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerEquipment</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerInvoices</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerChat</url-pattern>
-  </filter-mapping>
+    <servlet>
+        <servlet-name>CustomerContractServlet</servlet-name>
+        <servlet-class>controller.CustomerContractServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerContractServlet</servlet-name>
+        <url-pattern>/customerContracts</url-pattern>
+    </servlet-mapping>
 
-  <!-- ── CUSTOMER SERVLETS ── -->
-  <servlet>
-    <servlet-name>CustomerDashboardServlet</servlet-name>
-    <servlet-class>controller.CustomerDashboardServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerDashboardServlet</servlet-name>
-    <url-pattern>/customerDashboard</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>CustomerInvoiceServlet</servlet-name>
+        <servlet-class>controller.CustomerInvoiceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerInvoiceServlet</servlet-name>
+        <url-pattern>/customerInvoices</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>CustomerServiceRequestServlet</servlet-name>
-    <servlet-class>controller.CustomerServiceRequestServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerServiceRequestServlet</servlet-name>
-    <url-pattern>/customerServiceRequests</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>CustomerChatServlet</servlet-name>
+        <servlet-class>controller.CustomerChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerChatServlet</servlet-name>
+        <url-pattern>/customerChat</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>CustomerContractServlet</servlet-name>
-    <servlet-class>controller.CustomerContractServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerContractServlet</servlet-name>
-    <url-pattern>/customerContracts</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>CustomerEquipmentServlet</servlet-name>
+        <servlet-class>controller.CustomerEquipmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerEquipmentServlet</servlet-name>
+        <url-pattern>/customerEquipment</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>CustomerInvoiceServlet</servlet-name>
-    <servlet-class>controller.CustomerInvoiceServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerInvoiceServlet</servlet-name>
-    <url-pattern>/customerInvoices</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>controller.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/customerPayment</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>CustomerChatServlet</servlet-name>
-    <servlet-class>controller.CustomerChatServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerChatServlet</servlet-name>
-    <url-pattern>/customerChat</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>CustomerShopServlet</servlet-name>
+        <servlet-class>controller.CustomerShopServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerShopServlet</servlet-name>
+        <url-pattern>/customerShop</url-pattern>
+    </servlet-mapping>
 
-<!-- Equipment Servlet  -->
-  <servlet>
-    <servlet-name>CustomerEquipmentServlet</servlet-name>
-    <servlet-class>controller.CustomerEquipmentServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CustomerEquipmentServlet</servlet-name>
-    <url-pattern>/customerEquipment</url-pattern>
-  </servlet-mapping>
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerEquipment</url-pattern>
-  </filter-mapping>
+    <servlet>
+        <servlet-name>CustomerSupportChatServlet</servlet-name>
+        <servlet-class>controller.CustomerSupportChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerSupportChatServlet</servlet-name>
+        <url-pattern>/supportChat</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SupportDashboardServlet</servlet-name>
+        <servlet-class>controller.SupportDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupportDashboardServlet</servlet-name>
+        <url-pattern>/supportDashboard</url-pattern>
+    </servlet-mapping>
 
-  <!-- ── CUSTOMER FILTER cho payment ── -->
-  <filter-mapping>
-    <filter-name>CustomerFilter</filter-name>
-    <url-pattern>/customerPayment</url-pattern>
-  </filter-mapping>
+    <servlet>
+        <servlet-name>SupportCustomerServlet</servlet-name>
+        <servlet-class>controller.SupportCustomerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupportCustomerServlet</servlet-name>
+        <url-pattern>/supportCustomers</url-pattern>
+    </servlet-mapping>
 
-  <!-- ── PAYMENT SERVLET ── -->
-  <servlet>
-    <servlet-name>PaymentServlet</servlet-name>
-    <servlet-class>controller.PaymentServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>PaymentServlet</servlet-name>
-    <url-pattern>/customerPayment</url-pattern>
-  </servlet-mapping>
-<!-- FILTER - CustomerFilter bảo vệ shop pages -->
-<filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>/customerShop</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>/customerShopParts.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>/customerShopEquipment.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>/customerCart.jsp</url-pattern>
-</filter-mapping>
-<filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>/customerOrderSuccess.jsp</url-pattern>
-</filter-mapping>
+    <servlet>
+        <servlet-name>SupportContractServlet</servlet-name>
+        <servlet-class>controller.SupportContractServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupportContractServlet</servlet-name>
+        <url-pattern>/supportContracts</url-pattern>
+    </servlet-mapping>
 
-<!-- SERVLET -->
-<servlet>
-    <servlet-name>CustomerShopServlet</servlet-name>
-    <servlet-class>controller.CustomerShopServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>CustomerShopServlet</servlet-name>
-    <url-pattern>/customerShop</url-pattern>
-</servlet-mapping>
-<servlet>
-    <servlet-name>CustomerSupportChatServlet</servlet-name>
-    <servlet-class>controller.CustomerSupportChatServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>CustomerSupportChatServlet</servlet-name>
-    <url-pattern>/supportChat</url-pattern>
-</servlet-mapping>
-<!-- Support Dashboard -->
-<servlet>
-    <servlet-name>SupportDashboardServlet</servlet-name>
-    <servlet-class>controller.SupportDashboardServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SupportDashboardServlet</servlet-name>
-    <url-pattern>/supportDashboard</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>SupportServiceRequestServlet</servlet-name>
+        <servlet-class>controller.SupportServiceRequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupportServiceRequestServlet</servlet-name>
+        <url-pattern>/supportServiceRequests</url-pattern>
+    </servlet-mapping>
 
-<!-- Support Customers -->
-<servlet>
-    <servlet-name>SupportCustomerServlet</servlet-name>
-    <servlet-class>controller.SupportCustomerServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SupportCustomerServlet</servlet-name>
-    <url-pattern>/supportCustomers</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controller.ProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
 
-<!-- Support Contracts -->
-<servlet>
-    <servlet-name>SupportContractServlet</servlet-name>
-    <servlet-class>controller.SupportContractServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SupportContractServlet</servlet-name>
-    <url-pattern>/supportContracts</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>AvatarServlet</servlet-name>
+        <servlet-class>controller.AvatarServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>2097152</max-file-size>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AvatarServlet</servlet-name>
+        <url-pattern>/avatar/upload</url-pattern>
+    </servlet-mapping>
 
-<!-- Support Service Requests -->
-<servlet>
-    <servlet-name>SupportServiceRequestServlet</servlet-name>
-    <servlet-class>controller.SupportServiceRequestServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SupportServiceRequestServlet</servlet-name>
-    <url-pattern>/supportServiceRequests</url-pattern>
-</servlet-mapping>
-<servlet>
-    <servlet-name>ProfileServlet</servlet-name>
-    <servlet-class>controller.ProfileServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>ProfileServlet</servlet-name>
-    <url-pattern>/profile</url-pattern>
-</servlet-mapping>
-<servlet>
-    <servlet-name>AvatarServlet</servlet-name>
-    <servlet-class>controller.AvatarServlet</servlet-class>
-    <multipart-config>
-        <max-file-size>2097152</max-file-size>
-    </multipart-config>
-</servlet>
-<servlet-mapping>
-    <servlet-name>AvatarServlet</servlet-name>
-    <url-pattern>/avatar/upload</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>AvatarFileServlet</servlet-name>
+        <servlet-class>controller.AvatarFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AvatarFileServlet</servlet-name>
+        <url-pattern>/avatar/file/*</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>AvatarFileServlet</servlet-name>
-    <servlet-class>controller.AvatarFileServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>AvatarFileServlet</servlet-name>
-    <url-pattern>/avatar/file/*</url-pattern>
-</servlet-mapping>
-
-    <session-config>
-        <session-timeout>30</session-timeout>
-    </session-config>
-    
-    <!-- ── TECHNICAL MANAGER FILTER ── -->
-    <filter>
-        <filter-name>TechnicalManagerFilter</filter-name>
-        <filter-class>filter.TechnicalManagerFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>TechnicalManagerFilter</filter-name>
-        <url-pattern>/tmServiceRequests</url-pattern>
-    </filter-mapping>
-    
-    <!-- ── TECHNICAL MANAGER SERVLET ── -->
     <servlet>
         <servlet-name>TechnicalManagerServlet</servlet-name>
         <servlet-class>controller.TechnicalManagerServlet</servlet-class>
@@ -504,25 +500,30 @@
         <servlet-name>TechnicalManagerServlet</servlet-name>
         <url-pattern>/tmServiceRequests</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TechnicalManagerServlet</servlet-name>
+        <url-pattern>/tmServiceRequestDetail</url-pattern>
+    </servlet-mapping>
+
     <servlet>
-    <servlet-name>AIChatServlet</servlet-name>
-    <servlet-class>controller.AIChatServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>AIChatServlet</servlet-name>
-    <url-pattern>/customerAIChat</url-pattern>
-</servlet-mapping>
-      
-<servlet>
-    <servlet-name>ReviewImageServlet</servlet-name>
-    <servlet-class>controller.ReviewImageServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-    <servlet-name>ReviewImageServlet</servlet-name>
-    <url-pattern>/review-images/*</url-pattern>
-</servlet-mapping>   
-     
-     <!-- ── FINANCE (ADMIN) ── -->
+        <servlet-name>AIChatServlet</servlet-name>
+        <servlet-class>controller.AIChatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AIChatServlet</servlet-name>
+        <url-pattern>/customerAIChat</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReviewImageServlet</servlet-name>
+        <servlet-class>controller.ReviewImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReviewImageServlet</servlet-name>
+        <url-pattern>/review-images/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- ── FINANCE (ADMIN) ── -->
 <servlet>
     <servlet-name>FinanceServlet</servlet-name>
     <servlet-class>controller.FinanceServlet</servlet-class>
@@ -531,10 +532,13 @@
     <servlet-name>FinanceServlet</servlet-name>
     <url-pattern>/admin/finance</url-pattern>
 </servlet-mapping>
-
-<!-- AdminFilter bảo vệ URL /admin/finance -->
 <filter-mapping>
     <filter-name>AdminFilter</filter-name>
     <url-pattern>/admin/finance</url-pattern>
 </filter-mapping>
+    
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
 </web-app>
