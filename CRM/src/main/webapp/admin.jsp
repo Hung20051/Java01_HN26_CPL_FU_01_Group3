@@ -275,7 +275,9 @@
                 <div class="mgmt-title">Finance Management</div>
                 <div class="mgmt-desc">Compile sales and repair revenue statistics and generate Excel reports.</div>
                 <a href="<%=ctx%>/admin/finance" class="btn btn-finance">
-                    <i class="fas fa-chart-bar"></i>View Finance
+
+                    <i class="fas fa-chart-bar"></i> View Finance
+
                 </a>
             </div>
 
