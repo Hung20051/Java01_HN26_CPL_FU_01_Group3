@@ -47,7 +47,7 @@ public class TechnicianContractServlet extends HttpServlet {
     }
 
     private void showContractList(HttpServletRequest req, HttpServletResponse resp)
-            throws Exception, ServletException, IOException {
+            throws Exception {
         String keyword = req.getParameter("keyword");
         String type    = req.getParameter("type");
         String status  = req.getParameter("status");
@@ -55,8 +55,7 @@ public class TechnicianContractServlet extends HttpServlet {
 
         List<Contract> contracts = contractDAO.getAllFiltered(keyword, type, status, page, PAGE_SIZE);
         int total      = contractDAO.countFiltered(keyword, type, status);
-        int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-        if (totalPages < 1) totalPages = 1;
+        int totalPages = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
 
         req.setAttribute("contracts",    contracts);
         req.setAttribute("total",        total);
@@ -69,7 +68,7 @@ public class TechnicianContractServlet extends HttpServlet {
     }
 
     private void showContractDetail(HttpServletRequest req, HttpServletResponse resp)
-            throws Exception, ServletException, IOException {
+            throws Exception {
         String idParam = req.getParameter("id");
         if (idParam == null) { resp.sendRedirect(req.getContextPath() + "/technicianContracts"); return; }
 
@@ -84,33 +83,39 @@ public class TechnicianContractServlet extends HttpServlet {
     }
 
     private void showEquipmentList(HttpServletRequest req, HttpServletResponse resp)
-            throws Exception, ServletException, IOException {
-        String keyword = req.getParameter("keyword");
+            throws Exception {
+        String keyword    = req.getParameter("keyword");
+        String categoryId = req.getParameter("categoryId");
+        String status     = req.getParameter("status"); // AVAILABLE, INUSE, FAULTY, RETIRED
         int page = parsePage(req);
 
-        List<EquipmentType> equipTypes = equipmentDAO.findAllTypes(keyword, null, null, page, PAGE_SIZE);
-        int total      = equipmentDAO.countTypes(keyword, null);
-        int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-        if (totalPages < 1) totalPages = 1;
+        List<EquipmentType> types = equipmentDAO.findAllTypes(keyword, categoryId, null, page, PAGE_SIZE);
+        int total      = equipmentDAO.countTypes(keyword, categoryId);
+        int totalPages = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
 
-        req.setAttribute("equipTypes",   equipTypes);
+        req.setAttribute("equipTypes",   types);
         req.setAttribute("total",        total);
         req.setAttribute("page",         page);
         req.setAttribute("totalPages",   totalPages);
-        req.setAttribute("keyword",      keyword != null ? keyword : "");
-        req.getRequestDispatcher("/technicianEquipment.jsp").forward(req, resp);
+        req.setAttribute("keyword",      keyword    != null ? keyword    : "");
+        req.setAttribute("filterStatus", status     != null ? status     : "");
+        req.getRequestDispatcher("/technicianEquipmentList.jsp").forward(req, resp);
     }
 
     private void showEquipmentDetail(HttpServletRequest req, HttpServletResponse resp)
-            throws Exception, ServletException, IOException {
+            throws Exception {
         String idParam = req.getParameter("id");
-        if (idParam == null) { resp.sendRedirect(req.getContextPath() + "/technicianContracts?action=equipment"); return; }
+        if (idParam == null) {
+            resp.sendRedirect(req.getContextPath() + "/technicianContracts?action=equipment"); return;
+        }
+        int typeId = Integer.parseInt(idParam);
+        EquipmentType type  = equipmentDAO.findTypeById(typeId);
+        if (type == null) {
+            resp.sendRedirect(req.getContextPath() + "/technicianContracts?action=equipment"); return;
+        }
+        List<EquipmentUnit> units = equipmentDAO.findUnitsByTypeId(typeId);
 
-        EquipmentType equipType = equipmentDAO.findTypeById(Integer.parseInt(idParam));
-        if (equipType == null) { resp.sendRedirect(req.getContextPath() + "/technicianContracts?action=equipment"); return; }
-
-        List<EquipmentUnit> units = equipmentDAO.findUnitsByTypeId(Integer.parseInt(idParam));
-        req.setAttribute("equipType", equipType);
+        req.setAttribute("equipType", type);
         req.setAttribute("units",     units);
         req.getRequestDispatcher("/technicianEquipmentDetail.jsp").forward(req, resp);
     }

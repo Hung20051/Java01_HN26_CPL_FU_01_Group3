@@ -93,6 +93,7 @@
         <div class="sb-lbl">Overview</div><a href="<%=ctx%>/technicianDashboard" class="sb-item"><i class="fas fa-th-large"></i> Dashboard</a>
         <div class="sb-lbl">Work</div>
         <a href="<%=ctx%>/technicianTasks" class="sb-item on"><i class="fas fa-tasks"></i> My Tasks</a>
+        <a href="<%=ctx%>/technicianReports" class="sb-item"><i class="fas fa-clipboard-list"></i> Repair Reports</a>
         <a href="<%=ctx%>/technicianWorkHistory" class="sb-item"><i class="fas fa-history"></i> Work History</a>
         <div class="sb-lbl">Reference</div>
         <a href="<%=ctx%>/technicianContracts" class="sb-item"><i class="fas fa-file-contract"></i> Contracts</a>
