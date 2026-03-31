@@ -221,11 +221,11 @@
     </div>
     <div class="sb-foot">
         <a href="<%=ctx%>/profile" class="sb-user">
-            <div class="sb-ava">
-                <% if (currentUser.getAvatarUrl() != null && !currentUser.getAvatarUrl().isEmpty()) { %>
-                    <img src="<%=ctx%>/avatar/file/<%=currentUser.getAvatarUrl()%>" alt="">
-                <% } else { %> <%=initials%> <% } %>
-            </div>
+           <div class="sb-ava">
+    <% if (currentUser.getAvatarUrl() != null && !currentUser.getAvatarUrl().isEmpty()) { %>
+        <img src="<%=ctx%><%=currentUser.getAvatarUrl()%>" alt="">
+    <% } else { %> <%=initials%> <% } %>
+</div>
             <div>
                 <div class="sb-uname"><%=currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername()%></div>
                 <div class="sb-urole">Administrator</div>
