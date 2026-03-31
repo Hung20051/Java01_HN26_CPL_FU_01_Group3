@@ -147,7 +147,8 @@
         .btn-success:hover{background:#15803d;transform:translateY(-1px)}
         .btn-secondary{background:#fff;color:var(--text-m);border:1.5px solid var(--border-light)}
         .btn-secondary:hover{background:#f3f4f6;border-color:#d1d5db}
-
+        .btn-finance{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 3px 10px rgba(22,163,74,0.28)}
+        .btn-finance:hover{opacity:.9;transform:translateY(-1px)}
         /* System info */
         .system-info{background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:16px;padding:22px 24px;box-shadow:0 1px 6px rgba(0,0,0,0.05);animation:cardIn .5s .3s ease both;}
         .system-info-hd{font-size:.87rem;font-weight:700;color:var(--text-h);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
@@ -180,6 +181,10 @@
             </a>
             <a href="<%=ctx%>/role/list" class="sb-item">
                 <i class="fas fa-user-tag"></i> Roles
+            </a>
+            
+            <a href="<%=ctx%>/admin/finance" class="sb-item">
+                <i class="fas fa-chart-line"></i> Finance
             </a>
         </nav>
         <div class="sb-foot">
@@ -260,6 +265,18 @@
                         <a href="<%=ctx%>/role/list" class="btn btn-success"><i class="fas fa-list"></i> Role List</a>
                     </div>
                 </div>
+            </div>
+                    
+            <!-- Finance Management Card -->
+            <div class="mgmt-card">
+                <div class="mgmt-icon" style="background:rgba(22,163,74,0.1)">
+                    <i class="fas fa-chart-line" style="color:#16a34a"></i>
+                </div>
+                <div class="mgmt-title">Finance Management</div>
+                <div class="mgmt-desc">Thống kê doanh thu bán hàng và sửa chữa, xuất báo cáo Excel.</div>
+                <a href="<%=ctx%>/admin/finance" class="btn btn-finance">
+                    <i class="fas fa-chart-bar"></i> Xem Tài chính
+                </a>
             </div>
 
             <!-- System info -->
