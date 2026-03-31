@@ -522,7 +522,21 @@
         <servlet-name>ReviewImageServlet</servlet-name>
         <url-pattern>/review-images/*</url-pattern>
     </servlet-mapping>
-
+    
+    <!-- ── FINANCE (ADMIN) ── -->
+<servlet>
+    <servlet-name>FinanceServlet</servlet-name>
+    <servlet-class>controller.FinanceServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>FinanceServlet</servlet-name>
+    <url-pattern>/admin/finance</url-pattern>
+</servlet-mapping>
+<filter-mapping>
+    <filter-name>AdminFilter</filter-name>
+    <url-pattern>/admin/finance</url-pattern>
+</filter-mapping>
+    
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
