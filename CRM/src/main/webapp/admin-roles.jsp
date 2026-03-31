@@ -154,6 +154,9 @@
             <a href="<%=ctx%>/role/list" class="sb-item on">
                 <i class="fas fa-user-tag"></i> Roles
             </a>
+            <a href="<%=ctx%>/admin/finance" class="sb-item">
+                <i class="fas fa-chart-line"></i> Finance
+            </a>
         </nav>
         <div class="sb-foot">
             <a href="<%=ctx%>/profile" class="sb-user">
