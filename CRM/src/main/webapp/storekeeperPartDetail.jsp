@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.User, model.PartType, model.PartUnit, model.Category, java.util.*, java.text.*" %>
+<%@ page import="model.User, model.PartType, model.PartUnit, model.Category, dao.ReviewDAO, java.util.*, java.text.*" %>
 <%
     User currentUser = (User) session.getAttribute("user");
     if (currentUser == null || !"STOREKEEPER".equals(currentUser.getRoleName())) {
@@ -11,6 +11,15 @@
     if (pt == null) { response.sendRedirect(request.getContextPath() + "/numberPart"); return; }
     if (categories == null) categories = new ArrayList<>();
     if (units == null)      units      = new ArrayList<>();
+
+    // ── [THÊM MỚI] Đọc dữ liệu feedback từ request attributes ──
+    List<ReviewDAO.Review> reviews = (List<ReviewDAO.Review>) request.getAttribute("reviews");
+    double avgRating = request.getAttribute("avgRating") != null ? (double) request.getAttribute("avgRating") : 0;
+    Map<Integer,Integer> ratingDist = (Map<Integer,Integer>) request.getAttribute("ratingDist");
+    int totalReviews = reviews != null ? reviews.size() : 0;
+    if (reviews == null) reviews = new ArrayList<>();
+    if (ratingDist == null) ratingDist = new java.util.HashMap<>();
+    // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────
 
     String flashSuccess = (String) session.getAttribute("flashSuccess");
     String flashError   = (String) session.getAttribute("flashError");
@@ -466,9 +475,145 @@
                 </div>
                 <%}%>
             </div>
+        </div><!-- end bottom-grid -->
+
+        <!-- ════════════════════════════════════════════════════════
+             [THÊM MỚI] CUSTOMER FEEDBACK SECTION
+             Hiển thị tất cả đánh giá của khách hàng về sản phẩm này
+             ════════════════════════════════════════════════════════ -->
+        <div style="background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:16px;padding:24px;margin-top:0;animation:cardIn .5s .24s ease both;">
+
+            <%-- Header row --%>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light2);">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:32px;height:32px;border-radius:9px;background:#fef3c7;color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:.82rem;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span style="font-size:.88rem;font-weight:700;color:var(--text-h);">Customer Feedback</span>
+                    <%if(totalReviews>0){%>
+                    <span style="background:var(--primary-light);color:var(--primary-2);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;"><%=totalReviews%> review<%=totalReviews>1?"s":""%></span>
+                    <%}%>
+                </div>
+                <%if(totalReviews>0){%>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:1.3rem;font-weight:800;color:var(--amber);"><%=String.format("%.1f",avgRating)%></span>
+                    <div style="display:flex;gap:2px;">
+                        <%for(int s=1;s<=5;s++){%>
+                        <span style="font-size:13px;color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;">★</span>
+                        <%}%>
+                    </div>
+                </div>
+                <%}%>
+            </div>
+
+            <%if(totalReviews==0){%>
+            <%-- Empty state --%>
+            <div style="text-align:center;padding:36px 20px;color:var(--text-s);">
+                <i class="fas fa-comment-slash" style="font-size:2.2rem;display:block;margin-bottom:12px;opacity:.2;color:var(--text-m);"></i>
+                <div style="font-size:.85rem;font-weight:600;color:var(--text-m);margin-bottom:4px;">No reviews yet</div>
+                <div style="font-size:.78rem;">Customer feedback will appear here after purchase.</div>
+            </div>
+            <%}else{%>
+
+            <%-- Rating distribution bar --%>
+            <div style="display:flex;gap:20px;align-items:center;background:#f9fafb;border-radius:12px;padding:14px 18px;margin-bottom:20px;">
+                <div style="text-align:center;padding-right:18px;border-right:1px solid var(--border-light);">
+                    <div style="font-size:2.2rem;font-weight:800;color:var(--amber);line-height:1;"><%=String.format("%.1f",avgRating)%></div>
+                    <div style="display:flex;gap:2px;justify-content:center;margin:4px 0 3px;">
+                        <%for(int s=1;s<=5;s++){%>
+                        <span style="font-size:13px;color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;">★</span>
+                        <%}%>
+                    </div>
+                    <div style="font-size:.7rem;color:var(--text-s);"><%=totalReviews%> reviews</div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                    <%for(int s=5;s>=1;s--){
+                        int cnt=ratingDist.getOrDefault(s,0);
+                        int pct=totalReviews>0?cnt*100/totalReviews:0;
+                    %>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:.73rem;color:var(--text-m);">
+                        <span style="min-width:16px;text-align:right;"><%=s%></span>
+                        <span style="color:#f59e0b;font-size:11px;">★</span>
+                        <div style="flex:1;height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                            <div style="width:<%=pct%>%;height:100%;background:var(--amber);border-radius:3px;"></div>
+                        </div>
+                        <span style="min-width:14px;color:var(--text-s);"><%=cnt%></span>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+
+            <%-- Filter tabs --%>
+            <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;" id="rvFilterRow">
+                <button class="rv-filter-btn active" onclick="filterReviews(this,'all')"
+                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:var(--primary-light);color:var(--primary-2);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
+                    All (<%=totalReviews%>)
+                </button>
+                <%for(int s=5;s>=1;s--){
+                    int cnt=ratingDist.getOrDefault(s,0);
+                    if(cnt>0){%>
+                <button class="rv-filter-btn" onclick="filterReviews(this,'<%=s%>')"
+                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:#fff;color:var(--text-m);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
+                    <%=s%>★ (<%=cnt%>)
+                </button>
+                <%}}%>
+                <button class="rv-filter-btn" onclick="filterReviews(this,'img')"
+                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:#fff;color:var(--text-m);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
+                    <i class="fas fa-image" style="font-size:10px;"></i> Has Image
+                </button>
+            </div>
+
+            <%-- Review cards --%>
+            <div id="rvList" style="display:flex;flex-direction:column;gap:10px;">
+            <%for(ReviewDAO.Review rv : reviews){
+                String rvInit = rv.customerName!=null&&!rv.customerName.isEmpty()
+                    ? rv.customerName.substring(0,1).toUpperCase() : "?";
+                java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String hasImg = (rv.imageUrl!=null&&!rv.imageUrl.isEmpty()) ? "true" : "false";
+            %>
+            <div class="rv-card" data-stars="<%=rv.rating%>" data-has-img="<%=hasImg%>"
+                 style="border:1.5px solid var(--border-light2);border-radius:12px;padding:14px 16px;transition:background .12s;">
+                <%-- Top row: avatar + name + date + rating --%>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <div style="width:34px;height:34px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--primary-2);flex-shrink:0;">
+                        <%=rvInit%>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:.83rem;font-weight:600;color:var(--text-h);"><%=rv.customerName!=null?rv.customerName:"Unknown"%></div>
+                        <div style="font-size:.7rem;color:var(--text-s);"><%=rvSdf.format(rv.createdAt)%></div>
+                    </div>
+                    <%-- Stars --%>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+                        <div style="display:flex;gap:2px;">
+                            <%for(int s=1;s<=5;s++){%>
+                            <span style="font-size:13px;color:<%=s<=rv.rating?"#f59e0b":"#e5e7eb"%>;">★</span>
+                            <%}%>
+                        </div>
+                        <span style="background:#fef3c7;color:var(--amber);font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:6px;"><%=rv.rating%>/5</span>
+                    </div>
+                </div>
+                <%-- Comment --%>
+                <%if(rv.comment!=null&&!rv.comment.isEmpty()){%>
+                <p style="font-size:.82rem;color:var(--text-b);line-height:1.65;margin-bottom:<%=hasImg.equals("true")?"8px":"0"%>;"><%=rv.comment%></p>
+                <%}%>
+                <%-- Image --%>
+                <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
+                <div>
+                    <img src="<%=ctx+rv.imageUrl%>" alt="review"
+                         style="width:76px;height:76px;object-fit:cover;border-radius:8px;border:1.5px solid var(--border-light);cursor:zoom-in;transition:transform .15s;"
+                         onmouseover="this.style.transform='scale(1.04)'"
+                         onmouseout="this.style.transform='scale(1)'"
+                         onclick="openRvLightbox('<%=ctx+rv.imageUrl%>')">
+                </div>
+                <%}%>
+            </div>
+            <%}%>
+            </div>
+            <%}%>
         </div>
-    </div>
-</main>
+        <!-- ════ [KẾT THÚC THÊM MỚI] CUSTOMER FEEDBACK SECTION ════ -->
+
+    </div><!-- end .content -->
 
 <!-- ════ EDIT MODAL ════ -->
 <div class="modal-overlay" id="editModal">
@@ -697,5 +842,65 @@ function prepareEditSubmit() {
     }
 }
 </script>
+<!-- ════ [THÊM MỚI] Lightbox xem ảnh review ════ -->
+<div id="rvLightbox"
+     style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.82);
+            align-items:center;justify-content:center;cursor:zoom-out;"
+     onclick="closeRvLightbox()">
+    <button onclick="closeRvLightbox()" title="Close"
+            style="position:absolute;top:18px;right:22px;background:rgba(255,255,255,0.15);
+                   border:none;color:#fff;font-size:1.3rem;width:38px;height:38px;
+                   border-radius:50%;cursor:pointer;display:flex;align-items:center;
+                   justify-content:center;z-index:1;transition:background .2s;"
+            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.15)'">✕</button>
+    <img id="rvLightboxImg" src="" alt="review"
+         style="max-width:90vw;max-height:88vh;object-fit:contain;
+                border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.5);cursor:default;"
+         onclick="event.stopPropagation()">
+    <div style="position:absolute;bottom:16px;color:rgba(255,255,255,0.45);font-size:.73rem;">
+        Click outside or press ESC to close
+    </div>
+</div>
+
+<script>
+// Lightbox
+function openRvLightbox(src){
+    document.getElementById('rvLightboxImg').src=src;
+    document.getElementById('rvLightbox').style.display='flex';
+    document.body.style.overflow='hidden';
+}
+function closeRvLightbox(){
+    document.getElementById('rvLightbox').style.display='none';
+    document.getElementById('rvLightboxImg').src='';
+    document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeRvLightbox(); });
+
+// Filter reviews by star / has image
+function filterReviews(btn, type){
+    document.querySelectorAll('.rv-filter-btn').forEach(function(b){
+        b.style.background='#fff';
+        b.style.color='var(--text-m)';
+        b.style.borderColor='var(--border-light)';
+        b.classList.remove('active');
+    });
+    btn.style.background='var(--primary-light)';
+    btn.style.color='var(--primary-2)';
+    btn.style.borderColor='rgba(99,102,241,0.3)';
+    btn.classList.add('active');
+
+    document.querySelectorAll('.rv-card').forEach(function(card){
+        var stars=parseInt(card.dataset.stars);
+        var hasImg=card.dataset.hasImg==='true';
+        var show=true;
+        if(type==='img') show=hasImg;
+        else if(type!=='all') show=(stars===parseInt(type));
+        card.style.display=show?'':'none';
+    });
+}
+</script>
+<!-- ════ [KẾT THÚC THÊM MỚI] ════ -->
+
 </body>
 </html>

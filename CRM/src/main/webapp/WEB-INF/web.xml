@@ -152,6 +152,10 @@
         <url-pattern>/numberPart.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
+    <filter-name>StorekeeperFilter</filter-name>
+    <url-pattern>/storekeeperPartDetail.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
         <url-pattern>/numberEquipment</url-pattern>
     </filter-mapping>
