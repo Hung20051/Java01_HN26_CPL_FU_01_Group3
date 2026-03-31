@@ -273,9 +273,9 @@
                     <i class="fas fa-chart-line" style="color:#16a34a"></i>
                 </div>
                 <div class="mgmt-title">Finance Management</div>
-                <div class="mgmt-desc">Thống kê doanh thu bán hàng và sửa chữa, xuất báo cáo Excel.</div>
+                <div class="mgmt-desc">Compile sales and repair revenue statistics and generate Excel reports.</div>
                 <a href="<%=ctx%>/admin/finance" class="btn btn-finance">
-                    <i class="fas fa-chart-bar"></i> Xem Tài chính
+                    <i class="fas fa-chart-bar"></i>View Finance
                 </a>
             </div>
 
