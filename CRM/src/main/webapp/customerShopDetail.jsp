@@ -645,7 +645,8 @@
             List<ReviewDAO.Review> reviews = (List<ReviewDAO.Review>) request.getAttribute("reviews");
             double avgRating = request.getAttribute("avgRating") != null ? (double)request.getAttribute("avgRating") : 0;
             Map<Integer,Integer> ratingDist = (Map<Integer,Integer>) request.getAttribute("ratingDist");
-            boolean hasReviewed = request.getAttribute("hasReviewed") != null && (boolean)request.getAttribute("hasReviewed");
+            boolean hasReviewed  = request.getAttribute("hasReviewed")  != null && (boolean)request.getAttribute("hasReviewed");
+            boolean hasPurchased = request.getAttribute("hasPurchased") != null && (boolean)request.getAttribute("hasPurchased");
             int totalReviews = reviews != null ? reviews.size() : 0;
             if (ratingDist == null) ratingDist = new java.util.HashMap<>();
         %>
@@ -734,13 +735,33 @@
             </div>
             <%}%>
 
-            <%-- Write review form --%>
+            <%-- Write review form — 3 trạng thái: chưa mua / đã mua chưa review / đã review --%>
             <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light2);">
                 <h4 style="font-size:.95rem;font-weight:700;color:var(--text-h);margin-bottom:16px;">
-                    <%=hasReviewed ? "You have already reviewed this product" : "Write your review"%>
+                    Write Your Review
                 </h4>
 
-                <%if(!hasReviewed){%>
+                <%if(!hasPurchased){%>
+                <%-- Chưa mua: khoá form --%>
+                <div style="background:#f9fafb;border:1.5px dashed var(--border-light);border-radius:12px;padding:20px;text-align:center;">
+                    <div style="font-size:1.8rem;margin-bottom:8px;">🔒</div>
+                    <div style="font-size:.88rem;font-weight:600;color:var(--text-h);margin-bottom:4px;">Purchase required to review</div>
+                    <div style="font-size:.8rem;color:var(--text-s);margin-bottom:14px;">Only verified buyers can leave a review for this product.</div>
+                    <a href="<%=ctx%>/customerShop?action=<%=isPart?"parts":"equipment"%>"
+                       style="display:inline-flex;align-items:center;gap:6px;background:<%=accentColor%>;color:#fff;
+                              text-decoration:none;padding:9px 20px;border-radius:10px;font-size:.82rem;font-weight:600;">
+                        <i class="fas fa-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+
+                <%}else if(hasReviewed){%>
+                <%-- Đã review --%>
+                <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
+                    <i class="fas fa-check-circle"></i> You have already submitted a review for this product.
+                </div>
+
+                <%}else{%>
+                <%-- Đã mua, chưa review: hiện form --%>
                 <form method="post" action="<%=ctx%>/customerShop" enctype="multipart/form-data">
                     <input type="hidden" name="action"   value="addReview">
                     <input type="hidden" name="itemType" value="<%=item.itemType%>">
@@ -768,12 +789,10 @@
                             onblur="this.style.borderColor='var(--border-light)'"></textarea>
                     </div>
 
-                    <%-- [THÊM MỚI] Upload ảnh từ máy thay vì nhập URL --%>
                     <div style="margin-bottom:16px;">
                         <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">
                             Photo <span style="color:var(--text-s)">(optional · JPG, PNG, WEBP · max 5MB)</span>
                         </label>
-                        <%-- Vùng kéo thả / click chọn ảnh --%>
                         <div id="rvUploadArea"
                              style="border:1.5px dashed var(--border-light);border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:#f9fafb;transition:border-color .2s;"
                              onclick="document.getElementById('reviewImage').click()"
@@ -785,7 +804,6 @@
                                 <div style="font-size:.82rem;color:var(--text-m);font-weight:600;">Click to select a photo</div>
                                 <div style="font-size:.73rem;color:var(--text-s);margin-top:3px;">or drag and drop here</div>
                             </div>
-                            <%-- Preview ảnh sau khi chọn --%>
                             <div id="rvPreviewWrap" style="display:none;">
                                 <img id="rvPreviewImg" src="" alt="preview"
                                      style="max-height:120px;max-width:100%;border-radius:8px;object-fit:contain;">
@@ -798,23 +816,17 @@
                                 </div>
                             </div>
                         </div>
-                        <%-- Input file ẩn, name="reviewImage" khớp với req.getPart("reviewImage") trong servlet --%>
                         <input type="file" id="reviewImage" name="reviewImage"
                                accept="image/jpeg,image/png,image/webp,image/gif"
                                style="display:none;"
                                onchange="previewReviewImage(this)">
                     </div>
-                    <%-- [KẾT THÚC THÊM MỚI] --%>
 
                     <button type="submit" id="rvSubmit"
                         style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;opacity:.5;pointer-events:none;transition:all .2s;">
                         <i class="fas fa-paper-plane"></i> Submit Review
                     </button>
                 </form>
-                <%}else{%>
-                <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
-                    <i class="fas fa-check-circle"></i> You have already submitted a review for this product.
-                </div>
                 <%}%>
             </div>
 

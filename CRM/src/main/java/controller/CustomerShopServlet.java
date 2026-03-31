@@ -13,25 +13,30 @@ import java.sql.*;
 import java.util.*;
 import java.util.UUID;
 
-// ── [THÊM MỚI] Cho phép servlet nhận multipart/form-data (upload ảnh review) ──
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024) // tối đa 5MB mỗi ảnh
 public class CustomerShopServlet extends HttpServlet {
 
-    // Thư mục lưu ảnh review (giống pattern avatar của project)
-    private static final String REVIEW_UPLOAD_DIR = "C:/uploads/reviews/";
-    // Đường dẫn URL để truy cập ảnh (phục vụ qua ReviewImageServlet)
     private static final String REVIEW_URL_PREFIX = "/review-images/";
     private static final String[] ALLOWED_IMG_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"};
-    // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────────────
+
+    private String reviewUploadDir; // ✅ instance variable thay vì static final
 
     private final ShopDAO shopDAO = new ShopDAO();
     private final InvoiceDAO invoiceDAO = new InvoiceDAO();
     private final PaymentDAO paymentDAO = new PaymentDAO();
-    // ── [THÊM MỚI] Khai báo ReviewDAO để xử lý đánh giá sản phẩm ──
     private final ReviewDAO reviewDAO = new ReviewDAO();
-    // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────────────
 
     private static final int PAGE_SIZE = 12;
+
+    @Override
+    public void init() throws ServletException {
+        reviewUploadDir = getServletContext().getRealPath("/uploads/reviews/");
+        try {
+            Files.createDirectories(Paths.get(reviewUploadDir));
+        } catch (IOException e) {
+            throw new ServletException("Cannot create review upload directory", e);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -121,11 +126,9 @@ public class CustomerShopServlet extends HttpServlet {
                 case "vnpay_cancel":
                     handleVnpayCancel(req, resp);
                     break;
-                // ── [THÊM MỚI] Case xử lý submit đánh giá sản phẩm ──
                 case "addReview":
                     handleAddReview(req, resp, me);
                     break;
-                // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────
                 default:
                     resp.sendRedirect(req.getContextPath() + "/customerShop?action=cart");
             }
@@ -209,7 +212,7 @@ public class CustomerShopServlet extends HttpServlet {
     }
 
     private void showDetail(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        String itemType = nvl(req.getParameter("itemType")); // "PART" hoặc "EQUIPMENT"
+        String itemType = nvl(req.getParameter("itemType"));
         int id = parseInt(req.getParameter("id"), 0);
 
         if (id == 0 || (!itemType.equals("PART") && !itemType.equals("EQUIPMENT"))) {
@@ -231,32 +234,18 @@ public class CustomerShopServlet extends HttpServlet {
         req.setAttribute("itemType", itemType);
         req.setAttribute("cartCount", getCartCount(req));
 
-        // ── [THÊM MỚI] Load dữ liệu đánh giá sản phẩm ──────────────
-        // Lấy user hiện tại từ session để kiểm tra đã review chưa
         User me = (User) req.getSession().getAttribute("user");
-
-        // Danh sách tất cả review của sản phẩm (sắp xếp mới nhất trước)
         List<dao.ReviewDAO.Review> reviews = reviewDAO.getReviews(itemType, id);
-
-        // Điểm trung bình (trả về 0.0 nếu chưa có review nào)
         double avgRating = reviewDAO.getAverageRating(itemType, id);
-
-        // Phân phối số lượng theo từng mức sao: key = 1..5, value = số lượng review
         Map<Integer, Integer> ratingDist = reviewDAO.getRatingDistribution(itemType, id);
-
-        // Kiểm tra user hiện tại đã đánh giá sản phẩm này chưa (mỗi người chỉ review 1 lần)
         boolean hasReviewed = reviewDAO.hasReviewed(me.getId(), itemType, id);
-
-        // ── [THÊM MỚI] Kiểm tra user đã mua sản phẩm này chưa ──
         boolean hasPurchased = reviewDAO.hasPurchased(me.getId(), itemType, id);
-        req.setAttribute("hasPurchased", hasPurchased);
-        // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────
 
         req.setAttribute("reviews", reviews);
         req.setAttribute("avgRating", avgRating);
         req.setAttribute("ratingDist", ratingDist);
         req.setAttribute("hasReviewed", hasReviewed);
-        // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────
+        req.setAttribute("hasPurchased", hasPurchased);
 
         req.getRequestDispatcher("/customerShopDetail.jsp").forward(req, resp);
     }
@@ -267,10 +256,7 @@ public class CustomerShopServlet extends HttpServlet {
         int typeId = parseInt(req.getParameter("typeId"), 0);
         int qty = parseInt(req.getParameter("quantity"), 1);
 
-        // EQUIPMENT chỉ cho phép 1 unit per order
-        if ("EQUIPMENT".equals(itemType)) {
-            qty = 1;
-        }
+        if ("EQUIPMENT".equals(itemType)) qty = 1;
 
         String backAction = "PART".equals(itemType) ? "parts" : "equipment";
 
@@ -285,18 +271,14 @@ public class CustomerShopServlet extends HttpServlet {
         String key = itemType + "_" + typeId;
 
         if ("EQUIPMENT".equals(itemType)) {
-            // Equipment: không cộng dồn, luôn set = 1
             if (!cart.containsKey(key)) {
-                cart.put(key, new CartItem(typeId, itemType, si.name, si.categoryName,
-                        si.unitPrice, 1, 1));
+                cart.put(key, new CartItem(typeId, itemType, si.name, si.categoryName, si.unitPrice, 1, 1));
             } else {
-                req.getSession().setAttribute("shopFlashError",
-                    "\"" + si.name + "\" đã có trong giỏ hàng!");
+                req.getSession().setAttribute("shopFlashError", "\"" + si.name + "\" đã có trong giỏ hàng!");
                 resp.sendRedirect(req.getContextPath() + "/customerShop?action=" + backAction);
                 return;
             }
         } else {
-            // PART: giữ nguyên logic cũ
             if (cart.containsKey(key)) {
                 CartItem ex = cart.get(key);
                 ex.setQuantity(Math.min(ex.getQuantity() + qty, si.availableQty));
@@ -317,11 +299,8 @@ public class CustomerShopServlet extends HttpServlet {
         int qty = parseInt(req.getParameter("quantity"), 1);
         Map<String, CartItem> cart = getCart(req);
         if (cart.containsKey(key)) {
-            if (qty <= 0) {
-                cart.remove(key);
-            } else {
-                cart.get(key).setQuantity(Math.min(qty, cart.get(key).getMaxQty()));
-            }
+            if (qty <= 0) cart.remove(key);
+            else cart.get(key).setQuantity(Math.min(qty, cart.get(key).getMaxQty()));
             saveCart(req, cart);
         }
         resp.sendRedirect(req.getContextPath() + "/customerShop?action=cart");
@@ -348,7 +327,6 @@ public class CustomerShopServlet extends HttpServlet {
             return;
         }
 
-        // Build items
         List<InvoiceItem> items = new ArrayList<>();
         for (CartItem ci : cart.values()) {
             InvoiceItem ii = new InvoiceItem();
@@ -357,16 +335,11 @@ public class CustomerShopServlet extends HttpServlet {
             ii.setQuantity(ci.getQuantity());
             ii.setUnitPrice(BigDecimal.valueOf(ci.getUnitPrice()));
             ii.setTotalPrice(BigDecimal.valueOf(ci.getSubtotal()));
-            // ── [THÊM MỚI] Lưu typeId để sau này check đã mua chưa ──
             ii.setRefItemId(ci.getTypeId());
-            // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────
             items.add(ii);
         }
 
-        // Tạo invoice trực tiếp
         Invoice inv = createShopInvoice(me.getId(), items, me.getId());
-
-        // Deduct stock
         deductInventory(cart, me.getId(), inv.getId());
 
         if ("cash".equals(payMethod)) {
@@ -406,59 +379,43 @@ public class CustomerShopServlet extends HttpServlet {
 
     private void handleVnpayCancel(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Integer payId = (Integer) req.getSession().getAttribute("pendingPaymentId");
-        if (payId != null) {
-            paymentDAO.updateStatus(payId, "CANCELLED", null);
-        }
+        if (payId != null) paymentDAO.updateStatus(payId, "CANCELLED", null);
         clearVnpaySession(req);
         resp.sendRedirect(req.getContextPath() + "/customerShop?action=cart");
     }
 
-    // ── [THÊM MỚI] Xử lý submit đánh giá từ form trong trang detail ─
-    /**
-     * Nhận POST action=addReview từ customerShopDetail.jsp.
-     * Validate dữ liệu, xử lý upload ảnh (nếu có), lưu vào bảng product_reviews.
-     * Redirect về trang detail kèm flash message.
-     */
+    // ── REVIEW ───────────────────────────────────────────────────────
     private void handleAddReview(HttpServletRequest req, HttpServletResponse resp, User me)
             throws Exception {
-        String itemType = nvl(req.getParameter("itemType"));  // "PART" hoặc "EQUIPMENT"
-        int itemId      = parseInt(req.getParameter("itemId"), 0);
-        int rating      = parseInt(req.getParameter("rating"), 0);
-        String comment  = nvl(req.getParameter("comment"));
+        String itemType = nvl(req.getParameter("itemType"));
+        int itemId   = parseInt(req.getParameter("itemId"), 0);
+        int rating   = parseInt(req.getParameter("rating"), 0);
+        String comment = nvl(req.getParameter("comment"));
 
         String backUrl = req.getContextPath() + "/customerShop?action=detail&itemType="
                          + itemType + "&id=" + itemId;
 
-        // Validate: bắt buộc có số sao (1-5) và nhận xét không rỗng
         if (rating < 1 || rating > 5 || comment.isEmpty()) {
             req.getSession().setAttribute("shopFlashError", "Vui lòng chọn số sao và nhập nhận xét!");
             resp.sendRedirect(backUrl);
             return;
         }
-
-        // ── [THÊM MỚI] Chỉ cho phép đánh giá nếu đã mua sản phẩm ──
         if (!reviewDAO.hasPurchased(me.getId(), itemType, itemId)) {
             req.getSession().setAttribute("shopFlashError", "Bạn cần mua sản phẩm này trước khi đánh giá!");
             resp.sendRedirect(backUrl);
             return;
         }
-        // ── [KẾT THÚC THÊM MỚI] ────────────────────────────────────
-
-        // Kiểm tra đã review chưa (mỗi người chỉ review 1 lần)
         if (reviewDAO.hasReviewed(me.getId(), itemType, itemId)) {
             req.getSession().setAttribute("shopFlashError", "Bạn đã đánh giá sản phẩm này rồi!");
             resp.sendRedirect(backUrl);
             return;
         }
 
-        // ── Xử lý upload ảnh ──
+        // Xử lý upload ảnh
         String savedImageUrl = null;
         Part filePart = req.getPart("reviewImage");
-
         if (filePart != null && filePart.getSize() > 0) {
             String contentType = filePart.getContentType();
-
-            // Validate loại file
             boolean allowed = false;
             for (String t : ALLOWED_IMG_TYPES) {
                 if (t.equalsIgnoreCase(contentType)) { allowed = true; break; }
@@ -468,54 +425,39 @@ public class CustomerShopServlet extends HttpServlet {
                 resp.sendRedirect(backUrl);
                 return;
             }
-
-            // Validate kích thước (max 5MB)
             if (filePart.getSize() > 5 * 1024 * 1024) {
                 req.getSession().setAttribute("shopFlashError", "Ảnh không được vượt quá 5MB!");
                 resp.sendRedirect(backUrl);
                 return;
             }
-
-            // Tạo thư mục nếu chưa có
-            Files.createDirectories(Paths.get(REVIEW_UPLOAD_DIR));
-
-            // Tạo tên file duy nhất
             String ext = contentType.equals("image/png")  ? ".png"
                        : contentType.equals("image/webp") ? ".webp"
                        : contentType.equals("image/gif")  ? ".gif" : ".jpg";
             String filename = "review_" + me.getId() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
-
-            // Lưu file vào disk
             try (InputStream in = filePart.getInputStream()) {
-                Files.copy(in, Paths.get(REVIEW_UPLOAD_DIR + filename), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(in, Paths.get(reviewUploadDir, filename), StandardCopyOption.REPLACE_EXISTING);
             }
-
             savedImageUrl = REVIEW_URL_PREFIX + filename;
         }
 
-        // Lưu review vào database
         reviewDAO.addReview(me.getId(), itemType, itemId, rating, comment, savedImageUrl);
-
-        req.getSession().setAttribute("shopFlashSuccess", "Thank you for reviewing the product!");
+        req.getSession().setAttribute("shopFlashSuccess", "Cảm ơn bạn đã đánh giá sản phẩm!");
         resp.sendRedirect(backUrl);
     }
-    // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────────
 
     // ── INTERNAL HELPERS ─────────────────────────────────────────────
     private Invoice createShopInvoice(int customerId, List<InvoiceItem> items, int createdBy) throws Exception {
         BigDecimal sub = BigDecimal.ZERO;
-        for (InvoiceItem it : items) {
-            sub = sub.add(it.getTotalPrice());
-        }
+        for (InvoiceItem it : items) sub = sub.add(it.getTotalPrice());
         BigDecimal taxPct = new BigDecimal("10");
         BigDecimal taxAmt = sub.multiply(taxPct).divide(new BigDecimal("100"));
         BigDecimal total = sub.add(taxAmt);
         java.sql.Date due = new java.sql.Date(System.currentTimeMillis() + 7L * 86400 * 1000);
 
-        // Generate code
         String prefix = "INV" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()) + "-";
         String code;
-        try (Connection cx = util.DBConnection.getConnection(); PreparedStatement ps = cx.prepareStatement("SELECT COUNT(*) FROM invoices WHERE invoice_code LIKE ?")) {
+        try (Connection cx = util.DBConnection.getConnection();
+             PreparedStatement ps = cx.prepareStatement("SELECT COUNT(*) FROM invoices WHERE invoice_code LIKE ?")) {
             ps.setString(1, prefix + "%");
             ResultSet rs = ps.executeQuery();
             code = prefix + String.format("%04d", (rs.next() ? rs.getInt(1) : 0) + 1);
@@ -539,14 +481,9 @@ public class CustomerShopServlet extends HttpServlet {
                 ps.setInt(9, createdBy);
                 ps.executeUpdate();
                 int invId = -1;
-                try (ResultSet k = ps.getGeneratedKeys()) {
-                    if (k.next()) {
-                        invId = k.getInt(1);
-                    }
-                }
+                try (ResultSet k = ps.getGeneratedKeys()) { if (k.next()) invId = k.getInt(1); }
 
                 PreparedStatement psi = c.prepareStatement(
-                        // ── [THÊM MỚI] Thêm ref_item_id vào INSERT ──
                         "INSERT INTO invoice_items (invoice_id,item_name,item_type,quantity,unit_price,total_price,ref_item_id) VALUES (?,?,?,?,?,?,?)");
                 for (InvoiceItem it : items) {
                     psi.setInt(1, invId);
@@ -555,7 +492,7 @@ public class CustomerShopServlet extends HttpServlet {
                     psi.setInt(4, it.getQuantity());
                     psi.setBigDecimal(5, it.getUnitPrice());
                     psi.setBigDecimal(6, it.getTotalPrice());
-                    psi.setInt(7, it.getRefItemId()); // ── [THÊM MỚI] ──
+                    psi.setInt(7, it.getRefItemId());
                     psi.addBatch();
                 }
                 psi.executeBatch();
@@ -652,10 +589,6 @@ public class CustomerShopServlet extends HttpServlet {
     }
 
     private int parseInt(String s, int def) {
-        try {
-            return Integer.parseInt(s);
-        } catch (Exception e) {
-            return def;
-        }
+        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
     }
 }
