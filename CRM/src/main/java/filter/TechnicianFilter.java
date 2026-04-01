@@ -1,28 +1,21 @@
 package filter;
 
+import model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import model.User;
 import java.io.IOException;
 
 public class TechnicianFilter implements Filter {
-
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-        HttpServletRequest  req  = (HttpServletRequest)  request;
-        HttpServletResponse resp = (HttpServletResponse) response;
-
-        HttpSession session = req.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-
+        HttpServletRequest  request  = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+        User user = (User) request.getSession().getAttribute("user");
         if (user != null && "TECHNICIAN".equals(user.getRoleName())) {
-            chain.doFilter(request, response);
+            chain.doFilter(req, res);
         } else {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
         }
     }
-
-    @Override public void init(FilterConfig fc) {}
-    @Override public void destroy() {}
 }

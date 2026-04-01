@@ -66,7 +66,7 @@ public class LoginServlet extends HttpServlet {
                     resp.sendRedirect(ctx + "/supportDashboard");
                     break;
                 case "TECHNICIAN":
-                    resp.sendRedirect(ctx + "/technicianDashboard");
+                    resp.sendRedirect(ctx + "/techTasks");
                     break;
                 case "STOREKEEPER":
                     resp.sendRedirect(ctx + "/dashboard.jsp");

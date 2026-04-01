@@ -9,30 +9,37 @@
     </welcome-file-list>
 
     <!-- ===== FILTERS ===== -->
+
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>filter.AuthFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>filter.AdminFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>CustomerFilter</filter-name>
         <filter-class>filter.CustomerFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>StorekeeperFilter</filter-name>
         <filter-class>filter.StorekeeperFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>SupportFilter</filter-name>
         <filter-class>filter.SupportFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>TechnicalManagerFilter</filter-name>
         <filter-class>filter.TechnicalManagerFilter</filter-class>
     </filter>
+
     <filter>
         <filter-name>TechnicianFilter</filter-name>
         <filter-class>filter.TechnicianFilter</filter-class>
@@ -82,6 +89,14 @@
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/customerOrderSuccess.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/techTasks</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/techReports</url-pattern>
     </filter-mapping>
 
     <!-- ── AdminFilter mappings ── -->
@@ -159,10 +174,6 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
-        <url-pattern>/storekeeperReview</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>StorekeeperFilter</filter-name>
         <url-pattern>/numberEquipment</url-pattern>
     </filter-mapping>
     <filter-mapping>
@@ -221,22 +232,15 @@
     <!-- ── TechnicianFilter mappings ── -->
     <filter-mapping>
         <filter-name>TechnicianFilter</filter-name>
-        <url-pattern>/technicianDashboard</url-pattern>
+        <url-pattern>/techTasks</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>TechnicianFilter</filter-name>
-        <url-pattern>/technicianTasks</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>TechnicianFilter</filter-name>
-        <url-pattern>/technicianWorkHistory</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>TechnicianFilter</filter-name>
-        <url-pattern>/technicianContracts</url-pattern>
+        <url-pattern>/techReports</url-pattern>
     </filter-mapping>
 
     <!-- ===== SERVLETS ===== -->
+
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>controller.LoginServlet</servlet-class>
@@ -343,15 +347,6 @@
     <servlet-mapping>
         <servlet-name>PartServlet</servlet-name>
         <url-pattern>/numberPart</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>StorekeeperReviewServlet</servlet-name>
-        <servlet-class>controller.StorekeeperReviewServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>StorekeeperReviewServlet</servlet-name>
-        <url-pattern>/storekeeperReview</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -569,41 +564,18 @@
         <url-pattern>/admin/finance</url-pattern>
     </servlet-mapping>
 
-    <!-- ── TECHNICIAN MODULE ── -->
+    <!-- ── TECHNICIAN ── -->
     <servlet>
-        <servlet-name>TechnicianDashboardServlet</servlet-name>
-        <servlet-class>controller.TechnicianDashboardServlet</servlet-class>
+        <servlet-name>TechnicianServlet</servlet-name>
+        <servlet-class>controller.TechnicianServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>TechnicianDashboardServlet</servlet-name>
-        <url-pattern>/technicianDashboard</url-pattern>
+        <servlet-name>TechnicianServlet</servlet-name>
+        <url-pattern>/techTasks</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>TechnicianTaskServlet</servlet-name>
-        <servlet-class>controller.TechnicianTaskServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
-        <servlet-name>TechnicianTaskServlet</servlet-name>
-        <url-pattern>/technicianTasks</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
-        <servlet-class>controller.TechnicianWorkHistoryServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TechnicianWorkHistoryServlet</servlet-name>
-        <url-pattern>/technicianWorkHistory</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>TechnicianContractServlet</servlet-name>
-        <servlet-class>controller.TechnicianContractServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TechnicianContractServlet</servlet-name>
-        <url-pattern>/technicianContracts</url-pattern>
+        <servlet-name>TechnicianServlet</servlet-name>
+        <url-pattern>/techReports</url-pattern>
     </servlet-mapping>
 
     <session-config>
