@@ -28,7 +28,7 @@ public class PartServlet extends HttpServlet {
 
     private final PartDAO     partDAO     = new PartDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
-    private final ReviewDAO   reviewDAO   = new ReviewDAO(); // [THÊM MỚI] để load feedback customer
+    private final ReviewDAO   reviewDAO   = new ReviewDAO();
 
     private static final int PAGE_SIZE = 10;
 
@@ -66,13 +66,10 @@ public class PartServlet extends HttpServlet {
                 req.setAttribute("part",       pt);
                 req.setAttribute("units",      partDAO.findUnitsByTypeId(id));
                 req.setAttribute("categories", categoryDAO.findByType("PART"));
-
-                // ── [THÊM MỚI] Load feedback của customer về sản phẩm này ──
+                // Load review data
                 req.setAttribute("reviews",     reviewDAO.getReviews("PART", id));
                 req.setAttribute("avgRating",   reviewDAO.getAverageRating("PART", id));
                 req.setAttribute("ratingDist",  reviewDAO.getRatingDistribution("PART", id));
-                // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────
-
                 req.getRequestDispatcher("/storekeeperPartDetail.jsp").forward(req, resp);
                 return;
             }

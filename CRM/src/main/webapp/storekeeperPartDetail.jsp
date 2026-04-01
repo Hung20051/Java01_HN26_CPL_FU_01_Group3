@@ -12,15 +12,6 @@
     if (categories == null) categories = new ArrayList<>();
     if (units == null)      units      = new ArrayList<>();
 
-    // ── [THÊM MỚI] Đọc dữ liệu feedback từ request attributes ──
-    List<ReviewDAO.Review> reviews = (List<ReviewDAO.Review>) request.getAttribute("reviews");
-    double avgRating = request.getAttribute("avgRating") != null ? (double) request.getAttribute("avgRating") : 0;
-    Map<Integer,Integer> ratingDist = (Map<Integer,Integer>) request.getAttribute("ratingDist");
-    int totalReviews = reviews != null ? reviews.size() : 0;
-    if (reviews == null) reviews = new ArrayList<>();
-    if (ratingDist == null) ratingDist = new java.util.HashMap<>();
-    // ── [KẾT THÚC THÊM MỚI] ─────────────────────────────────────
-
     String flashSuccess = (String) session.getAttribute("flashSuccess");
     String flashError   = (String) session.getAttribute("flashError");
     session.removeAttribute("flashSuccess");
@@ -475,145 +466,9 @@
                 </div>
                 <%}%>
             </div>
-        </div><!-- end bottom-grid -->
-
-        <!-- ════════════════════════════════════════════════════════
-             [THÊM MỚI] CUSTOMER FEEDBACK SECTION
-             Hiển thị tất cả đánh giá của khách hàng về sản phẩm này
-             ════════════════════════════════════════════════════════ -->
-        <div style="background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:16px;padding:24px;margin-top:0;animation:cardIn .5s .24s ease both;">
-
-            <%-- Header row --%>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border-light2);">
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:32px;height:32px;border-radius:9px;background:#fef3c7;color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:.82rem;">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <span style="font-size:.88rem;font-weight:700;color:var(--text-h);">Customer Feedback</span>
-                    <%if(totalReviews>0){%>
-                    <span style="background:var(--primary-light);color:var(--primary-2);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;"><%=totalReviews%> review<%=totalReviews>1?"s":""%></span>
-                    <%}%>
-                </div>
-                <%if(totalReviews>0){%>
-                <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:1.3rem;font-weight:800;color:var(--amber);"><%=String.format("%.1f",avgRating)%></span>
-                    <div style="display:flex;gap:2px;">
-                        <%for(int s=1;s<=5;s++){%>
-                        <span style="font-size:13px;color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;">★</span>
-                        <%}%>
-                    </div>
-                </div>
-                <%}%>
-            </div>
-
-            <%if(totalReviews==0){%>
-            <%-- Empty state --%>
-            <div style="text-align:center;padding:36px 20px;color:var(--text-s);">
-                <i class="fas fa-comment-slash" style="font-size:2.2rem;display:block;margin-bottom:12px;opacity:.2;color:var(--text-m);"></i>
-                <div style="font-size:.85rem;font-weight:600;color:var(--text-m);margin-bottom:4px;">No reviews yet</div>
-                <div style="font-size:.78rem;">Customer feedback will appear here after purchase.</div>
-            </div>
-            <%}else{%>
-
-            <%-- Rating distribution bar --%>
-            <div style="display:flex;gap:20px;align-items:center;background:#f9fafb;border-radius:12px;padding:14px 18px;margin-bottom:20px;">
-                <div style="text-align:center;padding-right:18px;border-right:1px solid var(--border-light);">
-                    <div style="font-size:2.2rem;font-weight:800;color:var(--amber);line-height:1;"><%=String.format("%.1f",avgRating)%></div>
-                    <div style="display:flex;gap:2px;justify-content:center;margin:4px 0 3px;">
-                        <%for(int s=1;s<=5;s++){%>
-                        <span style="font-size:13px;color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;">★</span>
-                        <%}%>
-                    </div>
-                    <div style="font-size:.7rem;color:var(--text-s);"><%=totalReviews%> reviews</div>
-                </div>
-                <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-                    <%for(int s=5;s>=1;s--){
-                        int cnt=ratingDist.getOrDefault(s,0);
-                        int pct=totalReviews>0?cnt*100/totalReviews:0;
-                    %>
-                    <div style="display:flex;align-items:center;gap:8px;font-size:.73rem;color:var(--text-m);">
-                        <span style="min-width:16px;text-align:right;"><%=s%></span>
-                        <span style="color:#f59e0b;font-size:11px;">★</span>
-                        <div style="flex:1;height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
-                            <div style="width:<%=pct%>%;height:100%;background:var(--amber);border-radius:3px;"></div>
-                        </div>
-                        <span style="min-width:14px;color:var(--text-s);"><%=cnt%></span>
-                    </div>
-                    <%}%>
-                </div>
-            </div>
-
-            <%-- Filter tabs --%>
-            <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;" id="rvFilterRow">
-                <button class="rv-filter-btn active" onclick="filterReviews(this,'all')"
-                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:var(--primary-light);color:var(--primary-2);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
-                    All (<%=totalReviews%>)
-                </button>
-                <%for(int s=5;s>=1;s--){
-                    int cnt=ratingDist.getOrDefault(s,0);
-                    if(cnt>0){%>
-                <button class="rv-filter-btn" onclick="filterReviews(this,'<%=s%>')"
-                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:#fff;color:var(--text-m);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
-                    <%=s%>★ (<%=cnt%>)
-                </button>
-                <%}}%>
-                <button class="rv-filter-btn" onclick="filterReviews(this,'img')"
-                    style="padding:5px 14px;border-radius:20px;border:1.5px solid var(--border-light);background:#fff;color:var(--text-m);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;">
-                    <i class="fas fa-image" style="font-size:10px;"></i> Has Image
-                </button>
-            </div>
-
-            <%-- Review cards --%>
-            <div id="rvList" style="display:flex;flex-direction:column;gap:10px;">
-            <%for(ReviewDAO.Review rv : reviews){
-                String rvInit = rv.customerName!=null&&!rv.customerName.isEmpty()
-                    ? rv.customerName.substring(0,1).toUpperCase() : "?";
-                java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String hasImg = (rv.imageUrl!=null&&!rv.imageUrl.isEmpty()) ? "true" : "false";
-            %>
-            <div class="rv-card" data-stars="<%=rv.rating%>" data-has-img="<%=hasImg%>"
-                 style="border:1.5px solid var(--border-light2);border-radius:12px;padding:14px 16px;transition:background .12s;">
-                <%-- Top row: avatar + name + date + rating --%>
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                    <div style="width:34px;height:34px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--primary-2);flex-shrink:0;">
-                        <%=rvInit%>
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:.83rem;font-weight:600;color:var(--text-h);"><%=rv.customerName!=null?rv.customerName:"Unknown"%></div>
-                        <div style="font-size:.7rem;color:var(--text-s);"><%=rvSdf.format(rv.createdAt)%></div>
-                    </div>
-                    <%-- Stars --%>
-                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
-                        <div style="display:flex;gap:2px;">
-                            <%for(int s=1;s<=5;s++){%>
-                            <span style="font-size:13px;color:<%=s<=rv.rating?"#f59e0b":"#e5e7eb"%>;">★</span>
-                            <%}%>
-                        </div>
-                        <span style="background:#fef3c7;color:var(--amber);font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:6px;"><%=rv.rating%>/5</span>
-                    </div>
-                </div>
-                <%-- Comment --%>
-                <%if(rv.comment!=null&&!rv.comment.isEmpty()){%>
-                <p style="font-size:.82rem;color:var(--text-b);line-height:1.65;margin-bottom:<%=hasImg.equals("true")?"8px":"0"%>;"><%=rv.comment%></p>
-                <%}%>
-                <%-- Image --%>
-                <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
-                <div>
-                    <img src="<%=ctx+rv.imageUrl%>" alt="review"
-                         style="width:76px;height:76px;object-fit:cover;border-radius:8px;border:1.5px solid var(--border-light);cursor:zoom-in;transition:transform .15s;"
-                         onmouseover="this.style.transform='scale(1.04)'"
-                         onmouseout="this.style.transform='scale(1)'"
-                         onclick="openRvLightbox('<%=ctx+rv.imageUrl%>')">
-                </div>
-                <%}%>
-            </div>
-            <%}%>
-            </div>
-            <%}%>
         </div>
-        <!-- ════ [KẾT THÚC THÊM MỚI] CUSTOMER FEEDBACK SECTION ════ -->
-
-    </div><!-- end .content -->
+    </div>
+</main>
 
 <!-- ════ EDIT MODAL ════ -->
 <div class="modal-overlay" id="editModal">
@@ -842,65 +697,199 @@ function prepareEditSubmit() {
     }
 }
 </script>
-<!-- ════ [THÊM MỚI] Lightbox xem ảnh review ════ -->
-<div id="rvLightbox"
-     style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.82);
-            align-items:center;justify-content:center;cursor:zoom-out;"
-     onclick="closeRvLightbox()">
-    <button onclick="closeRvLightbox()" title="Close"
-            style="position:absolute;top:18px;right:22px;background:rgba(255,255,255,0.15);
-                   border:none;color:#fff;font-size:1.3rem;width:38px;height:38px;
-                   border-radius:50%;cursor:pointer;display:flex;align-items:center;
-                   justify-content:center;z-index:1;transition:background .2s;"
-            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-            onmouseout="this.style.background='rgba(255,255,255,0.15)'">✕</button>
-    <img id="rvLightboxImg" src="" alt="review"
-         style="max-width:90vw;max-height:88vh;object-fit:contain;
-                border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.5);cursor:default;"
-         onclick="event.stopPropagation()">
-    <div style="position:absolute;bottom:16px;color:rgba(255,255,255,0.45);font-size:.73rem;">
-        Click outside or press ESC to close
+<%-- ═══════════ CUSTOMER FEEDBACK SECTION ═══════════ --%>
+<%
+    List<ReviewDAO.Review> reviews   = (List<ReviewDAO.Review>) request.getAttribute("reviews");
+    double avgRating  = request.getAttribute("avgRating")  != null ? (double) request.getAttribute("avgRating")  : 0;
+    Map<Integer,Integer> ratingDist  = (Map<Integer,Integer>) request.getAttribute("ratingDist");
+    int totalReviews  = reviews != null ? reviews.size() : 0;
+    if (ratingDist == null) ratingDist = new java.util.HashMap<>();
+    String currentPageUrl = ctx + "/numberPart?action=detailPage&id=" + pt.getId();
+    java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+%>
+<div style="margin:28px 28px 0;background:#fff;border:1px solid var(--border-light);border-radius:16px;padding:24px 28px;margin-bottom:32px;">
+
+    <%-- Header --%>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border-light);">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text-h);display:flex;align-items:center;gap:8px;margin:0;">
+            <span style="background:#fef3c7;color:#d97706;width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;">
+                <i class="fas fa-star"></i>
+            </span>
+            Customer Feedback
+            <span style="background:#f1f5f9;color:var(--text-s);font-size:.72rem;font-weight:600;padding:2px 10px;border-radius:20px;"><%=totalReviews%> review<%=totalReviews!=1?"s":""%></span>
+        </h3>
+        <%if(totalReviews > 0){%>
+        <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:1.5rem;font-weight:800;color:#d97706;"><%=String.format("%.1f", avgRating)%></span>
+            <div>
+                <%for(int s=1;s<=5;s++){%><span style="color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;font-size:16px;">★</span><%}%>
+            </div>
+        </div>
+        <%}%>
     </div>
+
+    <%if(totalReviews == 0){%>
+    <div style="text-align:center;padding:32px;color:var(--text-s);">
+        <div style="font-size:2rem;margin-bottom:8px;">💬</div>
+        <div style="font-size:.88rem;">No reviews yet for this product.</div>
+    </div>
+    <%} else {%>
+
+    <%-- Rating distribution bar --%>
+    <div style="display:flex;gap:10px;align-items:center;background:#f9fafb;border-radius:10px;padding:12px 16px;margin-bottom:20px;">
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <%for(int s=5;s>=1;s--){
+                int cnt = ratingDist.getOrDefault(s,0);
+                int pct = totalReviews>0 ? cnt*100/totalReviews : 0;
+            %>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.74rem;color:var(--text-m);">
+                <span style="min-width:18px;"><%=s%>★</span>
+                <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                    <div style="width:<%=pct%>%;height:100%;background:#f59e0b;border-radius:3px;"></div>
+                </div>
+                <span style="min-width:16px;color:var(--text-s);"><%=cnt%></span>
+            </div>
+            <%}%>
+        </div>
+    </div>
+
+    <%-- Review list --%>
+    <%for(ReviewDAO.Review rv : reviews){
+        String rvInit = rv.customerName!=null&&!rv.customerName.isEmpty() ? rv.customerName.substring(0,1).toUpperCase() : "?";
+    %>
+    <div style="border:1px solid var(--border-light);border-radius:12px;padding:16px;margin-bottom:14px;">
+
+        <%-- Customer info row --%>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#d97706;flex-shrink:0;"><%=rvInit%></div>
+            <div>
+                <div style="font-size:.85rem;font-weight:600;color:var(--text-h);"><%=rv.customerName%></div>
+                <div style="font-size:.71rem;color:var(--text-s);"><%=rvSdf.format(rv.createdAt)%></div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:2px;">
+                <%for(int s=1;s<=5;s++){%><span style="color:<%=s<=rv.rating?"#f59e0b":"#e5e7eb"%>;font-size:15px;">★</span><%}%>
+                <span style="font-size:.72rem;color:var(--text-s);margin-left:4px;">(<%=rv.rating%>/5)</span>
+            </div>
+        </div>
+
+        <%-- Comment --%>
+        <p style="font-size:.84rem;color:var(--text-b);line-height:1.6;margin:0 0 10px;"><%=rv.comment!=null?rv.comment:""%></p>
+
+        <%-- Review image if any --%>
+        <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
+        <div style="margin-bottom:10px;">
+            <img src="<%=ctx+rv.imageUrl%>" alt="review"
+                 style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border-light);cursor:zoom-in;"
+                 onclick="this.style.width=this.style.width==='72px'?'200px':'72px'">
+        </div>
+        <%}%>
+
+        <%-- ── Storekeeper Reply Box ── --%>
+        <%if(rv.storekeeperReply != null && !rv.storekeeperReply.isEmpty()){%>
+        <div style="margin-top:12px;margin-left:16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:12px 16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <div style="width:26px;height:26px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fas fa-store" style="color:#fff;font-size:.6rem;"></i>
+                </div>
+                <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Store Response</span>
+                <%if(rv.repliedAt!=null){%>
+                <span style="font-size:.69rem;color:#64748b;margin-left:4px;"><%=rvSdf.format(rv.repliedAt)%></span>
+                <%}%>
+                <div style="margin-left:auto;display:flex;gap:6px;">
+                    <button onclick="toggleEditReply(<%=rv.id%>)"
+                        style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #0284c7;background:#fff;color:#0284c7;cursor:pointer;font-family:inherit;"
+                        onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#fff'">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <form method="post" action="<%=ctx%>/storekeeperReview" style="display:inline;" onsubmit="return confirm('Xóa phản hồi này?')">
+                        <input type="hidden" name="action" value="deleteReply">
+                        <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                        <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                        <button type="submit" style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #fca5a5;background:#fff;color:#dc2626;cursor:pointer;font-family:inherit;"
+                            onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fff'">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <p style="font-size:.83rem;color:#1e3a5f;line-height:1.6;margin:0;" id="replyText_<%=rv.id%>"><%=rv.storekeeperReply%></p>
+
+            <%-- Edit form (ẩn) --%>
+            <div id="editReplyForm_<%=rv.id%>" style="display:none;margin-top:10px;">
+                <form method="post" action="<%=ctx%>/storekeeperReview">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                    <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                    <textarea name="replyText" maxlength="1000" required
+                        style="width:100%;padding:8px 12px;font-family:inherit;font-size:.82rem;color:var(--text-b);background:#fff;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:72px;outline:none;"
+                        onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"><%=rv.storekeeperReply%></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px;">
+                        <button type="submit" style="padding:6px 16px;background:#0284c7;color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button type="button" onclick="toggleEditReply(<%=rv.id%>)" style="padding:6px 14px;background:#f1f5f9;color:var(--text-m);border:1px solid var(--border-light);border-radius:7px;font-family:inherit;font-size:.8rem;cursor:pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <%} else {%>
+        <%-- Chưa có reply — hiện nút Reply --%>
+        <div style="margin-top:10px;margin-left:16px;">
+            <button onclick="toggleReplyForm(<%=rv.id%>)"
+                style="font-size:.78rem;padding:6px 14px;border-radius:8px;border:1.5px dashed #0284c7;background:#f0f9ff;color:#0284c7;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;"
+                onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#f0f9ff'">
+                <i class="fas fa-reply"></i> Reply to this review
+            </button>
+            <div id="replyForm_<%=rv.id%>" style="display:none;margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    <div style="width:24px;height:24px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-store" style="color:#fff;font-size:.6rem;"></i>
+                    </div>
+                    <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Reply as Store</span>
+                </div>
+                <form method="post" action="<%=ctx%>/storekeeperReview">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                    <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                    <textarea name="replyText" maxlength="1000" required
+                        placeholder="Write your store response here..."
+                        style="width:100%;padding:10px 12px;font-family:inherit;font-size:.83rem;color:var(--text-b);background:#fff;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:80px;outline:none;"
+                        onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button type="submit"
+                            style="padding:7px 18px;background:#0284c7;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"
+                            onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                            <i class="fas fa-paper-plane"></i> Send Reply
+                        </button>
+                        <button type="button" onclick="toggleReplyForm(<%=rv.id%>)"
+                            style="padding:7px 14px;background:#fff;color:var(--text-m);border:1px solid var(--border-light);border-radius:8px;font-family:inherit;font-size:.82rem;cursor:pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <%}%>
+
+    </div>
+    <%}%>
+    <%}%>
 </div>
 
 <script>
-// Lightbox
-function openRvLightbox(src){
-    document.getElementById('rvLightboxImg').src=src;
-    document.getElementById('rvLightbox').style.display='flex';
-    document.body.style.overflow='hidden';
+function toggleReplyForm(reviewId) {
+    var f = document.getElementById('replyForm_' + reviewId);
+    if(f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
 }
-function closeRvLightbox(){
-    document.getElementById('rvLightbox').style.display='none';
-    document.getElementById('rvLightboxImg').src='';
-    document.body.style.overflow='';
-}
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeRvLightbox(); });
-
-// Filter reviews by star / has image
-function filterReviews(btn, type){
-    document.querySelectorAll('.rv-filter-btn').forEach(function(b){
-        b.style.background='#fff';
-        b.style.color='var(--text-m)';
-        b.style.borderColor='var(--border-light)';
-        b.classList.remove('active');
-    });
-    btn.style.background='var(--primary-light)';
-    btn.style.color='var(--primary-2)';
-    btn.style.borderColor='rgba(99,102,241,0.3)';
-    btn.classList.add('active');
-
-    document.querySelectorAll('.rv-card').forEach(function(card){
-        var stars=parseInt(card.dataset.stars);
-        var hasImg=card.dataset.hasImg==='true';
-        var show=true;
-        if(type==='img') show=hasImg;
-        else if(type!=='all') show=(stars===parseInt(type));
-        card.style.display=show?'':'none';
-    });
+function toggleEditReply(reviewId) {
+    var f = document.getElementById('editReplyForm_' + reviewId);
+    if(f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
 }
 </script>
-<!-- ════ [KẾT THÚC THÊM MỚI] ════ -->
+<%-- ═══════════ END CUSTOMER FEEDBACK SECTION ═══════════ --%>
 
 </body>
 </html>

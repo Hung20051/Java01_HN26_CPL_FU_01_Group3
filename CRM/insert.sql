@@ -932,3 +932,20 @@ UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Panasonic 2
 UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Honda 5kW Generator.jpg' WHERE id = 8;
 UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Toshiba 2.5HP Air Conditioner.webp' WHERE id = 13;
 UPDATE customer_equipment SET custom_image_url = '/uploads/equipment/Pentax CM50 Water Pump.jpg' WHERE id = 14;
+
+-- Tạo 1 work_task gắn với SR2025-001 cho technician id=4
+INSERT INTO work_tasks (request_id, technician_id, task_type, task_details, status, created_at)
+VALUES 
+(1, 4, 'Request', 'Kiểm tra và sửa Daikin VRV IV không làm lạnh', 'Assigned',     NOW()),
+(3, 4, 'Request', 'Bảo trì định kỳ ABB ACH580',                   'Completed',    NOW());
+
+-- Tạo work_assignments tương ứng (assigned_by = techmanager id=2, assigned_to = technician id=4)
+INSERT INTO work_assignments (task_id, assigned_by, assigned_to, assignment_date, estimated_duration, required_skills, priority)
+VALUES
+(1, 2, 4, NOW(), 4.0, 'HVAC, Refrigeration', 'HIGH'),
+(2, 2, 4, NOW(), 2.0, 'Electrical, VFD',     'LOW');
+
+-- Tạo workload record cho technician
+INSERT INTO technician_workload (technician_id, current_active_tasks, max_concurrent_tasks)
+VALUES (4, 1, 5)
+ON DUPLICATE KEY UPDATE current_active_tasks = 1;

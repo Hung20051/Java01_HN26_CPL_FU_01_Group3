@@ -16,6 +16,8 @@ public class ReviewDAO {
         public String comment;
         public String imageUrl;   // đường dẫn ảnh, ví dụ: /review-images/abc123.jpg
         public Timestamp createdAt;
+        public String storekeeperReply;  // reply của storekeeper
+        public Timestamp repliedAt;      // thời gian reply
     }
 
     // Lấy danh sách review của 1 sản phẩm (mới nhất trước)
@@ -32,20 +34,43 @@ public class ReviewDAO {
             ps.setInt(2, itemId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Review rv       = new Review();
-                rv.id           = rs.getInt("id");
-                rv.customerId   = rs.getInt("customer_id");
-                rv.customerName = rs.getString("customer_name");
-                rv.itemType     = rs.getString("item_type");
-                rv.itemId       = rs.getInt("item_id");
-                rv.rating       = rs.getInt("rating");
-                rv.comment      = rs.getString("comment");
-                rv.imageUrl     = rs.getString("image_url");
-                rv.createdAt    = rs.getTimestamp("created_at");
+                Review rv           = new Review();
+                rv.id               = rs.getInt("id");
+                rv.customerId       = rs.getInt("customer_id");
+                rv.customerName     = rs.getString("customer_name");
+                rv.itemType         = rs.getString("item_type");
+                rv.itemId           = rs.getInt("item_id");
+                rv.rating           = rs.getInt("rating");
+                rv.comment          = rs.getString("comment");
+                rv.imageUrl         = rs.getString("image_url");
+                rv.createdAt        = rs.getTimestamp("created_at");
+                rv.storekeeperReply = rs.getString("storekeeper_reply");
+                rv.repliedAt        = rs.getTimestamp("replied_at");
                 list.add(rv);
             }
         }
         return list;
+    }
+
+    // Storekeeper reply vào một review
+    public void replyToReview(int reviewId, String replyText) throws SQLException {
+        String sql = "UPDATE product_reviews SET storekeeper_reply=?, replied_at=NOW() WHERE id=?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, replyText);
+            ps.setInt(2, reviewId);
+            ps.executeUpdate();
+        }
+    }
+
+    // Xóa reply của storekeeper
+    public void deleteReply(int reviewId) throws SQLException {
+        String sql = "UPDATE product_reviews SET storekeeper_reply=NULL, replied_at=NULL WHERE id=?";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, reviewId);
+            ps.executeUpdate();
+        }
     }
 
     // Điểm trung bình (0.0 nếu chưa có review)
