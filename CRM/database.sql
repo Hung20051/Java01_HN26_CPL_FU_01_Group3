@@ -609,6 +609,8 @@
 		comment       TEXT,
 		image_url     VARCHAR(500),
 		created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+        storekeeper_reply   TEXT         DEFAULT NULL,
+    replied_at          TIMESTAMP    DEFAULT NULL,
 		FOREIGN KEY (customer_id) REFERENCES users(id)
 	);
 
