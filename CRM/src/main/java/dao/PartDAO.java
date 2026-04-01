@@ -405,4 +405,28 @@ public class PartDAO {
         if (ua != null) pu.setUpdatedAt(ua.toLocalDateTime());
         return pu;
     }
+    public List<PartType> findAvailableTypes() throws SQLException {
+    String sql = 
+        "SELECT pt.*, c.name as category_name, u.username as updated_by_username, "
+      + "COUNT(pu.id) as total_units, "
+      + "COALESCE(SUM(CASE WHEN pu.status='AVAILABLE' THEN 1 ELSE 0 END), 0) as available_units, "
+      + "COALESCE(SUM(CASE WHEN pu.status='INUSE'     THEN 1 ELSE 0 END), 0) as inuse_units, "
+      + "COALESCE(SUM(CASE WHEN pu.status='FAULTY'    THEN 1 ELSE 0 END), 0) as faulty_units, "
+      + "COALESCE(SUM(CASE WHEN pu.status='RETIRED'   THEN 1 ELSE 0 END), 0) as retired_units "
+      + "FROM part_types pt "
+      + "JOIN categories c ON pt.category_id = c.id "
+      + "LEFT JOIN users u ON pt.updated_by = u.id "
+      + "LEFT JOIN part_units pu ON pu.part_type_id = pt.id "
+      + "GROUP BY pt.id "
+      + "HAVING COALESCE(SUM(CASE WHEN pu.status='AVAILABLE' THEN 1 ELSE 0 END), 0) > 0 "
+      + "ORDER BY pt.name ASC";
+
+    List<PartType> list = new ArrayList<>();
+    try (Connection c = DBConnection.getConnection();
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) list.add(mapTypeRow(rs));
+    }
+    return list;
+}
 }
