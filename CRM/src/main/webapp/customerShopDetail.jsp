@@ -645,10 +645,11 @@
             List<ReviewDAO.Review> reviews = (List<ReviewDAO.Review>) request.getAttribute("reviews");
             double avgRating = request.getAttribute("avgRating") != null ? (double)request.getAttribute("avgRating") : 0;
             Map<Integer,Integer> ratingDist = (Map<Integer,Integer>) request.getAttribute("ratingDist");
-            boolean hasReviewed  = request.getAttribute("hasReviewed")  != null && (boolean)request.getAttribute("hasReviewed");
-            boolean hasPurchased = request.getAttribute("hasPurchased") != null && (boolean)request.getAttribute("hasPurchased");
+            boolean hasReviewed = request.getAttribute("hasReviewed") != null && (boolean)request.getAttribute("hasReviewed");
             int totalReviews = reviews != null ? reviews.size() : 0;
             if (ratingDist == null) ratingDist = new java.util.HashMap<>();
+            boolean isStorekeeper = "STOREKEEPER".equals(me.getRoleName());
+            String currentPageUrl = ctx + "/customerShop?action=detail&itemType=" + item.itemType + "&id=" + item.id;
         %>
         <div style="background:#fff;border:1px solid var(--border-light);border-radius:16px;padding:28px;margin-bottom:28px;">
 
@@ -700,6 +701,7 @@
                 java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
             %>
             <div style="border:1px solid var(--border-light2);border-radius:12px;padding:16px;margin-bottom:12px;">
+                <%-- Customer review header --%>
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                     <div style="width:36px;height:36px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--green);flex-shrink:0;">
                         <%=rvInitials%>
@@ -718,7 +720,6 @@
                 <p style="font-size:.84rem;color:var(--text-b);line-height:1.6;"><%=rv.comment!=null?rv.comment:""%></p>
                 <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
                 <div style="margin-top:10px;">
-                    <%-- src dùng ctx + rv.imageUrl để đúng với context path /DRSMS/ --%>
                     <img src="<%=ctx + rv.imageUrl%>" alt="review"
                          style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border-light);cursor:zoom-in;transition:transform .15s;"
                          onmouseover="this.style.transform='scale(1.05)'"
@@ -726,6 +727,102 @@
                          onclick="openLightbox('<%=ctx + rv.imageUrl%>')">
                 </div>
                 <%}%>
+
+                <%-- ── Storekeeper Reply Box ── --%>
+                <%if(rv.storekeeperReply != null && !rv.storekeeperReply.isEmpty()){%>
+                <div style="margin-top:14px;margin-left:20px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:12px 16px;position:relative;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                        <div style="width:28px;height:28px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-store" style="color:#fff;font-size:.65rem;"></i>
+                        </div>
+                        <div>
+                            <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Store Response</span>
+                            <%if(rv.repliedAt != null){%>
+                            <span style="font-size:.69rem;color:#64748b;margin-left:8px;"><%=rvSdf.format(rv.repliedAt)%></span>
+                            <%}%>
+                        </div>
+                        <%if(isStorekeeper){%>
+                        <div style="margin-left:auto;display:flex;gap:6px;">
+                            <button onclick="toggleEditReply(<%=rv.id%>)"
+                                style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #0284c7;background:#fff;color:#0284c7;cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s;"
+                                onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#fff'">
+                                <i class="fas fa-pen"></i> Edit
+                            </button>
+                            <form method="post" action="<%=ctx%>/storekeeperReview" style="display:inline;" onsubmit="return confirm('Xóa phản hồi này?')">
+                                <input type="hidden" name="action" value="deleteReply">
+                                <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                                <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                                <button type="submit" style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #fca5a5;background:#fff;color:#dc2626;cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s;"
+                                    onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fff'">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <%}%>
+                    </div>
+                    <p style="font-size:.83rem;color:#1e3a5f;line-height:1.6;margin:0;" id="replyText_<%=rv.id%>"><%=rv.storekeeperReply%></p>
+
+                    <%-- Edit Reply Form (ẩn mặc định) --%>
+                    <%if(isStorekeeper){%>
+                    <div id="editReplyForm_<%=rv.id%>" style="display:none;margin-top:10px;">
+                        <form method="post" action="<%=ctx%>/storekeeperReview">
+                            <input type="hidden" name="action" value="reply">
+                            <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                            <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                            <textarea name="replyText" maxlength="1000" required
+                                style="width:100%;padding:8px 12px;font-family:'Sora',sans-serif;font-size:.82rem;color:var(--text-b);background:#fff;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:72px;outline:none;"
+                                onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"><%=rv.storekeeperReply%></textarea>
+                            <div style="display:flex;gap:8px;margin-top:8px;">
+                                <button type="submit" style="padding:6px 16px;background:#0284c7;color:#fff;border:none;border-radius:7px;font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button type="button" onclick="toggleEditReply(<%=rv.id%>)" style="padding:6px 16px;background:#f1f5f9;color:var(--text-m);border:1px solid var(--border-light);border-radius:7px;font-family:'Sora',sans-serif;font-size:.8rem;cursor:pointer;">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <%}%>
+                </div>
+                <%} else if(isStorekeeper){%>
+                <%-- Storekeeper chưa reply — hiện form reply --%>
+                <div style="margin-top:12px;margin-left:20px;" id="replyToggle_<%=rv.id%>">
+                    <button onclick="toggleReplyForm(<%=rv.id%>)"
+                        style="font-size:.78rem;padding:6px 14px;border-radius:8px;border:1.5px dashed #0284c7;background:#f0f9ff;color:#0284c7;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;"
+                        onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#f0f9ff'">
+                        <i class="fas fa-reply"></i> Reply to this review
+                    </button>
+                    <div id="replyForm_<%=rv.id%>" style="display:none;margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                            <div style="width:24px;height:24px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;">
+                                <i class="fas fa-store" style="color:#fff;font-size:.6rem;"></i>
+                            </div>
+                            <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Reply as Store</span>
+                        </div>
+                        <form method="post" action="<%=ctx%>/storekeeperReview">
+                            <input type="hidden" name="action" value="reply">
+                            <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                            <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                            <textarea name="replyText" maxlength="1000" required
+                                placeholder="Nhập phản hồi của cửa hàng..."
+                                style="width:100%;padding:10px 12px;font-family:'Sora',sans-serif;font-size:.83rem;color:var(--text-b);background:#fff;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:80px;outline:none;"
+                                onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"></textarea>
+                            <div style="display:flex;gap:8px;margin-top:10px;">
+                                <button type="submit"
+                                    style="padding:7px 18px;background:#0284c7;color:#fff;border:none;border-radius:8px;font-family:'Sora',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;"
+                                    onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                                    <i class="fas fa-paper-plane"></i> Send Reply
+                                </button>
+                                <button type="button" onclick="toggleReplyForm(<%=rv.id%>)"
+                                    style="padding:7px 16px;background:#fff;color:var(--text-m);border:1px solid var(--border-light);border-radius:8px;font-family:'Sora',sans-serif;font-size:.82rem;cursor:pointer;">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <%}%>
+                <%-- ── Kết thúc Storekeeper Reply Box ── --%>
             </div>
             <%}%>
             <%}else{%>
@@ -735,33 +832,13 @@
             </div>
             <%}%>
 
-            <%-- Write review form — 3 trạng thái: chưa mua / đã mua chưa review / đã review --%>
+            <%-- Write review form --%>
             <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-light2);">
                 <h4 style="font-size:.95rem;font-weight:700;color:var(--text-h);margin-bottom:16px;">
-                    Write Your Review
+                    <%=hasReviewed ? "You have already reviewed this product" : "Write your review"%>
                 </h4>
 
-                <%if(!hasPurchased){%>
-                <%-- Chưa mua: khoá form --%>
-                <div style="background:#f9fafb;border:1.5px dashed var(--border-light);border-radius:12px;padding:20px;text-align:center;">
-                    <div style="font-size:1.8rem;margin-bottom:8px;">🔒</div>
-                    <div style="font-size:.88rem;font-weight:600;color:var(--text-h);margin-bottom:4px;">Purchase required to review</div>
-                    <div style="font-size:.8rem;color:var(--text-s);margin-bottom:14px;">Only verified buyers can leave a review for this product.</div>
-                    <a href="<%=ctx%>/customerShop?action=<%=isPart?"parts":"equipment"%>"
-                       style="display:inline-flex;align-items:center;gap:6px;background:<%=accentColor%>;color:#fff;
-                              text-decoration:none;padding:9px 20px;border-radius:10px;font-size:.82rem;font-weight:600;">
-                        <i class="fas fa-shopping-cart"></i> Shop Now
-                    </a>
-                </div>
-
-                <%}else if(hasReviewed){%>
-                <%-- Đã review --%>
-                <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
-                    <i class="fas fa-check-circle"></i> You have already submitted a review for this product.
-                </div>
-
-                <%}else{%>
-                <%-- Đã mua, chưa review: hiện form --%>
+                <%if(!hasReviewed){%>
                 <form method="post" action="<%=ctx%>/customerShop" enctype="multipart/form-data">
                     <input type="hidden" name="action"   value="addReview">
                     <input type="hidden" name="itemType" value="<%=item.itemType%>">
@@ -789,10 +866,12 @@
                             onblur="this.style.borderColor='var(--border-light)'"></textarea>
                     </div>
 
+                    <%-- [THÊM MỚI] Upload ảnh từ máy thay vì nhập URL --%>
                     <div style="margin-bottom:16px;">
                         <label style="font-size:.8rem;color:var(--text-m);display:block;margin-bottom:6px;">
                             Photo <span style="color:var(--text-s)">(optional · JPG, PNG, WEBP · max 5MB)</span>
                         </label>
+                        <%-- Vùng kéo thả / click chọn ảnh --%>
                         <div id="rvUploadArea"
                              style="border:1.5px dashed var(--border-light);border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:#f9fafb;transition:border-color .2s;"
                              onclick="document.getElementById('reviewImage').click()"
@@ -804,6 +883,7 @@
                                 <div style="font-size:.82rem;color:var(--text-m);font-weight:600;">Click to select a photo</div>
                                 <div style="font-size:.73rem;color:var(--text-s);margin-top:3px;">or drag and drop here</div>
                             </div>
+                            <%-- Preview ảnh sau khi chọn --%>
                             <div id="rvPreviewWrap" style="display:none;">
                                 <img id="rvPreviewImg" src="" alt="preview"
                                      style="max-height:120px;max-width:100%;border-radius:8px;object-fit:contain;">
@@ -816,17 +896,23 @@
                                 </div>
                             </div>
                         </div>
+                        <%-- Input file ẩn, name="reviewImage" khớp với req.getPart("reviewImage") trong servlet --%>
                         <input type="file" id="reviewImage" name="reviewImage"
                                accept="image/jpeg,image/png,image/webp,image/gif"
                                style="display:none;"
                                onchange="previewReviewImage(this)">
                     </div>
+                    <%-- [KẾT THÚC THÊM MỚI] --%>
 
                     <button type="submit" id="rvSubmit"
                         style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;opacity:.5;pointer-events:none;transition:all .2s;">
                         <i class="fas fa-paper-plane"></i> Submit Review
                     </button>
                 </form>
+                <%}else{%>
+                <div style="background:#f0fdf4;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;font-size:.84rem;color:#065f46;">
+                    <i class="fas fa-check-circle"></i> You have already submitted a review for this product.
+                </div>
                 <%}%>
             </div>
 
@@ -969,6 +1055,20 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeLightbox();
     });
+
+    // Toggle form reply mới
+    function toggleReplyForm(reviewId) {
+        var form = document.getElementById('replyForm_' + reviewId);
+        if (!form) return;
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Toggle form edit reply đã có
+    function toggleEditReply(reviewId) {
+        var form = document.getElementById('editReplyForm_' + reviewId);
+        if (!form) return;
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
 </script>
 <%-- ── [KẾT THÚC THÊM MỚI] ── --%>
 
