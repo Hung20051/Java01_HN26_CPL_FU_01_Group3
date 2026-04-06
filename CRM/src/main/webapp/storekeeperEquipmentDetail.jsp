@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.User, model.EquipmentType, model.EquipmentUnit, model.Category, java.util.*, java.text.*" %>
+<%@ page import="model.User, model.EquipmentType, model.EquipmentUnit, model.Category, dao.ReviewDAO, java.util.*, java.text.*" %>
 <%
     User currentUser = (User) session.getAttribute("user");
     if (currentUser == null || !"STOREKEEPER".equals(currentUser.getRoleName())) {
@@ -702,5 +702,197 @@ function prepareEditSubmit() {
     }
 }
 </script>
+
+<%-- ═══════════ CUSTOMER FEEDBACK SECTION ═══════════ --%>
+<%
+    List<ReviewDAO.Review> reviews   = (List<ReviewDAO.Review>) request.getAttribute("reviews");
+    double avgRating  = request.getAttribute("avgRating")  != null ? (double) request.getAttribute("avgRating")  : 0;
+    Map<Integer,Integer> ratingDist  = (Map<Integer,Integer>) request.getAttribute("ratingDist");
+    int totalReviews  = reviews != null ? reviews.size() : 0;
+    if (ratingDist == null) ratingDist = new java.util.HashMap<>();
+    String currentPageUrl = ctx + "/numberEquipment?action=detailPage&id=" + et.getId();
+    java.text.SimpleDateFormat rvSdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+%>
+<div style="margin:0 28px 32px;background:#fff;border:1px solid #e8ecf5;border-radius:16px;padding:24px 28px;">
+
+    <%-- Header --%>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #e8ecf5;">
+        <h3 style="font-size:1rem;font-weight:700;color:#1e1b4b;display:flex;align-items:center;gap:8px;margin:0;">
+            <span style="background:#fef3c7;color:#d97706;width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;">
+                <i class="fas fa-star"></i>
+            </span>
+            Customer Feedback
+            <span style="background:#f1f5f9;color:#9ca3af;font-size:.72rem;font-weight:600;padding:2px 10px;border-radius:20px;"><%=totalReviews%> review<%=totalReviews!=1?"s":""%></span>
+        </h3>
+        <%if(totalReviews > 0){%>
+        <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:1.5rem;font-weight:800;color:#d97706;"><%=String.format("%.1f", avgRating)%></span>
+            <div><%for(int s=1;s<=5;s++){%><span style="color:<%=s<=Math.round(avgRating)?"#f59e0b":"#e5e7eb"%>;font-size:16px;">★</span><%}%></div>
+        </div>
+        <%}%>
+    </div>
+
+    <%if(totalReviews == 0){%>
+    <div style="text-align:center;padding:32px;color:#9ca3af;">
+        <div style="font-size:2rem;margin-bottom:8px;">💬</div>
+        <div style="font-size:.88rem;">No reviews yet for this product.</div>
+    </div>
+    <%} else {%>
+
+    <%-- Rating distribution bar --%>
+    <div style="background:#f9fafb;border-radius:10px;padding:12px 16px;margin-bottom:20px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+            <%for(int s=5;s>=1;s--){
+                int cnt = ratingDist.getOrDefault(s,0);
+                int pct = totalReviews>0 ? cnt*100/totalReviews : 0;
+            %>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.74rem;color:#6b7280;">
+                <span style="min-width:18px;"><%=s%>★</span>
+                <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+                    <div style="width:<%=pct%>%;height:100%;background:#f59e0b;border-radius:3px;"></div>
+                </div>
+                <span style="min-width:16px;color:#9ca3af;"><%=cnt%></span>
+            </div>
+            <%}%>
+        </div>
+    </div>
+
+    <%-- Review list --%>
+    <%for(ReviewDAO.Review rv : reviews){
+        String rvInit = rv.customerName!=null&&!rv.customerName.isEmpty() ? rv.customerName.substring(0,1).toUpperCase() : "?";
+    %>
+    <div style="border:1px solid #e8ecf5;border-radius:12px;padding:16px;margin-bottom:14px;">
+
+        <%-- Customer info --%>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#d97706;flex-shrink:0;"><%=rvInit%></div>
+            <div>
+                <div style="font-size:.85rem;font-weight:600;color:#1e1b4b;"><%=rv.customerName%></div>
+                <div style="font-size:.71rem;color:#9ca3af;"><%=rvSdf.format(rv.createdAt)%></div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:2px;align-items:center;">
+                <%for(int s=1;s<=5;s++){%><span style="color:<%=s<=rv.rating?"#f59e0b":"#e5e7eb"%>;font-size:15px;">★</span><%}%>
+                <span style="font-size:.72rem;color:#9ca3af;margin-left:4px;">(<%=rv.rating%>/5)</span>
+            </div>
+        </div>
+
+        <%-- Comment --%>
+        <p style="font-size:.84rem;color:#374151;line-height:1.6;margin:0 0 10px;"><%=rv.comment!=null?rv.comment:""%></p>
+
+        <%-- Review image --%>
+        <%if(rv.imageUrl!=null&&!rv.imageUrl.isEmpty()){%>
+        <div style="margin-bottom:10px;">
+            <img src="<%=ctx+rv.imageUrl%>" alt="review"
+                 style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid #e8ecf5;cursor:zoom-in;"
+                 onclick="this.style.width=this.style.width==='72px'?'200px':'72px'">
+        </div>
+        <%}%>
+
+        <%-- Storekeeper Reply Box --%>
+        <%if(rv.storekeeperReply != null && !rv.storekeeperReply.isEmpty()){%>
+        <div style="margin-top:12px;margin-left:16px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:12px 16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <div style="width:26px;height:26px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fas fa-store" style="color:#fff;font-size:.6rem;"></i>
+                </div>
+                <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Store Response</span>
+                <%if(rv.repliedAt!=null){%>
+                <span style="font-size:.69rem;color:#64748b;margin-left:4px;"><%=rvSdf.format(rv.repliedAt)%></span>
+                <%}%>
+                <div style="margin-left:auto;display:flex;gap:6px;">
+                    <button onclick="toggleEqEditReply(<%=rv.id%>)"
+                        style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #0284c7;background:#fff;color:#0284c7;cursor:pointer;font-family:inherit;"
+                        onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#fff'">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <form method="post" action="<%=ctx%>/storekeeperReview" style="display:inline;" onsubmit="return confirm('Delete this response?')">
+                        <input type="hidden" name="action" value="deleteReply">
+                        <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                        <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                        <button type="submit" style="font-size:.72rem;padding:3px 10px;border-radius:6px;border:1px solid #fca5a5;background:#fff;color:#dc2626;cursor:pointer;font-family:inherit;"
+                            onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fff'">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <p style="font-size:.83rem;color:#1e3a5f;line-height:1.6;margin:0;"><%=rv.storekeeperReply%></p>
+            <%-- Edit form (hidden) --%>
+            <div id="eqEditReplyForm_<%=rv.id%>" style="display:none;margin-top:10px;">
+                <form method="post" action="<%=ctx%>/storekeeperReview">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                    <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                    <textarea name="replyText" maxlength="1000" required
+                        style="width:100%;padding:8px 12px;font-family:inherit;font-size:.82rem;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:72px;outline:none;background:#fff;"
+                        onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"><%=rv.storekeeperReply%></textarea>
+                    <div style="display:flex;gap:8px;margin-top:8px;">
+                        <button type="submit" style="padding:6px 16px;background:#0284c7;color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button type="button" onclick="toggleEqEditReply(<%=rv.id%>)" style="padding:6px 14px;background:#f1f5f9;color:#6b7280;border:1px solid #e8ecf5;border-radius:7px;font-family:inherit;font-size:.8rem;cursor:pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <%} else {%>
+        <%-- No reply yet — show Reply button --%>
+        <div style="margin-top:10px;margin-left:16px;">
+            <button onclick="toggleEqReplyForm(<%=rv.id%>)"
+                style="font-size:.78rem;padding:6px 14px;border-radius:8px;border:1.5px dashed #0284c7;background:#f0f9ff;color:#0284c7;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;"
+                onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#f0f9ff'">
+                <i class="fas fa-reply"></i> Reply to this review
+            </button>
+            <div id="eqReplyForm_<%=rv.id%>" style="display:none;margin-top:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    <div style="width:24px;height:24px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-store" style="color:#fff;font-size:.6rem;"></i>
+                    </div>
+                    <span style="font-size:.8rem;font-weight:700;color:#0284c7;">Reply as Store</span>
+                </div>
+                <form method="post" action="<%=ctx%>/storekeeperReview">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="reviewId" value="<%=rv.id%>">
+                    <input type="hidden" name="redirectUrl" value="<%=currentPageUrl%>">
+                    <textarea name="replyText" maxlength="1000" required
+                        placeholder="Write your store response here..."
+                        style="width:100%;padding:10px 12px;font-family:inherit;font-size:.83rem;border:1px solid #bae6fd;border-radius:8px;resize:vertical;min-height:80px;outline:none;background:#fff;"
+                        onfocus="this.style.borderColor='#0284c7'" onblur="this.style.borderColor='#bae6fd'"></textarea>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button type="submit"
+                            style="padding:7px 18px;background:#0284c7;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"
+                            onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                            <i class="fas fa-paper-plane"></i> Send Reply
+                        </button>
+                        <button type="button" onclick="toggleEqReplyForm(<%=rv.id%>)"
+                            style="padding:7px 14px;background:#fff;color:#6b7280;border:1px solid #e8ecf5;border-radius:8px;font-family:inherit;font-size:.82rem;cursor:pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <%}%>
+
+    </div>
+    <%}%>
+    <%}%>
+</div>
+
+<script>
+function toggleEqReplyForm(id) {
+    var f = document.getElementById('eqReplyForm_' + id);
+    if(f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+function toggleEqEditReply(id) {
+    var f = document.getElementById('eqEditReplyForm_' + id);
+    if(f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+<%-- ═══════════ END CUSTOMER FEEDBACK SECTION ═══════════ --%>
+
 </body>
 </html>

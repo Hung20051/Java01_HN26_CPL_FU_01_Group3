@@ -2,6 +2,7 @@ package controller;
 
 import dao.CategoryDAO;
 import dao.EquipmentDAO;
+import dao.ReviewDAO;
 import model.EquipmentType;
 import model.User;
 
@@ -25,6 +26,7 @@ public class EquipmentServlet extends HttpServlet {
 
     private final EquipmentDAO equipmentDAO = new EquipmentDAO();
     private final CategoryDAO  categoryDAO  = new CategoryDAO();
+    private final ReviewDAO    reviewDAO    = new ReviewDAO();
 
     private static final int PAGE_SIZE = 10;
 
@@ -55,6 +57,10 @@ public class EquipmentServlet extends HttpServlet {
                 req.setAttribute("equipment",   et);
                 req.setAttribute("units",       equipmentDAO.findUnitsByTypeId(id));
                 req.setAttribute("categories",  categoryDAO.findByType("EQUIPMENT"));
+                // Load review data
+                req.setAttribute("reviews",    reviewDAO.getReviews("EQUIPMENT", id));
+                req.setAttribute("avgRating",  reviewDAO.getAverageRating("EQUIPMENT", id));
+                req.setAttribute("ratingDist", reviewDAO.getRatingDistribution("EQUIPMENT", id));
                 req.getRequestDispatcher("/storekeeperEquipmentDetail.jsp").forward(req, resp);
                 return;
             }
