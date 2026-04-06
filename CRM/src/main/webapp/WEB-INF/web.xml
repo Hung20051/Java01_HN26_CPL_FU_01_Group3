@@ -174,11 +174,19 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/storekeeperReview</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
         <url-pattern>/numberEquipment</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
         <url-pattern>/numberEquipment.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>StorekeeperFilter</filter-name>
+        <url-pattern>/storekeeperEquipmentDetail.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>StorekeeperFilter</filter-name>
@@ -347,6 +355,15 @@
     <servlet-mapping>
         <servlet-name>PartServlet</servlet-name>
         <url-pattern>/numberPart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StorekeeperReviewServlet</servlet-name>
+        <servlet-class>controller.StorekeeperReviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StorekeeperReviewServlet</servlet-name>
+        <url-pattern>/storekeeperReview</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -554,7 +571,7 @@
         <url-pattern>/review-images/*</url-pattern>
     </servlet-mapping>
 
-    <!-- ── FINANCE (ADMIN) ── -->
+    <!-- ── Finance (Admin) ── -->
     <servlet>
         <servlet-name>FinanceServlet</servlet-name>
         <servlet-class>controller.FinanceServlet</servlet-class>
@@ -564,7 +581,7 @@
         <url-pattern>/admin/finance</url-pattern>
     </servlet-mapping>
 
-    <!-- ── TECHNICIAN ── -->
+    <!-- ── Technician ── -->
     <servlet>
         <servlet-name>TechnicianServlet</servlet-name>
         <servlet-class>controller.TechnicianServlet</servlet-class>
