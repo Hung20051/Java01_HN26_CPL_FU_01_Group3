@@ -10,6 +10,7 @@ import model.TechnicianWorkload;
 import model.User;
 import model.WorkAssignment;
 import model.WorkTask;
+import util.EmailUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public class TechnicalManagerServlet extends HttpServlet {
 
-    private final ServiceRequestDAO     srDAO  = new ServiceRequestDAO();
+    private final ServiceRequestDAO     srDAO   = new ServiceRequestDAO();
     private final UserDAO               userDAO = new UserDAO();
     private final WorkTaskDAO           wtDAO   = new WorkTaskDAO();
     private final WorkAssignmentDAO     waDAO   = new WorkAssignmentDAO();
@@ -47,12 +48,9 @@ public class TechnicalManagerServlet extends HttpServlet {
                     resp.sendRedirect(req.getContextPath() + "/tmServiceRequests");
                     return;
                 }
-                // Technicians for dropdown
-                List<User> technicians = userDAO.findWithFilter(null, "1", "TECHNICIAN", 1, 200);
-                // Workload for availability panel
+                List<User> technicians         = userDAO.findWithFilter(null, "1", "TECHNICIAN", 1, 200);
                 List<TechnicianWorkload> workloads = twDAO.findAllTechnicians();
-                // Assignment history for this request
-                List<WorkTask> assignedTasks = wtDAO.findByRequestId(id);
+                List<WorkTask> assignedTasks   = wtDAO.findByRequestId(id);
 
                 req.setAttribute("sr",            sr);
                 req.setAttribute("technicians",   technicians);
@@ -116,8 +114,26 @@ public class TechnicalManagerServlet extends HttpServlet {
             if ("approve".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 boolean ok = srDAO.approve(id, me.getId());
-                req.getSession().setAttribute(ok ? "flash_success" : "flash_error",
-                    ok ? "Request approved successfully." : "Cannot approve: request may not be PENDING.");
+
+                if (ok) {
+                    // Lấy thông tin SR + customer để gửi email
+                    ServiceRequest sr = srDAO.getById(id);
+                    User customer     = userDAO.findById(sr.getCustomerId());
+                    if (customer != null && customer.getEmail() != null) {
+                        sendMailAsync(() -> EmailUtil.sendSRApproved(
+                            customer.getEmail(),
+                            customer.getFullName(),
+                            sr.getRequestCode(),
+                            sr.getTitle(),
+                            sr.getContractType(),
+                            me.getFullName()
+                        ));
+                    }
+                    req.getSession().setAttribute("flash_success", "Request approved successfully.");
+                } else {
+                    req.getSession().setAttribute("flash_error", "Cannot approve: request may not be PENDING.");
+                }
+
                 resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                 return;
             }
@@ -132,8 +148,26 @@ public class TechnicalManagerServlet extends HttpServlet {
                     return;
                 }
                 boolean ok = srDAO.reject(id, me.getId(), reason.trim());
-                req.getSession().setAttribute(ok ? "flash_success" : "flash_error",
-                    ok ? "Request rejected." : "Cannot reject: request may not be PENDING.");
+
+                if (ok) {
+                    ServiceRequest sr = srDAO.getById(id);
+                    User customer     = userDAO.findById(sr.getCustomerId());
+                    if (customer != null && customer.getEmail() != null) {
+                        final String finalReason = reason.trim();
+                        sendMailAsync(() -> EmailUtil.sendSRRejected(
+                            customer.getEmail(),
+                            customer.getFullName(),
+                            sr.getRequestCode(),
+                            sr.getTitle(),
+                            finalReason,
+                            me.getFullName()
+                        ));
+                    }
+                    req.getSession().setAttribute("flash_success", "Request rejected.");
+                } else {
+                    req.getSession().setAttribute("flash_error", "Cannot reject: request may not be PENDING.");
+                }
+
                 resp.sendRedirect(ctx + "/tmServiceRequests?action=detail&id=" + id);
                 return;
             }
@@ -142,7 +176,6 @@ public class TechnicalManagerServlet extends HttpServlet {
             if ("assign".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
 
-                // Hỗ trợ cả single technicianId và multi technicianIds[]
                 String[] techIds = req.getParameterValues("technicianIds");
                 if (techIds == null || techIds.length == 0) {
                     String single = req.getParameter("technicianId");
@@ -162,23 +195,21 @@ public class TechnicalManagerServlet extends HttpServlet {
                 String priority    = req.getParameter("priority");
                 if (priority == null || priority.isEmpty()) priority = "MEDIUM";
 
-                int    successCount      = 0;
+                int    successCount       = 0;
                 int    firstSuccessTechId = -1;
-                StringBuilder errors     = new StringBuilder();
+                StringBuilder errors      = new StringBuilder();
 
                 for (String techIdStr : techIds) {
                     int technicianId;
                     try { technicianId = Integer.parseInt(techIdStr.trim()); }
                     catch (NumberFormatException e) { continue; }
 
-                    // 1. Kiểm tra duplicate
                     if (wtDAO.hasActiveTaskForTechnician(id, technicianId)) {
                         errors.append("Technician #").append(technicianId)
                               .append(" already has an active task for this request. ");
                         continue;
                     }
 
-                    // 2. Kiểm tra workload
                     twDAO.ensureExists(technicianId);
                     TechnicianWorkload wl = twDAO.findByTechnicianId(technicianId);
                     int points = calcPoints(priority);
@@ -191,7 +222,6 @@ public class TechnicalManagerServlet extends HttpServlet {
                         continue;
                     }
 
-                    // 3. Tạo WorkTask
                     WorkTask task = new WorkTask();
                     task.setRequestId(id);
                     task.setTechnicianId(technicianId);
@@ -205,7 +235,6 @@ public class TechnicalManagerServlet extends HttpServlet {
                         continue;
                     }
 
-                    // 4. Tạo WorkAssignment
                     WorkAssignment wa = new WorkAssignment();
                     wa.setTaskId(taskId);
                     wa.setAssignedBy(me.getId());
@@ -218,7 +247,6 @@ public class TechnicalManagerServlet extends HttpServlet {
                     wa.setPriority(priority);
                     waDAO.create(wa);
 
-                    // 5. Cập nhật workload
                     twDAO.increment(technicianId, points);
 
                     if (firstSuccessTechId < 0) firstSuccessTechId = technicianId;
@@ -226,8 +254,23 @@ public class TechnicalManagerServlet extends HttpServlet {
                 }
 
                 if (successCount > 0) {
-                    // Cập nhật service_request → IN_PROGRESS
                     srDAO.assignTechnician(id, firstSuccessTechId, me.getId());
+
+                    // Gửi email IN_PROGRESS cho customer
+                    final int finalSuccessCount = successCount;
+                    ServiceRequest sr = srDAO.getById(id);
+                    User customer     = userDAO.findById(sr.getCustomerId());
+                    if (customer != null && customer.getEmail() != null) {
+                        sendMailAsync(() -> EmailUtil.sendSRInProgress(
+                            customer.getEmail(),
+                            customer.getFullName(),
+                            sr.getRequestCode(),
+                            sr.getTitle(),
+                            finalSuccessCount,
+                            me.getFullName()
+                        ));
+                    }
+
                     req.getSession().setAttribute("flash_success",
                         successCount + " technician(s) assigned successfully.");
                 }
@@ -247,7 +290,22 @@ public class TechnicalManagerServlet extends HttpServlet {
         resp.sendRedirect(ctx + "/tmServiceRequests");
     }
 
-    // Priority → workload points (Urgent=3, High=2, Medium/Low=1)
+    // ── Helper: chạy email trên thread riêng để không block response ──────────
+    private void sendMailAsync(MailTask task) {
+        new Thread(() -> {
+            try {
+                task.run();
+            } catch (Exception e) {
+                System.err.println("[EmailUtil] Failed to send email: " + e.getMessage());
+            }
+        }, "mail-sender").start();
+    }
+
+    @FunctionalInterface
+    interface MailTask {
+        void run() throws Exception;
+    }
+
     private int calcPoints(String priority) {
         if (priority == null) return 1;
         return switch (priority.toUpperCase()) {
