@@ -10,7 +10,7 @@ public class TechnicalManagerFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        HttpServletRequest req   = (HttpServletRequest) request;
+        HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
@@ -22,6 +22,11 @@ public class TechnicalManagerFilter implements Filter {
         }
     }
 
-    @Override public void init(FilterConfig fc) {}
-    @Override public void destroy() {}
+    @Override
+    public void init(FilterConfig fc) {
+    }
+
+    @Override
+    public void destroy() {
+    }
 }
