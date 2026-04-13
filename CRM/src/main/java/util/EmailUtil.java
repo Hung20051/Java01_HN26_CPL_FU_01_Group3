@@ -10,24 +10,23 @@ import java.util.Random;
 
 public class EmailUtil {
 
-    private static final String SENDER_EMAIL    = AppConfig.getEmailSender();
+    private static final String SENDER_EMAIL = AppConfig.getEmailSender();
     private static final String SENDER_PASSWORD = AppConfig.getEmailPassword();
-    private static final String SMTP_HOST       = "smtp.gmail.com";
-    private static final int    SMTP_PORT       = 587;
+    private static final String SMTP_HOST = "smtp.gmail.com";
+    private static final int SMTP_PORT = 587;
 
     // ── Brand colors ───────────────────────────────────────────────────────────
-    private static final String COLOR_PRIMARY  = "#1e40af"; // blue-800
-    private static final String COLOR_SUCCESS  = "#15803d"; // green-700
-    private static final String COLOR_DANGER   = "#b91c1c"; // red-700
-    private static final String COLOR_WARNING  = "#b45309"; // amber-700
-    private static final String COLOR_INFO     = "#0e7490"; // cyan-700
-    private static final String COLOR_GRAY     = "#6b7280";
-    private static final String COLOR_BG       = "#f1f5f9";
+    private static final String COLOR_PRIMARY = "#1e40af"; // blue-800
+    private static final String COLOR_SUCCESS = "#15803d"; // green-700
+    private static final String COLOR_DANGER = "#b91c1c"; // red-700
+    private static final String COLOR_WARNING = "#b45309"; // amber-700
+    private static final String COLOR_INFO = "#0e7490"; // cyan-700
+    private static final String COLOR_GRAY = "#6b7280";
+    private static final String COLOR_BG = "#f1f5f9";
 
     // ══════════════════════════════════════════════════════════════════════════
     //  PUBLIC API — one method per status event
     // ══════════════════════════════════════════════════════════════════════════
-
     /**
      * Gửi OTP xác nhận đăng ký tài khoản.
      */
@@ -38,32 +37,32 @@ public class EmailUtil {
     public static void sendOTP(String toEmail, String otp)
             throws MessagingException, UnsupportedEncodingException {
         send(toEmail,
-             "DRSMS – Your OTP Verification Code",
-             buildOtpHtml(otp));
+                "DRSMS – Your OTP Verification Code",
+                buildOtpHtml(otp));
     }
 
     // ── SR: APPROVED ──────────────────────────────────────────────────────────
     /**
      * Gửi khi Technical Manager APPROVE service request.
      *
-     * @param toEmail       email khách hàng
-     * @param customerName  tên khách hàng
-     * @param requestCode   mã SR (SR2026-015)
-     * @param requestTitle  tiêu đề SR
-     * @param contractType  "WARRANTY" hoặc "MAINTENANCE"
-     * @param managerName   tên Technical Manager
+     * @param toEmail email khách hàng
+     * @param customerName tên khách hàng
+     * @param requestCode mã SR (SR2026-015)
+     * @param requestTitle tiêu đề SR
+     * @param contractType "WARRANTY" hoặc "MAINTENANCE"
+     * @param managerName tên Technical Manager
      */
     public static void sendSRApproved(String toEmail,
-                                      String customerName,
-                                      String requestCode,
-                                      String requestTitle,
-                                      String contractType,
-                                      String managerName)
+            String customerName,
+            String requestCode,
+            String requestTitle,
+            String contractType,
+            String managerName)
             throws MessagingException, UnsupportedEncodingException {
 
         String subject = "[DRSMS] Service Request " + requestCode + " – Approved ✓";
-        String html    = buildSRApprovedHtml(customerName, requestCode, requestTitle,
-                                             contractType, managerName);
+        String html = buildSRApprovedHtml(customerName, requestCode, requestTitle,
+                contractType, managerName);
         send(toEmail, subject, html);
     }
 
@@ -71,19 +70,19 @@ public class EmailUtil {
     /**
      * Gửi khi Technical Manager REJECT service request.
      *
-     * @param rejectReason  lý do từ chối
+     * @param rejectReason lý do từ chối
      */
     public static void sendSRRejected(String toEmail,
-                                      String customerName,
-                                      String requestCode,
-                                      String requestTitle,
-                                      String rejectReason,
-                                      String managerName)
+            String customerName,
+            String requestCode,
+            String requestTitle,
+            String rejectReason,
+            String managerName)
             throws MessagingException, UnsupportedEncodingException {
 
         String subject = "[DRSMS] Service Request " + requestCode + " – Not Approved";
-        String html    = buildSRRejectedHtml(customerName, requestCode, requestTitle,
-                                             rejectReason, managerName);
+        String html = buildSRRejectedHtml(customerName, requestCode, requestTitle,
+                rejectReason, managerName);
         send(toEmail, subject, html);
     }
 
@@ -91,19 +90,19 @@ public class EmailUtil {
     /**
      * Gửi khi technician được assign → SR chuyển sang IN_PROGRESS.
      *
-     * @param technicianCount  số lượng technician được giao
+     * @param technicianCount số lượng technician được giao
      */
     public static void sendSRInProgress(String toEmail,
-                                        String customerName,
-                                        String requestCode,
-                                        String requestTitle,
-                                        int    technicianCount,
-                                        String managerName)
+            String customerName,
+            String requestCode,
+            String requestTitle,
+            int technicianCount,
+            String managerName)
             throws MessagingException, UnsupportedEncodingException {
 
         String subject = "[DRSMS] Service Request " + requestCode + " – Technician Assigned";
-        String html    = buildSRInProgressHtml(customerName, requestCode, requestTitle,
-                                               technicianCount, managerName);
+        String html = buildSRInProgressHtml(customerName, requestCode, requestTitle,
+                technicianCount, managerName);
         send(toEmail, subject, html);
     }
 
@@ -111,35 +110,34 @@ public class EmailUtil {
     /**
      * Gửi khi toàn bộ technician submit báo cáo → SR COMPLETED.
      *
-     * @param invoiceCode   mã hoá đơn vừa tạo
-     * @param totalAmount   tổng tiền (BigDecimal, đơn vị VND)
-     * @param contractType  "WARRANTY" hoặc "MAINTENANCE"
-     * @param dueDate       hạn thanh toán (yyyy-MM-dd)
+     * @param invoiceCode mã hoá đơn vừa tạo
+     * @param totalAmount tổng tiền (BigDecimal, đơn vị VND)
+     * @param contractType "WARRANTY" hoặc "MAINTENANCE"
+     * @param dueDate hạn thanh toán (yyyy-MM-dd)
      */
     public static void sendSRCompleted(String toEmail,
-                                       String customerName,
-                                       String requestCode,
-                                       String requestTitle,
-                                       String invoiceCode,
-                                       BigDecimal totalAmount,
-                                       String contractType,
-                                       String dueDate)
+            String customerName,
+            String requestCode,
+            String requestTitle,
+            String invoiceCode,
+            BigDecimal totalAmount,
+            String contractType,
+            String dueDate)
             throws MessagingException, UnsupportedEncodingException {
 
         String subject = "[DRSMS] Service Request " + requestCode + " – Completed 🎉";
-        String html    = buildSRCompletedHtml(customerName, requestCode, requestTitle,
-                                              invoiceCode, totalAmount, contractType, dueDate);
+        String html = buildSRCompletedHtml(customerName, requestCode, requestTitle,
+                invoiceCode, totalAmount, contractType, dueDate);
         send(toEmail, subject, html);
     }
 
     // ══════════════════════════════════════════════════════════════════════════
     //  HTML BUILDERS
     // ══════════════════════════════════════════════════════════════════════════
-
     // ── OTP ───────────────────────────────────────────────────────────────────
     private static String buildOtpHtml(String otp) {
         return wrapper("Account Verification", COLOR_PRIMARY,
-            """
+                """
             <p style="color:#374151;font-size:1rem;margin:0 0 20px;">
               Please use the OTP below to complete your account registration:
             </p>
@@ -154,20 +152,20 @@ public class EmailUtil {
               Never share this code with anyone.
             </p>
             """.formatted(otp),
-            "If you did not request this, please ignore this email."
+                "If you did not request this, please ignore this email."
         );
     }
 
     // ── APPROVED ──────────────────────────────────────────────────────────────
     private static String buildSRApprovedHtml(String customerName,
-                                               String requestCode,
-                                               String requestTitle,
-                                               String contractType,
-                                               String managerName) {
+            String requestCode,
+            String requestTitle,
+            String contractType,
+            String managerName) {
         boolean isWarranty = "WARRANTY".equalsIgnoreCase(contractType);
-        String  contractBadge = isWarranty
-            ? badge("#065f46", "#d1fae5", "WARRANTY – Repair is FREE")
-            : badge("#92400e", "#fef3c7", "MAINTENANCE – Charges apply");
+        String contractBadge = isWarranty
+                ? badge("#065f46", "#d1fae5", "WARRANTY – Repair is FREE")
+                : badge("#92400e", "#fef3c7", "MAINTENANCE – Charges apply");
 
         String body = """
             <p style="color:#374151;font-size:.9375rem;margin:0 0 20px;">
@@ -183,20 +181,20 @@ public class EmailUtil {
               Reviewed by: <strong>%s</strong>
             </p>
             """.formatted(customerName, COLOR_SUCCESS,
-                          infoCard(requestCode, requestTitle),
-                          contractBadge,
-                          managerName);
+                infoCard(requestCode, requestTitle),
+                contractBadge,
+                managerName);
 
         return wrapper("Request Approved", COLOR_SUCCESS, body,
-            "You will receive another notification when a technician is assigned.");
+                "You will receive another notification when a technician is assigned.");
     }
 
     // ── REJECTED ──────────────────────────────────────────────────────────────
     private static String buildSRRejectedHtml(String customerName,
-                                               String requestCode,
-                                               String requestTitle,
-                                               String rejectReason,
-                                               String managerName) {
+            String requestCode,
+            String requestTitle,
+            String rejectReason,
+            String managerName) {
         String body = """
             <p style="color:#374151;font-size:.9375rem;margin:0 0 20px;">
               Dear <strong>%s</strong>,
@@ -221,23 +219,23 @@ public class EmailUtil {
               Reviewed by: <strong>%s</strong>
             </p>
             """.formatted(customerName, COLOR_DANGER, COLOR_DANGER,
-                          infoCard(requestCode, requestTitle),
-                          rejectReason,
-                          managerName);
+                infoCard(requestCode, requestTitle),
+                rejectReason,
+                managerName);
 
         return wrapper("Request Not Approved", COLOR_DANGER, body,
-            "For assistance, please contact our support team.");
+                "For assistance, please contact our support team.");
     }
 
     // ── IN_PROGRESS ───────────────────────────────────────────────────────────
     private static String buildSRInProgressHtml(String customerName,
-                                                 String requestCode,
-                                                 String requestTitle,
-                                                 int    technicianCount,
-                                                 String managerName) {
+            String requestCode,
+            String requestTitle,
+            int technicianCount,
+            String managerName) {
         String techText = technicianCount == 1
-            ? "A technician has been assigned"
-            : technicianCount + " technicians have been assigned";
+                ? "A technician has been assigned"
+                : technicianCount + " technicians have been assigned";
 
         String body = """
             <p style="color:#374151;font-size:.9375rem;margin:0 0 20px;">
@@ -260,25 +258,25 @@ public class EmailUtil {
               Assigned by: <strong>%s</strong>
             </p>
             """.formatted(customerName, COLOR_INFO, techText,
-                          infoCard(requestCode, requestTitle),
-                          COLOR_INFO, managerName);
+                infoCard(requestCode, requestTitle),
+                COLOR_INFO, managerName);
 
         return wrapper("Technician Assigned", COLOR_INFO, body,
-            "You will be notified once the repair is completed.");
+                "You will be notified once the repair is completed.");
     }
 
     // ── COMPLETED ─────────────────────────────────────────────────────────────
     private static String buildSRCompletedHtml(String customerName,
-                                                String requestCode,
-                                                String requestTitle,
-                                                String invoiceCode,
-                                                BigDecimal totalAmount,
-                                                String contractType,
-                                                String dueDate) {
+            String requestCode,
+            String requestTitle,
+            String invoiceCode,
+            BigDecimal totalAmount,
+            String contractType,
+            String dueDate) {
         boolean isWarranty = "WARRANTY".equalsIgnoreCase(contractType);
 
         String invoiceSection = isWarranty
-            ? """
+                ? """
               <div style="background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;
                           padding:16px 20px;margin:20px 0;">
                 <p style="margin:0;color:#374151;font-size:.875rem;">
@@ -287,7 +285,7 @@ public class EmailUtil {
                 </p>
               </div>
               """
-            : """
+                : """
               <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;
                           padding:20px;margin:20px 0;">
                 <p style="margin:0 0 12px;font-weight:700;color:#1e293b;font-size:.9375rem;">
@@ -314,9 +312,9 @@ public class EmailUtil {
                 </p>
               </div>
               """.formatted(invoiceCode,
-                            COLOR_PRIMARY,
-                            formatMoney(totalAmount),
-                            dueDate);
+                        COLOR_PRIMARY,
+                        formatMoney(totalAmount),
+                        dueDate);
 
         String body = """
             <p style="color:#374151;font-size:.9375rem;margin:0 0 20px;">
@@ -330,22 +328,23 @@ public class EmailUtil {
             %s
             %s
             """.formatted(customerName, COLOR_SUCCESS,
-                          infoCard(requestCode, requestTitle),
-                          invoiceSection);
+                infoCard(requestCode, requestTitle),
+                invoiceSection);
 
         return wrapper("Service Completed", COLOR_SUCCESS, body,
-            "Thank you for choosing DRSMS. We hope to serve you again.");
+                "Thank you for choosing DRSMS. We hope to serve you again.");
     }
 
     // ══════════════════════════════════════════════════════════════════════════
     //  SHARED HTML COMPONENTS
     // ══════════════════════════════════════════════════════════════════════════
-
-    /** Master wrapper: header strip + body card + footer */
+    /**
+     * Master wrapper: header strip + body card + footer
+     */
     private static String wrapper(String headerTitle,
-                                   String headerColor,
-                                   String bodyHtml,
-                                   String footerNote) {
+            String headerColor,
+            String bodyHtml,
+            String footerNote) {
         return """
             <!DOCTYPE html>
             <html lang="en">
@@ -380,7 +379,9 @@ public class EmailUtil {
             """.formatted(COLOR_BG, headerColor, headerTitle, bodyHtml, COLOR_GRAY, footerNote);
     }
 
-    /** Card hiển thị request code + title */
+    /**
+     * Card hiển thị request code + title
+     */
     private static String infoCard(String requestCode, String requestTitle) {
         return """
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;
@@ -393,7 +394,9 @@ public class EmailUtil {
             """.formatted(requestCode, requestTitle);
     }
 
-    /** Inline badge */
+    /**
+     * Inline badge
+     */
     private static String badge(String textColor, String bgColor, String label) {
         return """
             <span style="display:inline-block;background:%s;color:%s;font-size:.8125rem;
@@ -403,25 +406,28 @@ public class EmailUtil {
             """.formatted(bgColor, textColor, label);
     }
 
-    /** Format số tiền VND với dấu phẩy */
+    /**
+     * Format số tiền VND với dấu phẩy
+     */
     private static String formatMoney(BigDecimal amount) {
-        if (amount == null) return "0";
+        if (amount == null) {
+            return "0";
+        }
         return String.format("%,.0f", amount);
     }
 
     // ══════════════════════════════════════════════════════════════════════════
     //  TRANSPORT
     // ══════════════════════════════════════════════════════════════════════════
-
     private static void send(String toEmail, String subject, String htmlBody)
             throws MessagingException, UnsupportedEncodingException {
 
         Properties props = new Properties();
-        props.put("mail.smtp.auth",            "true");
+        props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host",            SMTP_HOST);
-        props.put("mail.smtp.port",            SMTP_PORT);
-        props.put("mail.smtp.ssl.trust",       SMTP_HOST);
+        props.put("mail.smtp.host", SMTP_HOST);
+        props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.ssl.trust", SMTP_HOST);
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override

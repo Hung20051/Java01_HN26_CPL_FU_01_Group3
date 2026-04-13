@@ -17,7 +17,9 @@ public class PasswordUtil {
      * Kiểm tra mật khẩu nhập vào với hash đã lưu
      */
     public static boolean checkPassword(String plainPassword, String hashedPassword) {
-        if (plainPassword == null || hashedPassword == null) return false;
+        if (plainPassword == null || hashedPassword == null) {
+            return false;
+        }
         return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 }
