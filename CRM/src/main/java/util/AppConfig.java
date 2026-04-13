@@ -57,7 +57,8 @@ public class AppConfig {
     public static String getEmailPassword() {
         return props.getProperty("email.password");
     }
-     public static String getGeminiApiKey() {
+
+    public static String getGeminiApiKey() {
         return props.getProperty("gemini.api.key");
     }
 }
