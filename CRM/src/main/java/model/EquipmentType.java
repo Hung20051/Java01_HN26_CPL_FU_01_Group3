@@ -1,7 +1,9 @@
 package model;
+
 import java.time.LocalDateTime;
 
 public class EquipmentType {
+
     private int id;
     private String model;
     private int categoryId;
@@ -20,53 +22,134 @@ public class EquipmentType {
     private int faultyUnits;
     private int retiredUnits;
 
-    public EquipmentType() {}
+    public EquipmentType() {
+    }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getCategoryId() { return categoryId; }
-    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+    public String getModel() {
+        return model;
+    }
 
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public int getCategoryId() {
+        return categoryId;
+    }
 
-    public double getUnitPrice() { return unitPrice; }
-    public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getCategoryName() {
+        return categoryName;
+    }
 
-    public int getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(int updatedBy) { this.updatedBy = updatedBy; }
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
-    public String getUpdatedByUsername() { return updatedByUsername; }
-    public void setUpdatedByUsername(String u) { this.updatedByUsername = u; }
+    public String getDescription() {
+        return description;
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public double getUnitPrice() {
+        return unitPrice;
+    }
 
-    public int getTotalUnits() { return totalUnits; }
-    public void setTotalUnits(int totalUnits) { this.totalUnits = totalUnits; }
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
-    public int getAvailableUnits() { return availableUnits; }
-    public void setAvailableUnits(int availableUnits) { this.availableUnits = availableUnits; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public int getInuseUnits() { return inuseUnits; }
-    public void setInuseUnits(int inuseUnits) { this.inuseUnits = inuseUnits; }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-    public int getFaultyUnits() { return faultyUnits; }
-    public void setFaultyUnits(int faultyUnits) { this.faultyUnits = faultyUnits; }
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
 
-    public int getRetiredUnits() { return retiredUnits; }
-    public void setRetiredUnits(int retiredUnits) { this.retiredUnits = retiredUnits; }
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getUpdatedByUsername() {
+        return updatedByUsername;
+    }
+
+    public void setUpdatedByUsername(String u) {
+        this.updatedByUsername = u;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getTotalUnits() {
+        return totalUnits;
+    }
+
+    public void setTotalUnits(int totalUnits) {
+        this.totalUnits = totalUnits;
+    }
+
+    public int getAvailableUnits() {
+        return availableUnits;
+    }
+
+    public void setAvailableUnits(int availableUnits) {
+        this.availableUnits = availableUnits;
+    }
+
+    public int getInuseUnits() {
+        return inuseUnits;
+    }
+
+    public void setInuseUnits(int inuseUnits) {
+        this.inuseUnits = inuseUnits;
+    }
+
+    public int getFaultyUnits() {
+        return faultyUnits;
+    }
+
+    public void setFaultyUnits(int faultyUnits) {
+        this.faultyUnits = faultyUnits;
+    }
+
+    public int getRetiredUnits() {
+        return retiredUnits;
+    }
+
+    public void setRetiredUnits(int retiredUnits) {
+        this.retiredUnits = retiredUnits;
+    }
 }
