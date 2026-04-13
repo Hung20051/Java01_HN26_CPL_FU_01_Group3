@@ -1,4 +1,5 @@
 package dao;
+
 import model.CustomerEquipment;
 import util.DBConnection;
 import java.sql.*;
@@ -22,11 +23,12 @@ public class CustomerEquipmentDAO {
     public List<CustomerEquipment> getByCustomerId(int customerId) throws Exception {
         List<CustomerEquipment> list = new ArrayList<>();
         String sql = BASE + " WHERE ce.customer_id = ? ORDER BY ce.created_at DESC";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, customerId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
             }
         }
         return list;
@@ -34,11 +36,12 @@ public class CustomerEquipmentDAO {
 
     public CustomerEquipment getById(int id) throws Exception {
         String sql = BASE + " WHERE ce.id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return map(rs);
+                if (rs.next()) {
+                    return map(rs);
+                }
             }
         }
         return null;
@@ -51,11 +54,12 @@ public class CustomerEquipmentDAO {
              WHERE cteq.contract_id = ?
              ORDER BY ce.id
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, contractId);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(map(rs));
+                while (rs.next()) {
+                    list.add(map(rs));
+                }
             }
         }
         return list;
@@ -67,7 +71,9 @@ public class CustomerEquipmentDAO {
         e.setCustomerId(rs.getInt("customer_id"));
 
         int euid = rs.getInt("equipment_unit_id");
-        if (!rs.wasNull()) e.setEquipmentUnitId(euid);
+        if (!rs.wasNull()) {
+            e.setEquipmentUnitId(euid);
+        }
 
         e.setSerialNumber(rs.getString("serial_number"));
         e.setEquipmentModel(rs.getString("equipment_model"));
@@ -80,15 +86,21 @@ public class CustomerEquipmentDAO {
         e.setSource(rs.getString("source"));
 
         java.sql.Date pd = rs.getDate("purchased_date");
-        if (pd != null) e.setPurchasedDate(pd.toLocalDate());
+        if (pd != null) {
+            e.setPurchasedDate(pd.toLocalDate());
+        }
 
         java.sql.Date we = rs.getDate("warranty_expires");
-        if (we != null) e.setWarrantyExpires(we.toLocalDate());
+        if (we != null) {
+            e.setWarrantyExpires(we.toLocalDate());
+        }
 
         e.setNotes(rs.getString("notes"));
 
         Timestamp cat = rs.getTimestamp("created_at");
-        if (cat != null) e.setCreatedAt(cat.toLocalDateTime());
+        if (cat != null) {
+            e.setCreatedAt(cat.toLocalDateTime());
+        }
 
         return e;
     }
