@@ -162,14 +162,23 @@ public class CustomerEquipment {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    public String getImageUrl() {
-    if ("EXTERNAL".equals(source)) {
-        return customImageUrl; // ảnh tự upload cho external
-    }
-    return imageUrl; // ảnh từ equipment_types cho internal
-}
-public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-public String getCustomImageUrl() { return customImageUrl; }
-public void setCustomImageUrl(String customImageUrl) { this.customImageUrl = customImageUrl; }
+    public String getImageUrl() {
+        if ("EXTERNAL".equals(source)) {
+            return customImageUrl; // ảnh tự upload cho external
+        }
+        return imageUrl; // ảnh từ equipment_types cho internal
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getCustomImageUrl() {
+        return customImageUrl;
+    }
+
+    public void setCustomImageUrl(String customImageUrl) {
+        this.customImageUrl = customImageUrl;
+    }
 }
