@@ -411,8 +411,7 @@ public class ServiceRequestDAO {
                    reviewed_at = NOW()
              WHERE id = ? AND status = 'PENDING'
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, reviewedBy);
             ps.setInt(2, requestId);
             return ps.executeUpdate() > 0;
@@ -429,8 +428,7 @@ public class ServiceRequestDAO {
                    reject_reason = ?
              WHERE id = ? AND status = 'PENDING'
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, reviewedBy);
             ps.setString(2, reason != null ? reason : "");
             ps.setInt(3, requestId);
@@ -449,8 +447,7 @@ public class ServiceRequestDAO {
                    reviewed_at  = COALESCE(reviewed_at, NOW())
              WHERE id = ? AND status = 'APPROVED'
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, technicianId);
             ps.setInt(2, managerId);
             ps.setInt(3, requestId);
