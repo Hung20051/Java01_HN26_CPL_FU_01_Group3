@@ -28,6 +28,7 @@ public class RepairReportDAO {
     JOIN contracts c          ON c.id  = sr.contract_id
     LEFT JOIN invoices inv    ON inv.id = rr.invoice_id
     """;
+
     // ── Tạo report mới (DRAFT) ─────────────────────────────────────────
     public int create(RepairReport rr) throws Exception {
         String sql = """
@@ -36,8 +37,7 @@ public class RepairReportDAO {
                diagnosis, work_done, labor_cost, status)
             VALUES (?,?,?,?,?,?,?,'DRAFT')
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, rr.getWorkTaskId());
             ps.setInt(2, rr.getServiceRequestId());
             ps.setInt(3, rr.getTechnicianId());
@@ -59,8 +59,7 @@ public class RepairReportDAO {
                SET diagnosis = ?, work_done = ?, labor_cost = ?
              WHERE id = ? AND technician_id = ? AND status = 'DRAFT'
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, rr.getDiagnosis());
             ps.setString(2, rr.getWorkDone());
             ps.setBigDecimal(3, rr.getLaborCost() != null ? rr.getLaborCost() : BigDecimal.ZERO);
@@ -77,8 +76,7 @@ public class RepairReportDAO {
                SET status = 'SUBMITTED', submitted_at = NOW()
              WHERE id = ? AND technician_id = ? AND status = 'DRAFT'
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, reportId);
             ps.setInt(2, technicianId);
             return ps.executeUpdate() > 0;
@@ -88,8 +86,7 @@ public class RepairReportDAO {
     // ── Set invoice_id sau khi tạo hóa đơn ────────────────────────────
     public boolean setInvoiceId(int reportId, int invoiceId) throws Exception {
         String sql = "UPDATE repair_reports SET invoice_id = ? WHERE id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, invoiceId);
             ps.setInt(2, reportId);
             return ps.executeUpdate() > 0;
@@ -99,8 +96,7 @@ public class RepairReportDAO {
     // ── Kiểm tra technician đã có report cho task này chưa ────────────
     public boolean existsByWorkTaskId(int workTaskId) throws Exception {
         String sql = "SELECT COUNT(*) FROM repair_reports WHERE work_task_id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, workTaskId);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() && rs.getInt(1) > 0;
@@ -110,8 +106,7 @@ public class RepairReportDAO {
 
     public RepairReport findByWorkTaskId(int workTaskId) throws Exception {
         String sql = BASE_SELECT + " WHERE rr.work_task_id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, workTaskId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -126,8 +121,7 @@ public class RepairReportDAO {
 
     public RepairReport findById(int id) throws Exception {
         String sql = BASE_SELECT + " WHERE rr.id = ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -142,21 +136,26 @@ public class RepairReportDAO {
 
     // ── Lấy tất cả reports của 1 technician ───────────────────────────
     public List<RepairReport> findByTechnicianId(int technicianId, String status,
-                                                  int page, int pageSize) throws Exception {
+            int page, int pageSize) throws Exception {
         StringBuilder sql = new StringBuilder(BASE_SELECT + " WHERE rr.technician_id = ?");
-        if (status != null && !status.isEmpty()) sql.append(" AND rr.status = ?");
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND rr.status = ?");
+        }
         sql.append(" ORDER BY rr.created_at DESC LIMIT ? OFFSET ?");
 
         List<RepairReport> list = new ArrayList<>();
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             int idx = 1;
             ps.setInt(idx++, technicianId);
-            if (status != null && !status.isEmpty()) ps.setString(idx++, status);
+            if (status != null && !status.isEmpty()) {
+                ps.setString(idx++, status);
+            }
             ps.setInt(idx++, pageSize);
             ps.setInt(idx, (page - 1) * pageSize);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapRow(rs));
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
             }
         }
         return list;
@@ -164,13 +163,16 @@ public class RepairReportDAO {
 
     public int countByTechnicianId(int technicianId, String status) throws Exception {
         StringBuilder sql = new StringBuilder(
-            "SELECT COUNT(*) FROM repair_reports rr WHERE rr.technician_id = ?");
-        if (status != null && !status.isEmpty()) sql.append(" AND rr.status = ?");
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+                "SELECT COUNT(*) FROM repair_reports rr WHERE rr.technician_id = ?");
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND rr.status = ?");
+        }
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql.toString())) {
             int idx = 1;
             ps.setInt(idx++, technicianId);
-            if (status != null && !status.isEmpty()) ps.setString(idx, status);
+            if (status != null && !status.isEmpty()) {
+                ps.setString(idx, status);
+            }
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() ? rs.getInt(1) : 0;
             }
@@ -181,8 +183,7 @@ public class RepairReportDAO {
     public List<RepairReport> findByServiceRequestId(int srId) throws Exception {
         String sql = BASE_SELECT + " WHERE rr.service_request_id = ? ORDER BY rr.created_at ASC";
         List<RepairReport> list = new ArrayList<>();
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, srId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -205,12 +206,11 @@ public class RepairReportDAO {
             WHERE wt.request_id = ?
               AND wt.status NOT IN ('Cancelled')
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, serviceRequestId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    int total     = rs.getInt("total");
+                    int total = rs.getInt("total");
                     int submitted = rs.getInt("submitted");
                     return total > 0 && total == submitted;
                 }
@@ -260,8 +260,8 @@ public class RepairReportDAO {
 
     public List<RepairReportPart> getPartsByReportId(Connection con, int reportId) throws SQLException {
         String sql = "SELECT rrp.*, pt.name AS part_name_db FROM repair_report_parts rrp "
-                   + "JOIN part_types pt ON pt.id = rrp.part_type_id "
-                   + "WHERE rrp.report_id = ? ORDER BY rrp.id";
+                + "JOIN part_types pt ON pt.id = rrp.part_type_id "
+                + "WHERE rrp.report_id = ? ORDER BY rrp.id";
         List<RepairReportPart> list = new ArrayList<>();
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, reportId);
@@ -292,13 +292,12 @@ public class RepairReportDAO {
               SUM(status='SUBMITTED') AS submitted
             FROM repair_reports WHERE technician_id = ?
             """;
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, technicianId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    m.put("total",     rs.getInt("total"));
-                    m.put("draft",     rs.getInt("draft"));
+                    m.put("total", rs.getInt("total"));
+                    m.put("draft", rs.getInt("draft"));
                     m.put("submitted", rs.getInt("submitted"));
                 }
             }
@@ -331,23 +330,58 @@ public class RepairReportDAO {
         rr.setLaborCost(rs.getBigDecimal("labor_cost"));
         rr.setStatus(rs.getString("status"));
         Timestamp sa = rs.getTimestamp("submitted_at");
-        if (sa != null) rr.setSubmittedAt(sa.toLocalDateTime());
+        if (sa != null) {
+            rr.setSubmittedAt(sa.toLocalDateTime());
+        }
         int inv = rs.getInt("invoice_id");
-        if (!rs.wasNull()) rr.setInvoiceId(inv);
+        if (!rs.wasNull()) {
+            rr.setInvoiceId(inv);
+        }
         Timestamp ca = rs.getTimestamp("created_at");
-        if (ca != null) rr.setCreatedAt(ca.toLocalDateTime());
+        if (ca != null) {
+            rr.setCreatedAt(ca.toLocalDateTime());
+        }
         Timestamp ua = rs.getTimestamp("updated_at");
-        if (ua != null) rr.setUpdatedAt(ua.toLocalDateTime());
+        if (ua != null) {
+            rr.setUpdatedAt(ua.toLocalDateTime());
+        }
         // Joined
-        try { rr.setTechnicianName(rs.getString("technician_name")); }      catch (Exception ignored) {}
-        try { rr.setTechnicianAvatarUrl(rs.getString("technician_avatar_url")); } catch (Exception ignored) {}
-        try { rr.setRequestCode(rs.getString("request_code")); }            catch (Exception ignored) {}
-        try { rr.setRequestTitle(rs.getString("request_title")); }          catch (Exception ignored) {}
-        try { rr.setRequestStatus(rs.getString("request_status")); }        catch (Exception ignored) {}
-        try { rr.setContractType(rs.getString("contract_type")); }          catch (Exception ignored) {}
-        try { rr.setCustomerName(rs.getString("customer_name")); }          catch (Exception ignored) {}
-        try { rr.setCustomerId(rs.getInt("customer_id")); }                 catch (Exception ignored) {}
-        try { rr.setInvoiceStatus(rs.getString("invoice_status")); } catch (Exception ignored) {}
+        try {
+            rr.setTechnicianName(rs.getString("technician_name"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setTechnicianAvatarUrl(rs.getString("technician_avatar_url"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setRequestCode(rs.getString("request_code"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setRequestTitle(rs.getString("request_title"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setRequestStatus(rs.getString("request_status"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setContractType(rs.getString("contract_type"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setCustomerName(rs.getString("customer_name"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setCustomerId(rs.getInt("customer_id"));
+        } catch (Exception ignored) {
+        }
+        try {
+            rr.setInvoiceStatus(rs.getString("invoice_status"));
+        } catch (Exception ignored) {
+        }
         return rr;
     }
 }
