@@ -11,13 +11,14 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  FIND methods
     // ─────────────────────────────────────────────────
-
     public User findByUsername(String username) throws SQLException {
         String sql = "SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.username = ? AND u.auth_provider = 'LOCAL'";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRow(rs);
+            if (rs.next()) {
+                return mapRow(rs);
+            }
         }
         return null;
     }
@@ -27,7 +28,9 @@ public class UserDAO {
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRow(rs);
+            if (rs.next()) {
+                return mapRow(rs);
+            }
         }
         return null;
     }
@@ -38,7 +41,9 @@ public class UserDAO {
             ps.setString(1, provider);
             ps.setString(2, providerId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRow(rs);
+            if (rs.next()) {
+                return mapRow(rs);
+            }
         }
         return null;
     }
@@ -48,7 +53,9 @@ public class UserDAO {
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRow(rs);
+            if (rs.next()) {
+                return mapRow(rs);
+            }
         }
         return null;
     }
@@ -58,7 +65,9 @@ public class UserDAO {
         List<User> list = new ArrayList<>();
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
         }
         return list;
     }
@@ -82,7 +91,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  INSERT
     // ─────────────────────────────────────────────────
-
     public int insert(User u) throws SQLException {
         String sql = "INSERT INTO users (full_name, email, phone, username, password, auth_provider, provider_id, avatar_url, role_id, active) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -98,7 +106,9 @@ public class UserDAO {
             ps.setBoolean(10, u.isActive());
             ps.executeUpdate();
             ResultSet keys = ps.getGeneratedKeys();
-            if (keys.next()) return keys.getInt(1);
+            if (keys.next()) {
+                return keys.getInt(1);
+            }
         }
         return -1;
     }
@@ -106,7 +116,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  UPDATE — core (admin: role, active, email)
     // ─────────────────────────────────────────────────
-
     public void update(User u) throws SQLException {
         String sql = "UPDATE users SET full_name=?, email=?, phone=?, role_id=?, active=? WHERE id=?";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -123,7 +132,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  UPDATE — basic profile (name, phone)
     // ─────────────────────────────────────────────────
-
     public void updateBasicInfo(User u) throws SQLException {
         String sql = "UPDATE users SET full_name=?, phone=? WHERE id=?";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -137,7 +145,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  UPDATE — extended personal info (profile page)
     // ─────────────────────────────────────────────────
-
     public void updatePersonalInfo(User u) throws SQLException {
         // Auto-build address_full from components
         String addressFull = buildAddressFull(u);
@@ -194,7 +201,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  UPDATE — password & avatar
     // ─────────────────────────────────────────────────
-
     public void updatePassword(int userId, String hashedPassword) throws SQLException {
         String sql = "UPDATE users SET password = ? WHERE id = ?";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -216,7 +222,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  DELETE
     // ─────────────────────────────────────────────────
-
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -228,12 +233,13 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  COUNT
     // ─────────────────────────────────────────────────
-
     public int countAll() throws SQLException {
         String sql = "SELECT COUNT(*) FROM users";
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         }
         return 0;
     }
@@ -241,17 +247,18 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  FILTER / PAGINATE
     // ─────────────────────────────────────────────────
-
     public List<User> findWithFilter(String keyword, String status, String roleName, int page, int pageSize) throws SQLException {
         StringBuilder sql = new StringBuilder(
-            "SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE 1=1"
+                "SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE 1=1"
         );
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
             sql.append(" AND (u.username LIKE ? OR u.email LIKE ? OR u.full_name LIKE ?)");
             String kw = "%" + keyword.trim() + "%";
-            params.add(kw); params.add(kw); params.add(kw);
+            params.add(kw);
+            params.add(kw);
+            params.add(kw);
         }
         if (status != null && !status.isEmpty()) {
             sql.append(" AND u.active = ?");
@@ -267,23 +274,29 @@ public class UserDAO {
 
         List<User> list = new ArrayList<>();
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
         }
         return list;
     }
 
     public int countWithFilter(String keyword, String status, String roleName) throws SQLException {
         StringBuilder sql = new StringBuilder(
-            "SELECT COUNT(*) FROM users u JOIN roles r ON u.role_id = r.id WHERE 1=1"
+                "SELECT COUNT(*) FROM users u JOIN roles r ON u.role_id = r.id WHERE 1=1"
         );
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
             sql.append(" AND (u.username LIKE ? OR u.email LIKE ? OR u.full_name LIKE ?)");
             String kw = "%" + keyword.trim() + "%";
-            params.add(kw); params.add(kw); params.add(kw);
+            params.add(kw);
+            params.add(kw);
+            params.add(kw);
         }
         if (status != null && !status.isEmpty()) {
             sql.append(" AND u.active = ?");
@@ -295,9 +308,13 @@ public class UserDAO {
         }
 
         try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) ps.setObject(i + 1, params.get(i));
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         }
         return 0;
     }
@@ -305,7 +322,6 @@ public class UserDAO {
     // ─────────────────────────────────────────────────
     //  INTERNAL HELPERS
     // ─────────────────────────────────────────────────
-
     private String buildAddressFull(User u) {
         StringBuilder sb = new StringBuilder();
         append(sb, u.getAddressStreet());
@@ -317,7 +333,9 @@ public class UserDAO {
 
     private void append(StringBuilder sb, String part) {
         if (part != null && !part.isBlank()) {
-            if (sb.length() > 0) sb.append(", ");
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
             sb.append(part.trim());
         }
     }
@@ -349,7 +367,9 @@ public class UserDAO {
         // Personal info
         u.setHometown(safeGetString(rs, "hometown"));
         java.sql.Date dob = safeGetDate(rs, "date_of_birth");
-        if (dob != null) u.setDateOfBirth(dob.toLocalDate());
+        if (dob != null) {
+            u.setDateOfBirth(dob.toLocalDate());
+        }
         u.setGender(safeGetString(rs, "gender"));
         u.setNationalId(safeGetString(rs, "national_id"));
 
@@ -365,12 +385,22 @@ public class UserDAO {
         return u;
     }
 
-    /** Returns null instead of throwing if column doesn't exist yet */
+    /**
+     * Returns null instead of throwing if column doesn't exist yet
+     */
     private String safeGetString(ResultSet rs, String col) {
-        try { return rs.getString(col); } catch (SQLException e) { return null; }
+        try {
+            return rs.getString(col);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     private java.sql.Date safeGetDate(ResultSet rs, String col) {
-        try { return rs.getDate(col); } catch (SQLException e) { return null; }
+        try {
+            return rs.getDate(col);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }
