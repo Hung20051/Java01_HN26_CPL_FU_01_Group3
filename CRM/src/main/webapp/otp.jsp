@@ -22,7 +22,11 @@
                 --danger:      #f87171;
                 --success:     #34d399;
             }
-            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
             body {
                 font-family: 'Sora', sans-serif;
                 background: var(--navy);
@@ -31,9 +35,16 @@
                 display: flex;
                 flex-direction: column;
             }
-            ::-webkit-scrollbar { width: 5px; }
-            ::-webkit-scrollbar-track { background: var(--navy); }
-            ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+            ::-webkit-scrollbar {
+                width: 5px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--navy);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--accent);
+                border-radius: 4px;
+            }
 
             /* ── NAVBAR ── */
             .navbar {
@@ -47,31 +58,59 @@
                 z-index: 10;
             }
             .navbar-brand {
-                display: flex; align-items: center; gap: 10px;
-                font-size: 1.1rem; font-weight: 700;
-                color: white; text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: white;
+                text-decoration: none;
             }
             .brand-icon {
-                width: 36px; height: 36px;
+                width: 36px;
+                height: 36px;
                 background: linear-gradient(135deg, var(--accent), var(--accent-2));
                 border-radius: 10px;
-                display: flex; align-items: center; justify-content: center;
-                color: white; font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 0.85rem;
                 box-shadow: 0 4px 12px var(--accent-glow);
             }
-            .navbar-links { display: flex; align-items: center; gap: 20px; }
-            .nav-link { font-size: 0.82rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.25s; }
-            .nav-link:hover { color: white; }
+            .navbar-links {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+            .nav-link {
+                font-size: 0.82rem;
+                font-weight: 500;
+                color: var(--muted);
+                text-decoration: none;
+                transition: color 0.25s;
+            }
+            .nav-link:hover {
+                color: white;
+            }
             .btn-nav {
-                display: inline-flex; align-items: center; gap: 7px;
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
                 padding: 8px 18px;
                 background: rgba(79,126,248,0.15);
                 border: 1px solid rgba(79,126,248,0.3);
-                color: var(--accent-2); text-decoration: none;
-                font-size: 0.82rem; font-weight: 600;
-                border-radius: 100px; transition: all 0.25s;
+                color: var(--accent-2);
+                text-decoration: none;
+                font-size: 0.82rem;
+                font-weight: 600;
+                border-radius: 100px;
+                transition: all 0.25s;
             }
-            .btn-nav:hover { background: rgba(79,126,248,0.25); color: white; }
+            .btn-nav:hover {
+                background: rgba(79,126,248,0.25);
+                color: white;
+            }
 
             /* ── PAGE WRAP ── */
             .page-wrap {
@@ -86,24 +125,34 @@
 
             /* Orbs */
             .orb {
-                position: absolute; border-radius: 50%;
-                filter: blur(110px); pointer-events: none;
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(110px);
+                pointer-events: none;
             }
             .orb-1 {
-                width: 500px; height: 500px;
+                width: 500px;
+                height: 500px;
                 background: radial-gradient(circle, rgba(79,126,248,0.2) 0%, transparent 70%);
-                top: -120px; left: -80px;
+                top: -120px;
+                left: -80px;
                 animation: orbFloat 11s ease-in-out infinite;
             }
             .orb-2 {
-                width: 400px; height: 400px;
+                width: 400px;
+                height: 400px;
                 background: radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 70%);
-                bottom: -80px; right: 5%;
+                bottom: -80px;
+                right: 5%;
                 animation: orbFloat 14s ease-in-out infinite reverse;
             }
             @keyframes orbFloat {
-                0%,100% { transform: translate(0,0); }
-                50%      { transform: translate(22px,-28px); }
+                0%,100% {
+                    transform: translate(0,0);
+                }
+                50%      {
+                    transform: translate(22px,-28px);
+                }
             }
 
             /* ── CARD ── */
@@ -124,17 +173,26 @@
                 animation: cardIn 0.6s cubic-bezier(.4,0,.2,1) both;
             }
             @keyframes cardIn {
-                from { opacity: 0; transform: translateY(28px) scale(0.97); }
-                to   { opacity: 1; transform: translateY(0) scale(1); }
+                from {
+                    opacity: 0;
+                    transform: translateY(28px) scale(0.97);
+                }
+                to   {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
             }
 
             /* Icon circle */
             .icon-circle {
-                width: 68px; height: 68px;
+                width: 68px;
+                height: 68px;
                 border-radius: 20px;
                 background: rgba(79,126,248,0.12);
                 border: 1px solid rgba(79,126,248,0.25);
-                display: flex; align-items: center; justify-content: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 font-size: 1.6rem;
                 color: var(--accent-2);
                 margin: 0 auto 22px;
@@ -142,38 +200,67 @@
                 animation: iconPulse 3s ease-in-out infinite;
             }
             @keyframes iconPulse {
-                0%,100% { box-shadow: 0 8px 24px rgba(79,126,248,0.15); }
-                50%      { box-shadow: 0 8px 36px rgba(79,126,248,0.35); }
+                0%,100% {
+                    box-shadow: 0 8px 24px rgba(79,126,248,0.15);
+                }
+                50%      {
+                    box-shadow: 0 8px 36px rgba(79,126,248,0.35);
+                }
             }
 
             .card-title {
-                font-size: 1.65rem; font-weight: 800;
-                color: white; letter-spacing: -0.5px;
-                text-align: center; margin-bottom: 8px;
+                font-size: 1.65rem;
+                font-weight: 800;
+                color: white;
+                letter-spacing: -0.5px;
+                text-align: center;
+                margin-bottom: 8px;
             }
             .card-sub {
-                font-size: 0.83rem; color: var(--muted);
-                font-weight: 300; line-height: 1.7;
-                text-align: center; margin-bottom: 28px;
+                font-size: 0.83rem;
+                color: var(--muted);
+                font-weight: 300;
+                line-height: 1.7;
+                text-align: center;
+                margin-bottom: 28px;
             }
-            .card-sub span { color: var(--accent-2); font-weight: 500; }
+            .card-sub span {
+                color: var(--accent-2);
+                font-weight: 500;
+            }
 
             /* Alert */
             .alert {
-                display: flex; align-items: center; gap: 9px;
-                padding: 11px 14px; border-radius: 10px;
-                font-size: 0.82rem; font-weight: 500; margin-bottom: 18px;
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                padding: 11px 14px;
+                border-radius: 10px;
+                font-size: 0.82rem;
+                font-weight: 500;
+                margin-bottom: 18px;
             }
-            .alert-error { background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.25); color: var(--danger); }
+            .alert-error {
+                background: rgba(248,113,113,0.12);
+                border: 1px solid rgba(248,113,113,0.25);
+                color: var(--danger);
+            }
 
             /* OTP input group */
             .form-label {
-                display: block; font-size: 0.72rem; font-weight: 600;
-                color: var(--text-2); margin-bottom: 10px;
-                letter-spacing: 0.5px; text-transform: uppercase;
+                display: block;
+                font-size: 0.72rem;
+                font-weight: 600;
+                color: var(--text-2);
+                margin-bottom: 10px;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
                 text-align: center;
             }
-            .required { color: var(--danger); margin-left: 2px; }
+            .required {
+                color: var(--danger);
+                margin-left: 2px;
+            }
 
             /* 6-box OTP inputs */
             .otp-boxes {
@@ -183,19 +270,23 @@
                 margin-bottom: 6px;
             }
             .otp-box {
-                width: 52px; height: 58px;
+                width: 52px;
+                height: 58px;
                 background: rgba(255,255,255,0.05);
                 border: 1px solid var(--border);
                 border-radius: 14px;
                 color: white;
                 font-family: 'Sora', sans-serif;
-                font-size: 1.4rem; font-weight: 700;
+                font-size: 1.4rem;
+                font-weight: 700;
                 text-align: center;
                 outline: none;
                 transition: all 0.25s;
                 caret-color: var(--accent-2);
             }
-            .otp-box::placeholder { color: rgba(255,255,255,0.15); }
+            .otp-box::placeholder {
+                color: rgba(255,255,255,0.15);
+            }
             .otp-box:focus {
                 border-color: var(--border-focus);
                 background: rgba(79,126,248,0.1);
@@ -208,63 +299,103 @@
             }
 
             /* Hidden real input for form submit */
-            #otpHidden { display: none; }
+            #otpHidden {
+                display: none;
+            }
 
             /* Progress dots */
             .otp-progress {
-                display: flex; justify-content: center; gap: 6px;
+                display: flex;
+                justify-content: center;
+                gap: 6px;
                 margin: 14px 0 22px;
             }
             .prog-dot {
-                width: 6px; height: 6px; border-radius: 50%;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
                 background: var(--border);
                 transition: all 0.3s;
             }
-            .prog-dot.active { background: var(--accent-2); transform: scale(1.3); }
+            .prog-dot.active {
+                background: var(--accent-2);
+                transform: scale(1.3);
+            }
 
             /* Submit button */
             .btn-primary {
-                width: 100%; padding: 14px;
+                width: 100%;
+                padding: 14px;
                 background: linear-gradient(135deg, var(--accent), var(--accent-2));
-                border: none; border-radius: 12px;
-                color: white; font-family: 'Sora', sans-serif;
-                font-size: 0.9rem; font-weight: 700; cursor: pointer;
+                border: none;
+                border-radius: 12px;
+                color: white;
+                font-family: 'Sora', sans-serif;
+                font-size: 0.9rem;
+                font-weight: 700;
+                cursor: pointer;
                 transition: all 0.3s cubic-bezier(.4,0,.2,1);
                 box-shadow: 0 6px 24px var(--accent-glow);
-                display: flex; align-items: center; justify-content: center; gap: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
             }
             .btn-primary:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 14px 36px rgba(79,126,248,0.5);
             }
-            .btn-primary:active { transform: translateY(0); }
+            .btn-primary:active {
+                transform: translateY(0);
+            }
             .btn-primary:disabled {
-                opacity: 0.5; cursor: not-allowed; transform: none;
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none;
                 box-shadow: none;
             }
 
             /* Divider */
             .divider {
-                display: flex; align-items: center; gap: 12px;
-                margin: 20px 0; color: var(--muted); font-size: 0.75rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 20px 0;
+                color: var(--muted);
+                font-size: 0.75rem;
             }
-            .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
 
             /* Resend row */
             .resend-row {
-                display: flex; flex-direction: column; align-items: center; gap: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
             }
-            .resend-text { font-size: 0.8rem; color: var(--muted); }
+            .resend-text {
+                font-size: 0.8rem;
+                color: var(--muted);
+            }
 
             .btn-resend {
-                display: inline-flex; align-items: center; gap: 7px;
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
                 padding: 10px 22px;
                 background: rgba(255,255,255,0.05);
                 border: 1px solid var(--border);
                 border-radius: 10px;
                 color: var(--text-2);
                 font-family: 'Sora', sans-serif;
-                font-size: 0.82rem; font-weight: 600; cursor: pointer;
+                font-size: 0.82rem;
+                font-weight: 600;
+                cursor: pointer;
                 transition: all 0.25s;
             }
             .btn-resend:not(:disabled):hover {
@@ -273,31 +404,47 @@
                 color: var(--accent-2);
             }
             .btn-resend:disabled {
-                opacity: 0.45; cursor: not-allowed;
+                opacity: 0.45;
+                cursor: not-allowed;
             }
 
             /* Countdown ring */
             .countdown-wrap {
-                display: flex; align-items: center; gap: 8px;
-                font-size: 0.78rem; color: var(--muted);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.78rem;
+                color: var(--muted);
             }
             .countdown-badge {
-                display: inline-flex; align-items: center; justify-content: center;
-                min-width: 40px; padding: 3px 10px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 40px;
+                padding: 3px 10px;
                 background: rgba(79,126,248,0.1);
                 border: 1px solid rgba(79,126,248,0.2);
                 border-radius: 100px;
-                color: var(--accent-2); font-weight: 700; font-size: 0.8rem;
+                color: var(--accent-2);
+                font-weight: 700;
+                font-size: 0.8rem;
             }
 
             .back-link {
-                display: block; text-align: center;
+                display: block;
+                text-align: center;
                 margin-top: 18px;
-                font-size: 0.78rem; color: var(--muted);
-                text-decoration: none; transition: color 0.2s;
+                font-size: 0.78rem;
+                color: var(--muted);
+                text-decoration: none;
+                transition: color 0.2s;
             }
-            .back-link:hover { color: var(--accent-2); }
-            .back-link i { margin-right: 4px; }
+            .back-link:hover {
+                color: var(--accent-2);
+            }
+            .back-link i {
+                margin-right: 4px;
+            }
         </style>
     </head>
     <body>
@@ -329,9 +476,9 @@
                 </div>
 
                 <% String error = (String) request.getAttribute("error"); %>
-                <% if (error != null) { %>
-                <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
-                <% } %>
+                <% if (error != null) {%>
+                <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error%></div>
+                <% }%>
 
                 <form action="otp" method="post" id="otpForm">
                     <input type="hidden" name="action" value="verify">
@@ -381,9 +528,9 @@
         <script>
             // ── OTP box navigation ──
             const boxes = document.querySelectorAll('.otp-box');
-            const dots  = document.querySelectorAll('.prog-dot');
+            const dots = document.querySelectorAll('.prog-dot');
             const verifyBtn = document.getElementById('verifyBtn');
-            const hidden    = document.getElementById('otpHidden');
+            const hidden = document.getElementById('otpHidden');
 
             function updateState() {
                 boxes.forEach((b, i) => {
@@ -397,22 +544,26 @@
 
             boxes.forEach((box, i) => {
                 box.addEventListener('input', e => {
-                    const val = e.target.value.replace(/\D/g,'');
+                    const val = e.target.value.replace(/\D/g, '');
                     e.target.value = val.slice(-1);
                     updateState();
-                    if (val && i < 5) boxes[i+1].focus();
+                    if (val && i < 5)
+                        boxes[i + 1].focus();
                 });
                 box.addEventListener('keydown', e => {
                     if (e.key === 'Backspace' && !box.value && i > 0) {
-                        boxes[i-1].focus();
-                        boxes[i-1].value = '';
+                        boxes[i - 1].focus();
+                        boxes[i - 1].value = '';
                         updateState();
                     }
                 });
                 box.addEventListener('paste', e => {
                     e.preventDefault();
-                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-                    paste.split('').forEach((ch, j) => { if (boxes[i+j]) boxes[i+j].value = ch; });
+                    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                    paste.split('').forEach((ch, j) => {
+                        if (boxes[i + j])
+                            boxes[i + j].value = ch;
+                    });
                     updateState();
                     const next = Math.min(i + paste.length, 5);
                     boxes[next].focus();
@@ -427,7 +578,7 @@
             // ── Countdown timer ──
             let timeLeft = 60;
             const btn = document.getElementById('resendBtn');
-            const cd  = document.getElementById('countdown');
+            const cd = document.getElementById('countdown');
             const cdWrap = document.getElementById('countdownWrap');
 
             const timer = setInterval(() => {
@@ -441,16 +592,16 @@
             }, 1000);
 
             function resendOtp() {
-                fetch('otp?action=resend', { method: 'POST' })
-                    .then(r => r.json())
-                    .then(d => {
-                        if (d.success) {
-                            alert('A new OTP code has been sent!');
-                            location.reload();
-                        } else {
-                            alert(d.message || 'An error occurred!');
-                        }
-                    });
+                fetch('otp?action=resend', {method: 'POST'})
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.success) {
+                                alert('A new OTP code has been sent!');
+                                location.reload();
+                            } else {
+                                alert(d.message || 'An error occurred!');
+                            }
+                        });
             }
         </script>
     </body>
