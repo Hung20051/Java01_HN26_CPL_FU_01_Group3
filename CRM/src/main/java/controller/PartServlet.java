@@ -52,21 +52,54 @@ public class PartServlet extends HttpServlet {
             return;
         }
 
-        String action = req.getParameter("action");
+        String action    = req.getParameter("action");
+        boolean wantJson = isJson(req);
 
         try {
-            // ── DETAIL PAGE (trang riêng cho storekeeper) ───────────────────
+            // ── DETAIL PAGE ─────────────────────────────────────────────────
             if ("detailPage".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 PartType pt = partDAO.findTypeById(id);
                 if (pt == null) {
+                    if (wantJson) { writeError(resp, 404, "Part not found"); return; }
                     resp.sendRedirect(req.getContextPath() + "/numberPart");
                     return;
                 }
+
+                List<model.PartUnit> units = partDAO.findUnitsByTypeId(id);
+
+                if (wantJson) {
+                    resp.setContentType("application/json;charset=UTF-8");
+                    StringBuilder json = new StringBuilder();
+                    json.append("{");
+                    json.append("\"id\":").append(pt.getId()).append(",");
+                    json.append("\"name\":").append(jsonStr(pt.getName())).append(",");
+                    json.append("\"categoryId\":").append(pt.getCategoryId()).append(",");
+                    json.append("\"categoryName\":").append(jsonStr(pt.getCategoryName())).append(",");
+                    json.append("\"description\":").append(jsonStr(pt.getDescription())).append(",");
+                    json.append("\"unitPrice\":").append(pt.getUnitPrice()).append(",");
+                    json.append("\"totalUnits\":").append(pt.getTotalUnits()).append(",");
+                    json.append("\"availableUnits\":").append(pt.getAvailableUnits()).append(",");
+                    json.append("\"imageUrl\":").append(jsonStr(pt.getImageUrl())).append(",");
+                    json.append("\"avgRating\":").append(reviewDAO.getAverageRating("PART", id)).append(",");
+                    json.append("\"units\":[");
+                    for (int i = 0; i < units.size(); i++) {
+                        model.PartUnit u = units.get(i);
+                        if (i > 0) json.append(",");
+                        json.append("{");
+                        json.append("\"id\":").append(u.getId()).append(",");
+                        json.append("\"partTypeName\":").append(jsonStr(u.getPartTypeName())).append(",");
+                        json.append("\"status\":").append(jsonStr(u.getStatus()));
+                        json.append("}");
+                    }
+                    json.append("]}");
+                    resp.getWriter().write(json.toString());
+                    return;
+                }
+
                 req.setAttribute("part",       pt);
-                req.setAttribute("units",      partDAO.findUnitsByTypeId(id));
-                req.setAttribute("categories", categoryDAO.findByType("PART"));
-                // Load review data
+                req.setAttribute("units",       units);
+                req.setAttribute("categories",  categoryDAO.findByType("PART"));
                 req.setAttribute("reviews",     reviewDAO.getReviews("PART", id));
                 req.setAttribute("avgRating",   reviewDAO.getAverageRating("PART", id));
                 req.setAttribute("ratingDist",  reviewDAO.getRatingDistribution("PART", id));
@@ -74,14 +107,14 @@ public class PartServlet extends HttpServlet {
                 return;
             }
 
-            // ── DETAIL (inline panel trong numberPart.jsp) ──────────────────
+            // ── DETAIL inline panel — giữ nguyên, không thêm JSON ───────────
             if ("detail".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("detailPart", partDAO.findTypeById(id));
                 req.setAttribute("units",      partDAO.findUnitsByTypeId(id));
             }
 
-            // Luôn load danh sách
+            // ── LIST ─────────────────────────────────────────────────────────
             String keyword    = req.getParameter("keyword");
             String categoryId = req.getParameter("categoryId");
             String sortBy     = req.getParameter("sortBy");
@@ -92,7 +125,35 @@ public class PartServlet extends HttpServlet {
             int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
             if (totalPages < 1) totalPages = 1;
 
-            req.setAttribute("parts",       partDAO.findAllTypes(keyword, categoryId, sortBy, page, PAGE_SIZE));
+            List<PartType> parts = partDAO.findAllTypes(keyword, categoryId, sortBy, page, PAGE_SIZE);
+
+            if (wantJson) {
+                resp.setContentType("application/json;charset=UTF-8");
+                StringBuilder json = new StringBuilder();
+                json.append("{");
+                json.append("\"page\":").append(page).append(",");
+                json.append("\"totalPages\":").append(totalPages).append(",");
+                json.append("\"total\":").append(total).append(",");
+                json.append("\"parts\":[");
+                for (int i = 0; i < parts.size(); i++) {
+                    PartType pt = parts.get(i);
+                    if (i > 0) json.append(",");
+                    json.append("{");
+                    json.append("\"id\":").append(pt.getId()).append(",");
+                    json.append("\"name\":").append(jsonStr(pt.getName())).append(",");
+                    json.append("\"categoryName\":").append(jsonStr(pt.getCategoryName())).append(",");
+                    json.append("\"unitPrice\":").append(pt.getUnitPrice()).append(",");
+                    json.append("\"totalUnits\":").append(pt.getTotalUnits()).append(",");
+                    json.append("\"availableUnits\":").append(pt.getAvailableUnits()).append(",");
+                    json.append("\"imageUrl\":").append(jsonStr(pt.getImageUrl()));
+                    json.append("}");
+                }
+                json.append("]}");
+                resp.getWriter().write(json.toString());
+                return;
+            }
+
+            req.setAttribute("parts",       parts);
             req.setAttribute("categories",  categoryDAO.findByType("PART"));
             req.setAttribute("keyword",     keyword    != null ? keyword    : "");
             req.setAttribute("categoryId",  categoryId != null ? categoryId : "");
@@ -100,18 +161,17 @@ public class PartServlet extends HttpServlet {
             req.setAttribute("currentPage", page);
             req.setAttribute("totalPages",  totalPages);
             req.setAttribute("total",       total);
-
             req.getRequestDispatcher("/numberPart.jsp").forward(req, resp);
 
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMessage", "Lỗi tải dữ liệu: " + e.getMessage());
             try {
-                req.setAttribute("parts",      new ArrayList<>());
-                req.setAttribute("categories", new ArrayList<>());
-                req.setAttribute("keyword",    "");
-                req.setAttribute("categoryId", "");
-                req.setAttribute("sortBy",     "");
+                req.setAttribute("parts",       new ArrayList<>());
+                req.setAttribute("categories",  new ArrayList<>());
+                req.setAttribute("keyword",     "");
+                req.setAttribute("categoryId",  "");
+                req.setAttribute("sortBy",      "");
                 req.setAttribute("currentPage", 1);
                 req.setAttribute("totalPages",  1);
                 req.setAttribute("total",       0);
@@ -121,7 +181,7 @@ public class PartServlet extends HttpServlet {
     }
 
     // =========================================================================
-    //  POST
+    //  POST — giữ nguyên hoàn toàn
     // =========================================================================
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -139,7 +199,6 @@ public class PartServlet extends HttpServlet {
         try {
             switch (action != null ? action : "") {
 
-                // ── CREATE ────────────────────────────────────────────────
                 case "create": {
                     String name  = req.getParameter("name");
                     int    catId = Integer.parseInt(req.getParameter("categoryId"));
@@ -176,7 +235,6 @@ public class PartServlet extends HttpServlet {
                     break;
                 }
 
-                // ── EDIT ──────────────────────────────────────────────────
                 case "edit": {
                     int    id    = Integer.parseInt(req.getParameter("id"));
                     String name  = req.getParameter("name");
@@ -203,7 +261,6 @@ public class PartServlet extends HttpServlet {
                     partDAO.updateType(pt);
                     req.getSession().setAttribute("flashSuccess", "Cập nhật linh kiện thành công!");
 
-                    // Nếu edit từ trang detail → redirect về detail
                     String referer = req.getParameter("referer");
                     if ("detailPage".equals(referer)) {
                         resp.sendRedirect(req.getContextPath() + "/numberPart?action=detailPage&id=" + id);
@@ -212,7 +269,6 @@ public class PartServlet extends HttpServlet {
                     break;
                 }
 
-                // ── DELETE ────────────────────────────────────────────────
                 case "delete": {
                     int id = Integer.parseInt(req.getParameter("id"));
                     PartType existing = partDAO.findTypeById(id);
@@ -225,13 +281,11 @@ public class PartServlet extends HttpServlet {
                     break;
                 }
 
-                // ── IMPORT (nhập thêm units) ──────────────────────────────
                 case "import": {
                     int partTypeId = Integer.parseInt(req.getParameter("partTypeId"));
                     int qty        = Integer.parseInt(req.getParameter("quantity"));
                     if (qty < 1 || qty > 100) {
                         req.getSession().setAttribute("flashError", "Số lượng nhập phải từ 1–100!");
-                        // Nếu từ detailPage → redirect về đó
                         String referer = req.getParameter("referer");
                         if ("detailPage".equals(referer)) {
                             resp.sendRedirect(req.getContextPath() + "/numberPart?action=detailPage&id=" + partTypeId);
@@ -242,7 +296,6 @@ public class PartServlet extends HttpServlet {
                     partDAO.insertUnits(partTypeId, qty, currentUser.getId());
                     req.getSession().setAttribute("flashSuccess", "Nhập kho thành công " + qty + " unit!");
 
-                    // Nếu từ detailPage → redirect về đó
                     String refImport = req.getParameter("referer");
                     if ("detailPage".equals(refImport)) {
                         resp.sendRedirect(req.getContextPath() + "/numberPart?action=detailPage&id=" + partTypeId);
@@ -251,7 +304,6 @@ public class PartServlet extends HttpServlet {
                     break;
                 }
 
-                // ── REDUCE STOCK (xóa N units AVAILABLE) ─────────────────
                 case "reduceStock": {
                     int partTypeId = Integer.parseInt(req.getParameter("partTypeId"));
                     int qty        = Integer.parseInt(req.getParameter("reduceQty"));
@@ -262,7 +314,6 @@ public class PartServlet extends HttpServlet {
                         return;
                     }
 
-                    // Kiểm tra không giảm quá số AVAILABLE hiện có
                     PartType current = partDAO.findTypeById(partTypeId);
                     if (current == null) {
                         req.getSession().setAttribute("flashError", "Không tìm thấy linh kiện!");
@@ -298,6 +349,23 @@ public class PartServlet extends HttpServlet {
     // =========================================================================
     //  HELPERS
     // =========================================================================
+
+    private boolean isJson(HttpServletRequest req) {
+        String accept = req.getHeader("Accept");
+        return accept != null && accept.contains("application/json");
+    }
+
+    private void writeError(HttpServletResponse resp, int status, String msg) throws IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        resp.setStatus(status);
+        resp.getWriter().write("{\"error\":\"" + msg + "\"}");
+    }
+
+    private String jsonStr(String s) {
+        if (s == null) return "null";
+        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+    }
+
     private String resolveImage(HttpServletRequest req, String mode)
             throws IOException, ServletException {
 

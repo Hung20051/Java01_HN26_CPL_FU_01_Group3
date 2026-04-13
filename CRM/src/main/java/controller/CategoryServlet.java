@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class CategoryServlet extends HttpServlet {
     private final CategoryDAO dao = new CategoryDAO();
@@ -15,7 +16,30 @@ public class CategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            req.setAttribute("categories", dao.findAll());
+            List<Category> categories = dao.findAll();
+
+            // ── JSON response ────────────────────────────────────────
+            String accept = req.getHeader("Accept");
+            if (accept != null && accept.contains("application/json")) {
+                resp.setContentType("application/json;charset=UTF-8");
+                StringBuilder json = new StringBuilder();
+                json.append("{\"total\":").append(categories.size()).append(",\"categories\":[");
+                for (int i = 0; i < categories.size(); i++) {
+                    Category c = categories.get(i);
+                    if (i > 0) json.append(",");
+                    json.append("{");
+                    json.append("\"id\":").append(c.getId()).append(",");
+                    json.append("\"name\":\"").append(safe(c.getName())).append("\",");
+                    json.append("\"type\":\"").append(safe(c.getType())).append("\"");
+                    json.append("}");
+                }
+                json.append("]}");
+                resp.getWriter().print(json.toString());
+                return;
+            }
+            // ── hết JSON ─────────────────────────────────────────────
+
+            req.setAttribute("categories", categories);
             req.getRequestDispatcher("/categoryManage.jsp").forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,5 +93,9 @@ public class CategoryServlet extends HttpServlet {
             req.getSession().setAttribute("flashError", "Lỗi: " + e.getMessage());
         }
         resp.sendRedirect(req.getContextPath() + "/categoryManage");
+    }
+
+    private String safe(String s) {
+        return s != null ? s.replace("\\", "\\\\").replace("\"", "\\\"") : "";
     }
 }

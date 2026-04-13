@@ -71,28 +71,67 @@ public class UserServlet extends HttpServlet {
     // ─────────────────────────────────────────────────
 
     private void showList(HttpServletRequest req, HttpServletResponse resp)
-            throws Exception {
-        String keyword = req.getParameter("keyword");
-        String status  = req.getParameter("status");
-        String role    = req.getParameter("role");
-        String pageStr = req.getParameter("page");
-        int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
+        throws Exception {
+    String keyword = req.getParameter("keyword");
+    String status  = req.getParameter("status");
+    String role    = req.getParameter("role");
+    String pageStr = req.getParameter("page");
+    int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
 
-        int total      = userDAO.countWithFilter(keyword, status, role);
-        int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-        List<User> users = userDAO.findWithFilter(keyword, status, role, page, PAGE_SIZE);
-        List<Role> roles = roleDAO.findAll();
+    int total      = userDAO.countWithFilter(keyword, status, role);
+    int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+    List<User> users = userDAO.findWithFilter(keyword, status, role, page, PAGE_SIZE);
+    List<Role> roles = roleDAO.findAll();
 
-        req.setAttribute("users",       users);
-        req.setAttribute("roles",       roles);
-        req.setAttribute("total",       total);
-        req.setAttribute("currentPage", page);
-        req.setAttribute("totalPages",  totalPages);
-        req.setAttribute("keyword",     keyword != null ? keyword : "");
-        req.setAttribute("status",      status  != null ? status  : "");
-        req.setAttribute("role",        role    != null ? role    : "");
-        req.getRequestDispatcher("/admin-users.jsp").forward(req, resp);
+    // ── CHECK JSON ──────────────────────────────────
+    String accept = req.getHeader("Accept");
+    if (accept != null && accept.contains("application/json")) {
+        resp.setContentType("application/json;charset=UTF-8");
+
+        StringBuilder json = new StringBuilder();
+        json.append("{");
+        json.append("\"page\":").append(page).append(",");
+        json.append("\"totalPages\":").append(totalPages).append(",");
+        json.append("\"total\":").append(total).append(",");
+        json.append("\"users\":[");
+        if (users != null) {
+            for (int i = 0; i < users.size(); i++) {
+                User u = users.get(i);
+                if (i > 0) json.append(",");
+                json.append("{");
+                json.append("\"id\":").append(u.getId()).append(",");
+                json.append("\"username\":\"").append(safe(u.getUsername())).append("\",");
+                json.append("\"fullName\":\"").append(safe(u.getFullName())).append("\",");
+                json.append("\"email\":\"").append(safe(u.getEmail())).append("\",");
+                json.append("\"phone\":\"").append(safe(u.getPhone())).append("\",");
+                json.append("\"role\":\"").append(safe(u.getRoleName())).append("\",");
+                json.append("\"active\":").append(u.isActive());
+                json.append("}");
+            }
+        }
+        json.append("]}");
+
+        resp.getWriter().print(json.toString());
+        return; // ← quan trọng: không forward JSP nữa
     }
+    // ── HẾT CHECK JSON ──────────────────────────────
+
+    // Logic cũ giữ nguyên
+    req.setAttribute("users",       users);
+    req.setAttribute("roles",       roles);
+    req.setAttribute("total",       total);
+    req.setAttribute("currentPage", page);
+    req.setAttribute("totalPages",  totalPages);
+    req.setAttribute("keyword",     keyword != null ? keyword : "");
+    req.setAttribute("status",      status  != null ? status  : "");
+    req.setAttribute("role",        role    != null ? role    : "");
+    req.getRequestDispatcher("/admin-users.jsp").forward(req, resp);
+}
+
+// Thêm helper này vào cuối class
+private String safe(String s) {
+    return s != null ? s.replace("\"", "\\\"") : "";
+}
 
     private void showEdit(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
