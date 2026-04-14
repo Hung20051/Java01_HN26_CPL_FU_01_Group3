@@ -23,8 +23,7 @@ import java.util.Locale;
 /**
  * URL: /admin/finance
  *
- * GET  → hiển thị trang tài chính
- * GET  ?export=excel → xuất file .xlsx
+ * GET → hiển thị trang tài chính GET ?export=excel → xuất file .xlsx
  */
 public class FinanceServlet extends HttpServlet {
 
@@ -44,11 +43,11 @@ public class FinanceServlet extends HttpServlet {
         }
 
         // ── Tham số lọc ───────────────────────────────────────────────────
-        String type     = nvl(req.getParameter("type"));
+        String type = nvl(req.getParameter("type"));
         String fromDate = nvl(req.getParameter("fromDate"));
-        String toDate   = nvl(req.getParameter("toDate"));
-        String keyword  = nvl(req.getParameter("keyword"));
-        String export   = nvl(req.getParameter("export"));
+        String toDate = nvl(req.getParameter("toDate"));
+        String keyword = nvl(req.getParameter("keyword"));
+        String export = nvl(req.getParameter("export"));
 
         try {
             // ── Export Excel ─────────────────────────────────────────────
@@ -59,39 +58,41 @@ public class FinanceServlet extends HttpServlet {
 
             // ── Phân trang ───────────────────────────────────────────────
             int page = 1;
-            try { page = Math.max(1, Integer.parseInt(req.getParameter("page"))); }
-            catch (Exception ignored) {}
+            try {
+                page = Math.max(1, Integer.parseInt(req.getParameter("page")));
+            } catch (Exception ignored) {
+            }
 
-            int total     = dao.countRows(type, fromDate, toDate, keyword);
+            int total = dao.countRows(type, fromDate, toDate, keyword);
             int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
 
             List<FinanceRow> rows = dao.getRows(type, fromDate, toDate, keyword, page, PAGE_SIZE);
 
             // ── Tổng quan ────────────────────────────────────────────────
-            BigDecimal totalSale   = dao.getTotalSaleRevenue();
+            BigDecimal totalSale = dao.getTotalSaleRevenue();
             BigDecimal totalRepair = dao.getTotalRepairRevenue();
-            BigDecimal totalAll    = totalSale.add(totalRepair);
-            BigDecimal unpaidAmt   = dao.getTotalUnpaidAmount();
-            int        unpaidCount = dao.countUnpaidInvoices();
+            BigDecimal totalAll = totalSale.add(totalRepair);
+            BigDecimal unpaidAmt = dao.getTotalUnpaidAmount();
+            int unpaidCount = dao.countUnpaidInvoices();
 
             // ── Dữ liệu chart (12 tháng) ─────────────────────────────────
             List<MonthlyRevenue> monthly = dao.getMonthlyRevenue(12);
 
             // ── Set attributes ───────────────────────────────────────────
-            req.setAttribute("rows",        rows);
-            req.setAttribute("totalSale",   totalSale);
+            req.setAttribute("rows", rows);
+            req.setAttribute("totalSale", totalSale);
             req.setAttribute("totalRepair", totalRepair);
-            req.setAttribute("totalAll",    totalAll);
-            req.setAttribute("unpaidAmt",   unpaidAmt);
+            req.setAttribute("totalAll", totalAll);
+            req.setAttribute("unpaidAmt", unpaidAmt);
             req.setAttribute("unpaidCount", unpaidCount);
-            req.setAttribute("monthly",     monthly);
-            req.setAttribute("total",       total);
-            req.setAttribute("page",        page);
-            req.setAttribute("totalPages",  totalPages);
-            req.setAttribute("type",        type);
-            req.setAttribute("fromDate",    fromDate);
-            req.setAttribute("toDate",      toDate);
-            req.setAttribute("keyword",     keyword);
+            req.setAttribute("monthly", monthly);
+            req.setAttribute("total", total);
+            req.setAttribute("page", page);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("type", type);
+            req.setAttribute("fromDate", fromDate);
+            req.setAttribute("toDate", toDate);
+            req.setAttribute("keyword", keyword);
 
             req.getRequestDispatcher("/admin-finance.jsp").forward(req, resp);
 
@@ -102,9 +103,8 @@ public class FinanceServlet extends HttpServlet {
     }
 
     // ── Export Excel ──────────────────────────────────────────────────────────
-
     private void exportExcel(HttpServletRequest req, HttpServletResponse resp,
-                              String type, String fromDate, String toDate, String keyword)
+            String type, String fromDate, String toDate, String keyword)
             throws Exception {
 
         List<FinanceRow> rows = dao.getAllRows(type, fromDate, toDate, keyword);
@@ -117,20 +117,19 @@ public class FinanceServlet extends HttpServlet {
         resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         resp.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
-        try (Workbook wb = new XSSFWorkbook();
-             OutputStream out = resp.getOutputStream()) {
+        try (Workbook wb = new XSSFWorkbook(); OutputStream out = resp.getOutputStream()) {
 
             // ── Sheet 1: Chi tiết giao dịch ───────────────────────────────
             Sheet sheet = wb.createSheet("Transaction Details");
-            sheet.setColumnWidth(0,  12 * 256);
-            sheet.setColumnWidth(1,  16 * 256);
-            sheet.setColumnWidth(2,  16 * 256);
-            sheet.setColumnWidth(3,  26 * 256);
-            sheet.setColumnWidth(4,  14 * 256);
-            sheet.setColumnWidth(5,  14 * 256);
-            sheet.setColumnWidth(6,  18 * 256);
-            sheet.setColumnWidth(7,  12 * 256);
-            sheet.setColumnWidth(8,  20 * 256);
+            sheet.setColumnWidth(0, 12 * 256);
+            sheet.setColumnWidth(1, 16 * 256);
+            sheet.setColumnWidth(2, 16 * 256);
+            sheet.setColumnWidth(3, 26 * 256);
+            sheet.setColumnWidth(4, 14 * 256);
+            sheet.setColumnWidth(5, 14 * 256);
+            sheet.setColumnWidth(6, 18 * 256);
+            sheet.setColumnWidth(7, 12 * 256);
+            sheet.setColumnWidth(8, 20 * 256);
 
             // Style header
             CellStyle headerStyle = wb.createCellStyle();
@@ -164,8 +163,8 @@ public class FinanceServlet extends HttpServlet {
 
             // Header row
             Row header = sheet.createRow(0);
-            String[] cols = {"#","Payment Code","Invoice Code","Customer",
-                             "Type","Method","Amount (VND)","Status","Date"};
+            String[] cols = {"#", "Payment Code", "Invoice Code", "Customer",
+                "Type", "Method", "Amount (VND)", "Status", "Date"};
             for (int i = 0; i < cols.length; i++) {
                 Cell cell = header.createCell(i);
                 cell.setCellValue(cols[i]);
@@ -173,10 +172,10 @@ public class FinanceServlet extends HttpServlet {
             }
 
             // Data rows
-            NumberFormat nf = NumberFormat.getInstance(new Locale("vi","VN"));
+            NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             int rowNum = 1;
-            BigDecimal sumSale   = BigDecimal.ZERO;
+            BigDecimal sumSale = BigDecimal.ZERO;
             BigDecimal sumRepair = BigDecimal.ZERO;
 
             for (FinanceRow r : rows) {
@@ -202,30 +201,45 @@ public class FinanceServlet extends HttpServlet {
 
                 // Cộng tổng
                 if ("SUCCESS".equals(r.status) && r.amount != null) {
-                    if ("PURCHASE".equals(r.invoiceType)) sumSale   = sumSale.add(r.amount);
-                    else                                   sumRepair = sumRepair.add(r.amount);
+                    if ("PURCHASE".equals(r.invoiceType)) {
+                        sumSale = sumSale.add(r.amount);
+                    } else {
+                        sumRepair = sumRepair.add(r.amount);
+                    }
                 }
             }
 
             // Dòng tổng kết
             Row sumRow = sheet.createRow(rowNum + 1);
             CellStyle totalStyle = wb.createCellStyle();
-            Font tf = wb.createFont(); tf.setBold(true);
+            Font tf = wb.createFont();
+            tf.setBold(true);
             totalStyle.setFont(tf);
             totalStyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
             totalStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-            Cell lbl1 = sumRow.createCell(5); lbl1.setCellValue("Total Sales:"); lbl1.setCellStyle(totalStyle);
-            Cell val1 = sumRow.createCell(6); val1.setCellValue(sumSale.doubleValue()); val1.setCellStyle(moneyStyle);
+            Cell lbl1 = sumRow.createCell(5);
+            lbl1.setCellValue("Total Sales:");
+            lbl1.setCellStyle(totalStyle);
+            Cell val1 = sumRow.createCell(6);
+            val1.setCellValue(sumSale.doubleValue());
+            val1.setCellStyle(moneyStyle);
 
             Row sumRow2 = sheet.createRow(rowNum + 2);
-            Cell lbl2 = sumRow2.createCell(5); lbl2.setCellValue("Total Repair:"); lbl2.setCellStyle(totalStyle);
-            Cell val2 = sumRow2.createCell(6); val2.setCellValue(sumRepair.doubleValue()); val2.setCellStyle(moneyStyle);
+            Cell lbl2 = sumRow2.createCell(5);
+            lbl2.setCellValue("Total Repair:");
+            lbl2.setCellStyle(totalStyle);
+            Cell val2 = sumRow2.createCell(6);
+            val2.setCellValue(sumRepair.doubleValue());
+            val2.setCellStyle(moneyStyle);
 
             Row sumRow3 = sheet.createRow(rowNum + 3);
-            Cell lbl3 = sumRow3.createCell(5); lbl3.setCellValue("Grand Total:"); lbl3.setCellStyle(totalStyle);
+            Cell lbl3 = sumRow3.createCell(5);
+            lbl3.setCellValue("Grand Total:");
+            lbl3.setCellStyle(totalStyle);
             Cell val3 = sumRow3.createCell(6);
-            val3.setCellValue(sumSale.add(sumRepair).doubleValue()); val3.setCellStyle(moneyStyle);
+            val3.setCellValue(sumSale.add(sumRepair).doubleValue());
+            val3.setCellStyle(moneyStyle);
 
             // ── Sheet 2: Tổng hợp theo tháng ─────────────────────────────
             Sheet sheet2 = wb.createSheet("Monthly Revenue");
@@ -235,9 +249,11 @@ public class FinanceServlet extends HttpServlet {
             sheet2.setColumnWidth(3, 20 * 256);
 
             Row h2 = sheet2.createRow(0);
-            String[] cols2 = {"Month","Sales Revenue","Repair Revenue","Total"};
+            String[] cols2 = {"Month", "Sales Revenue", "Repair Revenue", "Total"};
             for (int i = 0; i < cols2.length; i++) {
-                Cell c2 = h2.createCell(i); c2.setCellValue(cols2[i]); c2.setCellStyle(headerStyle);
+                Cell c2 = h2.createCell(i);
+                c2.setCellValue(cols2[i]);
+                c2.setCellStyle(headerStyle);
             }
 
             List<MonthlyRevenue> monthly = dao.getMonthlyRevenue(12);
@@ -245,10 +261,15 @@ public class FinanceServlet extends HttpServlet {
             for (MonthlyRevenue mr : monthly) {
                 Row row2 = sheet2.createRow(r2++);
                 row2.createCell(0).setCellValue(mr.month);
-                Cell s = row2.createCell(1); s.setCellValue(mr.sale.doubleValue());   s.setCellStyle(moneyStyle);
-                Cell p = row2.createCell(2); p.setCellValue(mr.repair.doubleValue()); p.setCellStyle(moneyStyle);
+                Cell s = row2.createCell(1);
+                s.setCellValue(mr.sale.doubleValue());
+                s.setCellStyle(moneyStyle);
+                Cell p = row2.createCell(2);
+                p.setCellValue(mr.repair.doubleValue());
+                p.setCellStyle(moneyStyle);
                 Cell t = row2.createCell(3);
-                t.setCellValue(mr.sale.add(mr.repair).doubleValue()); t.setCellStyle(moneyStyle);
+                t.setCellValue(mr.sale.add(mr.repair).doubleValue());
+                t.setCellStyle(moneyStyle);
             }
 
             wb.write(out);
@@ -256,17 +277,25 @@ public class FinanceServlet extends HttpServlet {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private String nvl(String s) { return s != null ? s.trim() : ""; }
+    private String nvl(String s) {
+        return s != null ? s.trim() : "";
+    }
 
     private String translateStatus(String s) {
-        if (s == null) return "";
+        if (s == null) {
+            return "";
+        }
         return switch (s) {
-            case "SUCCESS"   -> "Successful";
-            case "PENDING"   -> "Processing";
-            case "FAILED"    -> "Failed";
-            case "CANCELLED" -> "Cancelled";
-            default          -> s;
+            case "SUCCESS" ->
+                "Successful";
+            case "PENDING" ->
+                "Processing";
+            case "FAILED" ->
+                "Failed";
+            case "CANCELLED" ->
+                "Cancelled";
+            default ->
+                s;
         };
     }
 }
