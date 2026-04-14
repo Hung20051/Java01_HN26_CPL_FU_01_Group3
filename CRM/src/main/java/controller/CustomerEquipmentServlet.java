@@ -59,8 +59,8 @@ public class CustomerEquipmentServlet extends HttpServlet {
         }
     }
 
-   private String safe(String s) {
-    return s != null ? s.replace("\\", "\\\\").replace("\"", "\\\"") : "";
-   
-}
+    private String safe(String s) {
+        return s != null ? s.replace("\\", "\\\\").replace("\"", "\\\"") : "";
+
+    }
 }
