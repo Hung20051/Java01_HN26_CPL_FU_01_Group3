@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class CustomerContractServlet extends HttpServlet {
+
     private final ContractDAO dao = new ContractDAO();
 
     @Override
@@ -24,8 +25,12 @@ public class CustomerContractServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Contract c = dao.getById(id);
                 if (c == null || c.getCustomerId() != cid) {
-                    if (wantJson) { writeError(resp, 403, "Forbidden"); return; }
-                    resp.sendRedirect(ctx + "/customerContracts"); return;
+                    if (wantJson) {
+                        writeError(resp, 403, "Forbidden");
+                        return;
+                    }
+                    resp.sendRedirect(ctx + "/customerContracts");
+                    return;
                 }
                 c.setEquipmentList(dao.getEquipmentByContractId(id));
 
@@ -49,7 +54,9 @@ public class CustomerContractServlet extends HttpServlet {
                     if (eqList != null) {
                         for (int i = 0; i < eqList.size(); i++) {
                             CustomerEquipment eq = eqList.get(i);
-                            if (i > 0) json.append(",");
+                            if (i > 0) {
+                                json.append(",");
+                            }
                             json.append("{");
                             json.append("\"id\":").append(eq.getId()).append(",");
                             json.append("\"name\":\"").append(safe(eq.getDisplayName())).append("\",");
@@ -71,9 +78,9 @@ public class CustomerContractServlet extends HttpServlet {
 
             // ── LIST ─────────────────────────────────────────────────
             List<Contract> list = dao.getByCustomerId(cid);
-            long active   = list.stream().filter(c -> "ACTIVE".equals(c.getStatus())).count();
+            long active = list.stream().filter(c -> "ACTIVE".equals(c.getStatus())).count();
             long warranty = list.stream().filter(c -> "WARRANTY".equals(c.getContractType())).count();
-            long maint    = list.stream().filter(c -> "MAINTENANCE".equals(c.getContractType())).count();
+            long maint = list.stream().filter(c -> "MAINTENANCE".equals(c.getContractType())).count();
 
             if (wantJson) {
                 resp.setContentType("application/json;charset=UTF-8");
@@ -86,7 +93,9 @@ public class CustomerContractServlet extends HttpServlet {
                 json.append("\"contracts\":[");
                 for (int i = 0; i < list.size(); i++) {
                     Contract c = list.get(i);
-                    if (i > 0) json.append(",");
+                    if (i > 0) {
+                        json.append(",");
+                    }
                     json.append("{");
                     json.append("\"id\":").append(c.getId()).append(",");
                     json.append("\"contractCode\":\"").append(safe(c.getContractCode())).append("\",");
@@ -105,10 +114,10 @@ public class CustomerContractServlet extends HttpServlet {
                 return;
             }
 
-            req.setAttribute("contracts",     list);
-            req.setAttribute("activeCount",   active);
+            req.setAttribute("contracts", list);
+            req.setAttribute("activeCount", active);
             req.setAttribute("warrantyCount", warranty);
-            req.setAttribute("maintCount",    maint);
+            req.setAttribute("maintCount", maint);
             req.getRequestDispatcher("/customerContracts.jsp").forward(req, resp);
 
         } catch (Exception e) {
