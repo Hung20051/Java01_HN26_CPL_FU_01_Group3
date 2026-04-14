@@ -38,10 +38,10 @@ public class OtpServlet extends HttpServlet {
         }
 
         // ── VERIFY OTP ──
-        String inputOtp   = req.getParameter("otp");
-        String storedOtp  = (String) session.getAttribute("otp");
-        Long   otpExpiry  = (Long) session.getAttribute("otpExpiry");
-        Long   otpSentAt  = (Long) session.getAttribute("otpSentAt");
+        String inputOtp = req.getParameter("otp");
+        String storedOtp = (String) session.getAttribute("otp");
+        Long otpExpiry = (Long) session.getAttribute("otpExpiry");
+        Long otpSentAt = (Long) session.getAttribute("otpSentAt");
         Map<String, String> pendingUser = (Map<String, String>) session.getAttribute("pendingUser");
 
         if (pendingUser == null || storedOtp == null) {
@@ -119,7 +119,7 @@ public class OtpServlet extends HttpServlet {
             String newOtp = EmailUtil.generateOTP();
             long newExpiry = System.currentTimeMillis() + 10 * 60 * 1000;
 
-            session.setAttribute("otp",       newOtp);
+            session.setAttribute("otp", newOtp);
             session.setAttribute("otpExpiry", newExpiry);
             session.setAttribute("otpSentAt", System.currentTimeMillis());
 
