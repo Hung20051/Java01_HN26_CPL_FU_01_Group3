@@ -20,21 +20,21 @@ import java.util.List;
 import java.util.UUID;
 
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,
-    maxFileSize       = 5 * 1024 * 1024,
-    maxRequestSize    = 10 * 1024 * 1024
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024
 )
 public class PartServlet extends HttpServlet {
 
-    private final PartDAO     partDAO     = new PartDAO();
+    private final PartDAO partDAO = new PartDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
-    private final ReviewDAO   reviewDAO   = new ReviewDAO();
+    private final ReviewDAO reviewDAO = new ReviewDAO();
 
     private static final int PAGE_SIZE = 10;
 
     private String getUploadDir() {
         return getServletContext().getRealPath("") + File.separator
-             + "uploads" + File.separator + "parts";
+                + "uploads" + File.separator + "parts";
     }
 
     // =========================================================================
@@ -52,7 +52,7 @@ public class PartServlet extends HttpServlet {
             return;
         }
 
-        String action    = req.getParameter("action");
+        String action = req.getParameter("action");
         boolean wantJson = isJson(req);
 
         try {
@@ -61,7 +61,10 @@ public class PartServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 PartType pt = partDAO.findTypeById(id);
                 if (pt == null) {
-                    if (wantJson) { writeError(resp, 404, "Part not found"); return; }
+                    if (wantJson) {
+                        writeError(resp, 404, "Part not found");
+                        return;
+                    }
                     resp.sendRedirect(req.getContextPath() + "/numberPart");
                     return;
                 }
@@ -85,7 +88,9 @@ public class PartServlet extends HttpServlet {
                     json.append("\"units\":[");
                     for (int i = 0; i < units.size(); i++) {
                         model.PartUnit u = units.get(i);
-                        if (i > 0) json.append(",");
+                        if (i > 0) {
+                            json.append(",");
+                        }
                         json.append("{");
                         json.append("\"id\":").append(u.getId()).append(",");
                         json.append("\"partTypeName\":").append(jsonStr(u.getPartTypeName())).append(",");
@@ -97,12 +102,12 @@ public class PartServlet extends HttpServlet {
                     return;
                 }
 
-                req.setAttribute("part",       pt);
-                req.setAttribute("units",       units);
-                req.setAttribute("categories",  categoryDAO.findByType("PART"));
-                req.setAttribute("reviews",     reviewDAO.getReviews("PART", id));
-                req.setAttribute("avgRating",   reviewDAO.getAverageRating("PART", id));
-                req.setAttribute("ratingDist",  reviewDAO.getRatingDistribution("PART", id));
+                req.setAttribute("part", pt);
+                req.setAttribute("units", units);
+                req.setAttribute("categories", categoryDAO.findByType("PART"));
+                req.setAttribute("reviews", reviewDAO.getReviews("PART", id));
+                req.setAttribute("avgRating", reviewDAO.getAverageRating("PART", id));
+                req.setAttribute("ratingDist", reviewDAO.getRatingDistribution("PART", id));
                 req.getRequestDispatcher("/storekeeperPartDetail.jsp").forward(req, resp);
                 return;
             }
@@ -111,19 +116,24 @@ public class PartServlet extends HttpServlet {
             if ("detail".equals(action)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("detailPart", partDAO.findTypeById(id));
-                req.setAttribute("units",      partDAO.findUnitsByTypeId(id));
+                req.setAttribute("units", partDAO.findUnitsByTypeId(id));
             }
 
             // ── LIST ─────────────────────────────────────────────────────────
-            String keyword    = req.getParameter("keyword");
+            String keyword = req.getParameter("keyword");
             String categoryId = req.getParameter("categoryId");
-            String sortBy     = req.getParameter("sortBy");
+            String sortBy = req.getParameter("sortBy");
             int page = 1;
-            try { page = Integer.parseInt(req.getParameter("page")); } catch (Exception ignored) {}
+            try {
+                page = Integer.parseInt(req.getParameter("page"));
+            } catch (Exception ignored) {
+            }
 
-            int total      = partDAO.countTypes(keyword, categoryId);
+            int total = partDAO.countTypes(keyword, categoryId);
             int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-            if (totalPages < 1) totalPages = 1;
+            if (totalPages < 1) {
+                totalPages = 1;
+            }
 
             List<PartType> parts = partDAO.findAllTypes(keyword, categoryId, sortBy, page, PAGE_SIZE);
 
@@ -137,7 +147,9 @@ public class PartServlet extends HttpServlet {
                 json.append("\"parts\":[");
                 for (int i = 0; i < parts.size(); i++) {
                     PartType pt = parts.get(i);
-                    if (i > 0) json.append(",");
+                    if (i > 0) {
+                        json.append(",");
+                    }
                     json.append("{");
                     json.append("\"id\":").append(pt.getId()).append(",");
                     json.append("\"name\":").append(jsonStr(pt.getName())).append(",");
@@ -153,30 +165,31 @@ public class PartServlet extends HttpServlet {
                 return;
             }
 
-            req.setAttribute("parts",       parts);
-            req.setAttribute("categories",  categoryDAO.findByType("PART"));
-            req.setAttribute("keyword",     keyword    != null ? keyword    : "");
-            req.setAttribute("categoryId",  categoryId != null ? categoryId : "");
-            req.setAttribute("sortBy",      sortBy     != null ? sortBy     : "");
+            req.setAttribute("parts", parts);
+            req.setAttribute("categories", categoryDAO.findByType("PART"));
+            req.setAttribute("keyword", keyword != null ? keyword : "");
+            req.setAttribute("categoryId", categoryId != null ? categoryId : "");
+            req.setAttribute("sortBy", sortBy != null ? sortBy : "");
             req.setAttribute("currentPage", page);
-            req.setAttribute("totalPages",  totalPages);
-            req.setAttribute("total",       total);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("total", total);
             req.getRequestDispatcher("/numberPart.jsp").forward(req, resp);
 
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMessage", "Lỗi tải dữ liệu: " + e.getMessage());
             try {
-                req.setAttribute("parts",       new ArrayList<>());
-                req.setAttribute("categories",  new ArrayList<>());
-                req.setAttribute("keyword",     "");
-                req.setAttribute("categoryId",  "");
-                req.setAttribute("sortBy",      "");
+                req.setAttribute("parts", new ArrayList<>());
+                req.setAttribute("categories", new ArrayList<>());
+                req.setAttribute("keyword", "");
+                req.setAttribute("categoryId", "");
+                req.setAttribute("sortBy", "");
                 req.setAttribute("currentPage", 1);
-                req.setAttribute("totalPages",  1);
-                req.setAttribute("total",       0);
+                req.setAttribute("totalPages", 1);
+                req.setAttribute("total", 0);
                 req.getRequestDispatcher("/numberPart.jsp").forward(req, resp);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -200,11 +213,11 @@ public class PartServlet extends HttpServlet {
             switch (action != null ? action : "") {
 
                 case "create": {
-                    String name  = req.getParameter("name");
-                    int    catId = Integer.parseInt(req.getParameter("categoryId"));
-                    String desc  = req.getParameter("description");
+                    String name = req.getParameter("name");
+                    int catId = Integer.parseInt(req.getParameter("categoryId"));
+                    String desc = req.getParameter("description");
                     double price = Double.parseDouble(req.getParameter("unitPrice"));
-                    int    qty   = Integer.parseInt(req.getParameter("quantity"));
+                    int qty = Integer.parseInt(req.getParameter("quantity"));
 
                     if (name == null || name.trim().length() < 3) {
                         req.getSession().setAttribute("flashError", "Tên linh kiện phải có ít nhất 3 ký tự!");
@@ -236,10 +249,10 @@ public class PartServlet extends HttpServlet {
                 }
 
                 case "edit": {
-                    int    id    = Integer.parseInt(req.getParameter("id"));
-                    String name  = req.getParameter("name");
-                    int    catId = Integer.parseInt(req.getParameter("categoryId"));
-                    String desc  = req.getParameter("description");
+                    int id = Integer.parseInt(req.getParameter("id"));
+                    String name = req.getParameter("name");
+                    int catId = Integer.parseInt(req.getParameter("categoryId"));
+                    String desc = req.getParameter("description");
                     double price = Double.parseDouble(req.getParameter("unitPrice"));
 
                     if (name == null || name.trim().length() < 3) {
@@ -283,7 +296,7 @@ public class PartServlet extends HttpServlet {
 
                 case "import": {
                     int partTypeId = Integer.parseInt(req.getParameter("partTypeId"));
-                    int qty        = Integer.parseInt(req.getParameter("quantity"));
+                    int qty = Integer.parseInt(req.getParameter("quantity"));
                     if (qty < 1 || qty > 100) {
                         req.getSession().setAttribute("flashError", "Số lượng nhập phải từ 1–100!");
                         String referer = req.getParameter("referer");
@@ -306,7 +319,7 @@ public class PartServlet extends HttpServlet {
 
                 case "reduceStock": {
                     int partTypeId = Integer.parseInt(req.getParameter("partTypeId"));
-                    int qty        = Integer.parseInt(req.getParameter("reduceQty"));
+                    int qty = Integer.parseInt(req.getParameter("reduceQty"));
 
                     if (qty < 1) {
                         req.getSession().setAttribute("flashError", "Số lượng giảm phải ít nhất 1!");
@@ -322,14 +335,14 @@ public class PartServlet extends HttpServlet {
                     }
                     if (qty > current.getAvailableUnits()) {
                         req.getSession().setAttribute("flashError",
-                            "Chỉ có " + current.getAvailableUnits() + " unit AVAILABLE, không thể xóa " + qty + "!");
+                                "Chỉ có " + current.getAvailableUnits() + " unit AVAILABLE, không thể xóa " + qty + "!");
                         resp.sendRedirect(req.getContextPath() + "/numberPart?action=detailPage&id=" + partTypeId);
                         return;
                     }
 
                     int deleted = partDAO.deleteAvailableUnits(partTypeId, qty);
                     req.getSession().setAttribute("flashSuccess",
-                        "Đã xóa " + deleted + " unit AVAILABLE khỏi kho!");
+                            "Đã xóa " + deleted + " unit AVAILABLE khỏi kho!");
                     resp.sendRedirect(req.getContextPath() + "/numberPart?action=detailPage&id=" + partTypeId);
                     return;
                 }
@@ -349,7 +362,6 @@ public class PartServlet extends HttpServlet {
     // =========================================================================
     //  HELPERS
     // =========================================================================
-
     private boolean isJson(HttpServletRequest req) {
         String accept = req.getHeader("Accept");
         return accept != null && accept.contains("application/json");
@@ -362,7 +374,9 @@ public class PartServlet extends HttpServlet {
     }
 
     private String jsonStr(String s) {
-        if (s == null) return "null";
+        if (s == null) {
+            return "null";
+        }
         return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
     }
 
@@ -374,20 +388,23 @@ public class PartServlet extends HttpServlet {
         }
 
         Part filePart = null;
-        try { filePart = req.getPart("imageFile"); } catch (Exception ignored) {}
+        try {
+            filePart = req.getPart("imageFile");
+        } catch (Exception ignored) {
+        }
 
         if (filePart != null && filePart.getSize() > 0) {
-            String fileName  = sanitizeFileName(filePart.getSubmittedFileName());
+            String fileName = sanitizeFileName(filePart.getSubmittedFileName());
             String extension = getExtension(fileName);
 
             if (!isImageExtension(extension)) {
                 req.getSession().setAttribute("flashError",
-                    "Chỉ chấp nhận file ảnh: jpg, png, webp, gif, avif");
+                        "Chỉ chấp nhận file ảnh: jpg, png, webp, gif, avif");
                 return null;
             }
 
             String uniqueName = UUID.randomUUID().toString() + "." + extension;
-            String uploadDir  = getUploadDir();
+            String uploadDir = getUploadDir();
             Files.createDirectories(Paths.get(uploadDir));
 
             String filePath = uploadDir + File.separator + uniqueName;
@@ -416,7 +433,9 @@ public class PartServlet extends HttpServlet {
     }
 
     private String sanitizeFileName(String name) {
-        if (name == null) return "image";
+        if (name == null) {
+            return "image";
+        }
         int idx = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
         return idx >= 0 ? name.substring(idx + 1) : name;
     }
