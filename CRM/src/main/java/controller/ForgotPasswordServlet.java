@@ -94,9 +94,9 @@ public class ForgotPasswordServlet extends HttpServlet {
             return;
         }
 
-        String inputOtp   = req.getParameter("otp");
-        String storedOtp  = (String) session.getAttribute("resetOtp");
-        Long   expiry     = (Long) session.getAttribute("resetOtpExpiry");
+        String inputOtp = req.getParameter("otp");
+        String storedOtp = (String) session.getAttribute("resetOtp");
+        Long expiry = (Long) session.getAttribute("resetOtpExpiry");
 
         if (expiry == null || System.currentTimeMillis() > expiry) {
             req.setAttribute("error", "Mã OTP đã hết hạn! Vui lòng yêu cầu gửi lại.");
