@@ -6,8 +6,8 @@ import java.io.*;
 import java.nio.file.*;
 
 /**
- * Phục vụ ảnh review từ thư mục uploads/reviews/ ra trình duyệt.
- * URL pattern: /review-images/{filename}
+ * Phục vụ ảnh review từ thư mục uploads/reviews/ ra trình duyệt. URL pattern:
+ * /review-images/{filename}
  */
 public class ReviewImageServlet extends HttpServlet {
 
@@ -41,10 +41,10 @@ public class ReviewImageServlet extends HttpServlet {
         }
         // Xác định Content-Type theo đuôi file
         String lower = filename.toLowerCase();
-        String contentType = lower.endsWith(".png")  ? "image/png"
-                           : lower.endsWith(".webp") ? "image/webp"
-                           : lower.endsWith(".gif")  ? "image/gif"
-                           : "image/jpeg";
+        String contentType = lower.endsWith(".png") ? "image/png"
+                : lower.endsWith(".webp") ? "image/webp"
+                : lower.endsWith(".gif") ? "image/gif"
+                : "image/jpeg";
         resp.setContentType(contentType);
         resp.setContentLengthLong(Files.size(filePath));
         // Stream file ra response
