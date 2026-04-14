@@ -22,14 +22,14 @@ public class GoogleAuthServlet extends HttpServlet {
         String state = generateState();
         req.getSession(true).setAttribute("oauth_state", state);
 
-        String authUrl = AppConfig.GOOGLE_AUTH_URL +
-            "?client_id="     + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_ID, StandardCharsets.UTF_8) +
-            "&redirect_uri="  + URLEncoder.encode(AppConfig.GOOGLE_REDIRECT_URI, StandardCharsets.UTF_8) +
-            "&response_type=code" +
-            "&scope="         + URLEncoder.encode("openid email profile", StandardCharsets.UTF_8) +
-            "&state="         + state +
-            "&access_type=online" +
-            "&prompt=select_account";
+        String authUrl = AppConfig.GOOGLE_AUTH_URL
+                + "?client_id=" + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_ID, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(AppConfig.GOOGLE_REDIRECT_URI, StandardCharsets.UTF_8)
+                + "&response_type=code"
+                + "&scope=" + URLEncoder.encode("openid email profile", StandardCharsets.UTF_8)
+                + "&state=" + state
+                + "&access_type=online"
+                + "&prompt=select_account";
 
         resp.sendRedirect(authUrl);
     }
