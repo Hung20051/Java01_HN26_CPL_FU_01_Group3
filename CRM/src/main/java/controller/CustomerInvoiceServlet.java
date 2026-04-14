@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class CustomerInvoiceServlet extends HttpServlet {
+
     private final InvoiceDAO dao = new InvoiceDAO();
 
     @Override
@@ -24,8 +25,12 @@ public class CustomerInvoiceServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Invoice inv = dao.getById(id);
                 if (inv == null || inv.getCustomerId() != cid) {
-                    if (wantJson) { writeError(resp, 403, "Forbidden"); return; }
-                    resp.sendRedirect(ctx + "/customerInvoices"); return;
+                    if (wantJson) {
+                        writeError(resp, 403, "Forbidden");
+                        return;
+                    }
+                    resp.sendRedirect(ctx + "/customerInvoices");
+                    return;
                 }
 
                 if (wantJson) {
@@ -41,7 +46,9 @@ public class CustomerInvoiceServlet extends HttpServlet {
 
             // ── LIST ─────────────────────────────────────────────────
             String status = req.getParameter("status");
-            if (status == null) status = "";
+            if (status == null) {
+                status = "";
+            }
             List<Invoice> list = dao.getByCustomerId(cid, status);
             Map<String, Object> summary = dao.getSummary(cid);
 
@@ -56,18 +63,26 @@ public class CustomerInvoiceServlet extends HttpServlet {
                 if (summary != null) {
                     int si = 0;
                     for (Map.Entry<String, Object> e : summary.entrySet()) {
-                        if (si++ > 0) json.append(",");
+                        if (si++ > 0) {
+                            json.append(",");
+                        }
                         json.append("\"").append(safe(e.getKey())).append("\":");
                         Object v = e.getValue();
-                        if (v == null) json.append("null");
-                        else if (v instanceof Number) json.append(v);
-                        else json.append("\"").append(safe(v.toString())).append("\"");
+                        if (v == null) {
+                            json.append("null");
+                        } else if (v instanceof Number) {
+                            json.append(v);
+                        } else {
+                            json.append("\"").append(safe(v.toString())).append("\"");
+                        }
                     }
                 }
                 json.append("},");
                 json.append("\"invoices\":[");
                 for (int i = 0; i < list.size(); i++) {
-                    if (i > 0) json.append(",");
+                    if (i > 0) {
+                        json.append(",");
+                    }
                     json.append(invoiceToJson(list.get(i)));
                 }
                 json.append("]}");
@@ -75,9 +90,9 @@ public class CustomerInvoiceServlet extends HttpServlet {
                 return;
             }
 
-            req.setAttribute("invoices",      list);
-            req.setAttribute("summary",       summary);
-            req.setAttribute("filterStatus",  status);
+            req.setAttribute("invoices", list);
+            req.setAttribute("summary", summary);
+            req.setAttribute("filterStatus", status);
             req.getRequestDispatcher("/customerInvoices.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -87,7 +102,6 @@ public class CustomerInvoiceServlet extends HttpServlet {
     }
 
     // ── HELPERS ──────────────────────────────────────────────────────
-
     private String invoiceToJson(Invoice inv) {
         StringBuilder json = new StringBuilder();
         json.append("{");
@@ -111,7 +125,9 @@ public class CustomerInvoiceServlet extends HttpServlet {
         if (items != null) {
             for (int i = 0; i < items.size(); i++) {
                 InvoiceItem it = items.get(i);
-                if (i > 0) json.append(",");
+                if (i > 0) {
+                    json.append(",");
+                }
                 json.append("{");
                 json.append("\"id\":").append(it.getId()).append(",");
                 json.append("\"itemName\":\"").append(safe(it.getItemName())).append("\",");
