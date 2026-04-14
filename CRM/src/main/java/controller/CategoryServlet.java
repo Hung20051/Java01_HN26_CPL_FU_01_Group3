@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CategoryServlet extends HttpServlet {
+
     private final CategoryDAO dao = new CategoryDAO();
 
     @Override
@@ -26,7 +27,9 @@ public class CategoryServlet extends HttpServlet {
                 json.append("{\"total\":").append(categories.size()).append(",\"categories\":[");
                 for (int i = 0; i < categories.size(); i++) {
                     Category c = categories.get(i);
-                    if (i > 0) json.append(",");
+                    if (i > 0) {
+                        json.append(",");
+                    }
                     json.append("{");
                     json.append("\"id\":").append(c.getId()).append(",");
                     json.append("\"name\":\"").append(safe(c.getName())).append("\",");
@@ -69,7 +72,7 @@ public class CategoryServlet extends HttpServlet {
                     break;
                 }
                 case "edit": {
-                    int id      = Integer.parseInt(req.getParameter("id"));
+                    int id = Integer.parseInt(req.getParameter("id"));
                     String name = req.getParameter("name");
                     String type = req.getParameter("type");
                     if (name == null || name.trim().isEmpty()) {
