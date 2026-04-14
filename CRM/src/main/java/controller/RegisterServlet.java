@@ -23,17 +23,17 @@ public class RegisterServlet extends HttpServlet {
 
         req.setCharacterEncoding("UTF-8");
 
-        String fullName       = req.getParameter("fullName");
-        String email          = req.getParameter("email");
-        String phone          = req.getParameter("phone");
-        String username       = req.getParameter("username");
-        String password       = req.getParameter("password");
-        String confirmPass    = req.getParameter("confirmPassword");
+        String fullName = req.getParameter("fullName");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String confirmPass = req.getParameter("confirmPassword");
 
         // Validation
-        if (fullName == null || email == null || phone == null ||
-            username == null || password == null || confirmPass == null ||
-            fullName.isBlank() || email.isBlank() || username.isBlank() || password.isBlank()) {
+        if (fullName == null || email == null || phone == null
+                || username == null || password == null || confirmPass == null
+                || fullName.isBlank() || email.isBlank() || username.isBlank() || password.isBlank()) {
             req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
             req.getRequestDispatcher("register.jsp").forward(req, resp);
             return;
@@ -72,15 +72,15 @@ public class RegisterServlet extends HttpServlet {
             // Lưu thông tin đăng ký tạm thời vào session
             Map<String, String> pendingUser = new HashMap<>();
             pendingUser.put("fullName", fullName.trim());
-            pendingUser.put("email",    email.trim());
-            pendingUser.put("phone",    phone.trim());
+            pendingUser.put("email", email.trim());
+            pendingUser.put("phone", phone.trim());
             pendingUser.put("username", username.trim());
             pendingUser.put("password", PasswordUtil.hashPassword(password)); // hash ngay
 
             session.setAttribute("pendingUser", pendingUser);
-            session.setAttribute("otp",         otp);
-            session.setAttribute("otpExpiry",   otpExpiry);
-            session.setAttribute("otpSentAt",   System.currentTimeMillis());
+            session.setAttribute("otp", otp);
+            session.setAttribute("otpExpiry", otpExpiry);
+            session.setAttribute("otpSentAt", System.currentTimeMillis());
 
             // Gửi OTP qua email
             EmailUtil.sendOTP(email.trim(), otp);
