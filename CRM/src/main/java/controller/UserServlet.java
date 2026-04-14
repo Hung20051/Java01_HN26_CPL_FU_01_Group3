@@ -21,19 +21,24 @@ public class UserServlet extends HttpServlet {
     // ─────────────────────────────────────────────────
     //  GET
     // ─────────────────────────────────────────────────
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+            action = "list";
+        }
 
         try {
             switch (action) {
-                case "edit"   -> showEdit(req, resp);
-                case "create" -> showCreate(req, resp);
-                case "delete" -> handleDelete(req, resp);
-                default       -> showList(req, resp);
+                case "edit" ->
+                    showEdit(req, resp);
+                case "create" ->
+                    showCreate(req, resp);
+                case "delete" ->
+                    handleDelete(req, resp);
+                default ->
+                    showList(req, resp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,21 +49,27 @@ public class UserServlet extends HttpServlet {
     // ─────────────────────────────────────────────────
     //  POST
     // ─────────────────────────────────────────────────
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) {
+            action = "";
+        }
 
         try {
             switch (action) {
-                case "create"             -> doCreate(req, resp);
-                case "update"             -> doUpdate(req, resp);
-                case "updatePersonalInfo" -> doUpdatePersonalInfo(req, resp);
-                case "changePassword"     -> doChangePassword(req, resp);
-                default -> resp.sendRedirect(req.getContextPath() + "/user/list");
+                case "create" ->
+                    doCreate(req, resp);
+                case "update" ->
+                    doUpdate(req, resp);
+                case "updatePersonalInfo" ->
+                    doUpdatePersonalInfo(req, resp);
+                case "changePassword" ->
+                    doChangePassword(req, resp);
+                default ->
+                    resp.sendRedirect(req.getContextPath() + "/user/list");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,77 +80,78 @@ public class UserServlet extends HttpServlet {
     // ─────────────────────────────────────────────────
     //  SHOW pages
     // ─────────────────────────────────────────────────
-
     private void showList(HttpServletRequest req, HttpServletResponse resp)
-        throws Exception {
-    String keyword = req.getParameter("keyword");
-    String status  = req.getParameter("status");
-    String role    = req.getParameter("role");
-    String pageStr = req.getParameter("page");
-    int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
+            throws Exception {
+        String keyword = req.getParameter("keyword");
+        String status = req.getParameter("status");
+        String role = req.getParameter("role");
+        String pageStr = req.getParameter("page");
+        int page = (pageStr != null && !pageStr.isEmpty()) ? Integer.parseInt(pageStr) : 1;
 
-    int total      = userDAO.countWithFilter(keyword, status, role);
-    int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-    List<User> users = userDAO.findWithFilter(keyword, status, role, page, PAGE_SIZE);
-    List<Role> roles = roleDAO.findAll();
+        int total = userDAO.countWithFilter(keyword, status, role);
+        int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+        List<User> users = userDAO.findWithFilter(keyword, status, role, page, PAGE_SIZE);
+        List<Role> roles = roleDAO.findAll();
 
-    // ── CHECK JSON ──────────────────────────────────
-    String accept = req.getHeader("Accept");
-    if (accept != null && accept.contains("application/json")) {
-        resp.setContentType("application/json;charset=UTF-8");
+        // ── CHECK JSON ──────────────────────────────────
+        String accept = req.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            resp.setContentType("application/json;charset=UTF-8");
 
-        StringBuilder json = new StringBuilder();
-        json.append("{");
-        json.append("\"page\":").append(page).append(",");
-        json.append("\"totalPages\":").append(totalPages).append(",");
-        json.append("\"total\":").append(total).append(",");
-        json.append("\"users\":[");
-        if (users != null) {
-            for (int i = 0; i < users.size(); i++) {
-                User u = users.get(i);
-                if (i > 0) json.append(",");
-                json.append("{");
-                json.append("\"id\":").append(u.getId()).append(",");
-                json.append("\"username\":\"").append(safe(u.getUsername())).append("\",");
-                json.append("\"fullName\":\"").append(safe(u.getFullName())).append("\",");
-                json.append("\"email\":\"").append(safe(u.getEmail())).append("\",");
-                json.append("\"phone\":\"").append(safe(u.getPhone())).append("\",");
-                json.append("\"role\":\"").append(safe(u.getRoleName())).append("\",");
-                json.append("\"active\":").append(u.isActive());
-                json.append("}");
+            StringBuilder json = new StringBuilder();
+            json.append("{");
+            json.append("\"page\":").append(page).append(",");
+            json.append("\"totalPages\":").append(totalPages).append(",");
+            json.append("\"total\":").append(total).append(",");
+            json.append("\"users\":[");
+            if (users != null) {
+                for (int i = 0; i < users.size(); i++) {
+                    User u = users.get(i);
+                    if (i > 0) {
+                        json.append(",");
+                    }
+                    json.append("{");
+                    json.append("\"id\":").append(u.getId()).append(",");
+                    json.append("\"username\":\"").append(safe(u.getUsername())).append("\",");
+                    json.append("\"fullName\":\"").append(safe(u.getFullName())).append("\",");
+                    json.append("\"email\":\"").append(safe(u.getEmail())).append("\",");
+                    json.append("\"phone\":\"").append(safe(u.getPhone())).append("\",");
+                    json.append("\"role\":\"").append(safe(u.getRoleName())).append("\",");
+                    json.append("\"active\":").append(u.isActive());
+                    json.append("}");
+                }
             }
+            json.append("]}");
+
+            resp.getWriter().print(json.toString());
+            return; // ← quan trọng: không forward JSP nữa
         }
-        json.append("]}");
+        // ── HẾT CHECK JSON ──────────────────────────────
 
-        resp.getWriter().print(json.toString());
-        return; // ← quan trọng: không forward JSP nữa
+        // Logic cũ giữ nguyên
+        req.setAttribute("users", users);
+        req.setAttribute("roles", roles);
+        req.setAttribute("total", total);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("keyword", keyword != null ? keyword : "");
+        req.setAttribute("status", status != null ? status : "");
+        req.setAttribute("role", role != null ? role : "");
+        req.getRequestDispatcher("/admin-users.jsp").forward(req, resp);
     }
-    // ── HẾT CHECK JSON ──────────────────────────────
-
-    // Logic cũ giữ nguyên
-    req.setAttribute("users",       users);
-    req.setAttribute("roles",       roles);
-    req.setAttribute("total",       total);
-    req.setAttribute("currentPage", page);
-    req.setAttribute("totalPages",  totalPages);
-    req.setAttribute("keyword",     keyword != null ? keyword : "");
-    req.setAttribute("status",      status  != null ? status  : "");
-    req.setAttribute("role",        role    != null ? role    : "");
-    req.getRequestDispatcher("/admin-users.jsp").forward(req, resp);
-}
 
 // Thêm helper này vào cuối class
-private String safe(String s) {
-    return s != null ? s.replace("\"", "\\\"") : "";
-}
+    private String safe(String s) {
+        return s != null ? s.replace("\"", "\\\"") : "";
+    }
 
     private void showEdit(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         int id = Integer.parseInt(req.getParameter("id"));
-        User user      = userDAO.findById(id);
+        User user = userDAO.findById(id);
         List<Role> roles = roleDAO.findAll();
         req.setAttribute("editUser", user);
-        req.setAttribute("roles",    roles);
+        req.setAttribute("roles", roles);
         req.getRequestDispatcher("/user-edit.jsp").forward(req, resp);
     }
 
@@ -153,29 +165,31 @@ private String safe(String s) {
     // ─────────────────────────────────────────────────
     //  ACTION: create user
     // ─────────────────────────────────────────────────
-
     private void doCreate(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         String username = req.getParameter("username");
         String fullName = req.getParameter("fullName");
-        String email    = req.getParameter("email");
-        String phone    = req.getParameter("phone");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
         String password = req.getParameter("password");
-        String confirm  = req.getParameter("confirmPassword");
-        int    roleId   = Integer.parseInt(req.getParameter("roleId"));
-        boolean active  = "1".equals(req.getParameter("active"));
+        String confirm = req.getParameter("confirmPassword");
+        int roleId = Integer.parseInt(req.getParameter("roleId"));
+        boolean active = "1".equals(req.getParameter("active"));
 
         if (!password.equals(confirm)) {
             req.setAttribute("error", "Mật khẩu xác nhận không khớp!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
         if (userDAO.existsUsername(username)) {
             req.setAttribute("error", "Username đã tồn tại!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
         if (email != null && !email.isEmpty() && userDAO.existsEmail(email)) {
             req.setAttribute("error", "Email đã tồn tại!");
-            showCreate(req, resp); return;
+            showCreate(req, resp);
+            return;
         }
 
         // Build user object
@@ -201,8 +215,10 @@ private String safe(String s) {
         u.setNationalId(trim(req, "nationalId"));
         String dobStr = req.getParameter("dateOfBirth");
         if (dobStr != null && !dobStr.isBlank()) {
-            try { u.setDateOfBirth(LocalDate.parse(dobStr)); }
-            catch (DateTimeParseException ignored) { /* skip invalid date silently on create */ }
+            try {
+                u.setDateOfBirth(LocalDate.parse(dobStr));
+            } catch (DateTimeParseException ignored) {
+                /* skip invalid date silently on create */ }
         }
 
         // Emergency contact (optional)
@@ -227,15 +243,14 @@ private String safe(String s) {
     // ─────────────────────────────────────────────────
     //  ACTION: update account info + role
     // ─────────────────────────────────────────────────
-
     private void doUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        int     id      = Integer.parseInt(req.getParameter("id"));
-        String  fullName = req.getParameter("fullName");
-        String  email    = req.getParameter("email");
-        String  phone    = req.getParameter("phone");
-        int     roleId   = Integer.parseInt(req.getParameter("roleId"));
-        boolean active   = "1".equals(req.getParameter("active"));
+        int id = Integer.parseInt(req.getParameter("id"));
+        String fullName = req.getParameter("fullName");
+        String email = req.getParameter("email");
+        String phone = req.getParameter("phone");
+        int roleId = Integer.parseInt(req.getParameter("roleId"));
+        boolean active = "1".equals(req.getParameter("active"));
 
         User u = userDAO.findById(id);
         u.setFullName(fullName);
@@ -251,7 +266,6 @@ private String safe(String s) {
     // ─────────────────────────────────────────────────
     //  ACTION: update personal info + address (NEW)
     // ─────────────────────────────────────────────────
-
     private void doUpdatePersonalInfo(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         int id = Integer.parseInt(req.getParameter("id"));
@@ -264,7 +278,9 @@ private String safe(String s) {
 
         // Basic (admin có thể sửa cả fullName + phone từ tab này)
         String fullName = req.getParameter("fullName");
-        if (fullName != null && !fullName.isBlank()) u.setFullName(fullName.trim());
+        if (fullName != null && !fullName.isBlank()) {
+            u.setFullName(fullName.trim());
+        }
         u.setPhone(trim(req, "phone"));
 
         // Address
@@ -285,7 +301,7 @@ private String safe(String s) {
             } catch (DateTimeParseException e) {
                 // invalid date — redirect with error
                 resp.sendRedirect(req.getContextPath()
-                    + "/user/edit?action=edit&id=" + id + "&error=invalid_date&tab=personal");
+                        + "/user/edit?action=edit&id=" + id + "&error=invalid_date&tab=personal");
                 return;
             }
         } else {
@@ -304,33 +320,31 @@ private String safe(String s) {
         userDAO.updatePersonalInfo(u);
 
         resp.sendRedirect(req.getContextPath()
-            + "/user/edit?action=edit&id=" + id + "&success=personal_updated&tab=personal");
+                + "/user/edit?action=edit&id=" + id + "&success=personal_updated&tab=personal");
     }
 
     // ─────────────────────────────────────────────────
     //  ACTION: change password
     // ─────────────────────────────────────────────────
-
     private void doChangePassword(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        int    id      = Integer.parseInt(req.getParameter("id"));
+        int id = Integer.parseInt(req.getParameter("id"));
         String newPass = req.getParameter("newPassword");
         String confirm = req.getParameter("confirmPassword");
 
         if (!newPass.equals(confirm)) {
             resp.sendRedirect(req.getContextPath()
-                + "/user/edit?action=edit&id=" + id + "&error=password_mismatch");
+                    + "/user/edit?action=edit&id=" + id + "&error=password_mismatch");
             return;
         }
         userDAO.updatePassword(id, PasswordUtil.hashPassword(newPass));
         resp.sendRedirect(req.getContextPath()
-            + "/user/edit?action=edit&id=" + id + "&success=password_changed");
+                + "/user/edit?action=edit&id=" + id + "&success=password_changed");
     }
 
     // ─────────────────────────────────────────────────
     //  ACTION: delete user
     // ─────────────────────────────────────────────────
-
     private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
         String idStr = req.getParameter("id");
@@ -343,7 +357,6 @@ private String safe(String s) {
     // ─────────────────────────────────────────────────
     //  HELPER
     // ─────────────────────────────────────────────────
-
     private String trim(HttpServletRequest req, String param) {
         String v = req.getParameter(param);
         return (v != null && !v.isBlank()) ? v.trim() : null;
