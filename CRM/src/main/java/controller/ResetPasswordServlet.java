@@ -37,7 +37,7 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        String newPassword     = req.getParameter("newPassword");
+        String newPassword = req.getParameter("newPassword");
         String confirmPassword = req.getParameter("confirmPassword");
 
         if (newPassword == null || newPassword.length() < 6) {
