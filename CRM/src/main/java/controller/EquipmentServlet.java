@@ -18,21 +18,21 @@ import java.nio.file.*;
 import java.util.*;
 
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,
-    maxFileSize       = 5 * 1024 * 1024,
-    maxRequestSize    = 10 * 1024 * 1024
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 5 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024
 )
 public class EquipmentServlet extends HttpServlet {
 
     private final EquipmentDAO equipmentDAO = new EquipmentDAO();
-    private final CategoryDAO  categoryDAO  = new CategoryDAO();
-    private final ReviewDAO    reviewDAO    = new ReviewDAO();
+    private final CategoryDAO categoryDAO = new CategoryDAO();
+    private final ReviewDAO reviewDAO = new ReviewDAO();
 
     private static final int PAGE_SIZE = 10;
 
     private String getUploadDir() {
         return getServletContext().getRealPath("") + File.separator
-             + "uploads" + File.separator + "equipment";
+                + "uploads" + File.separator + "equipment";
     }
 
     @Override
@@ -41,9 +41,12 @@ public class EquipmentServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         User user = (User) req.getSession().getAttribute("user");
-        if (user == null) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
-        String action    = req.getParameter("action");
+        String action = req.getParameter("action");
         boolean wantJson = isJson(req);
 
         try {
@@ -52,7 +55,10 @@ public class EquipmentServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 EquipmentType et = equipmentDAO.findTypeById(id);
                 if (et == null) {
-                    if (wantJson) { writeError(resp, 404, "Equipment not found"); return; }
+                    if (wantJson) {
+                        writeError(resp, 404, "Equipment not found");
+                        return;
+                    }
                     resp.sendRedirect(req.getContextPath() + "/numberEquipment");
                     return;
                 }
@@ -76,7 +82,9 @@ public class EquipmentServlet extends HttpServlet {
                     json.append("\"units\":[");
                     for (int i = 0; i < units.size(); i++) {
                         model.EquipmentUnit u = units.get(i);
-                        if (i > 0) json.append(",");
+                        if (i > 0) {
+                            json.append(",");
+                        }
                         json.append("{");
                         json.append("\"id\":").append(u.getId()).append(",");
                         json.append("\"serialNumber\":").append(jsonStr(u.getSerialNumber())).append(",");
@@ -88,26 +96,31 @@ public class EquipmentServlet extends HttpServlet {
                     return;
                 }
 
-                req.setAttribute("equipment",   et);
-                req.setAttribute("units",       units);
-                req.setAttribute("categories",  categoryDAO.findByType("EQUIPMENT"));
-                req.setAttribute("reviews",     reviewDAO.getReviews("EQUIPMENT", id));
-                req.setAttribute("avgRating",   reviewDAO.getAverageRating("EQUIPMENT", id));
-                req.setAttribute("ratingDist",  reviewDAO.getRatingDistribution("EQUIPMENT", id));
+                req.setAttribute("equipment", et);
+                req.setAttribute("units", units);
+                req.setAttribute("categories", categoryDAO.findByType("EQUIPMENT"));
+                req.setAttribute("reviews", reviewDAO.getReviews("EQUIPMENT", id));
+                req.setAttribute("avgRating", reviewDAO.getAverageRating("EQUIPMENT", id));
+                req.setAttribute("ratingDist", reviewDAO.getRatingDistribution("EQUIPMENT", id));
                 req.getRequestDispatcher("/storekeeperEquipmentDetail.jsp").forward(req, resp);
                 return;
             }
 
             // ── LIST PAGE ────────────────────────────────────────────
-            String keyword    = req.getParameter("keyword");
+            String keyword = req.getParameter("keyword");
             String categoryId = req.getParameter("categoryId");
-            String sortBy     = req.getParameter("sortBy");
+            String sortBy = req.getParameter("sortBy");
             int page = 1;
-            try { page = Integer.parseInt(req.getParameter("page")); } catch (Exception ignored) {}
+            try {
+                page = Integer.parseInt(req.getParameter("page"));
+            } catch (Exception ignored) {
+            }
 
-            int total      = equipmentDAO.countTypes(keyword, categoryId);
+            int total = equipmentDAO.countTypes(keyword, categoryId);
             int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
-            if (totalPages < 1) totalPages = 1;
+            if (totalPages < 1) {
+                totalPages = 1;
+            }
 
             List<EquipmentType> equipments = equipmentDAO.findAllTypes(keyword, categoryId, sortBy, page, PAGE_SIZE);
 
@@ -121,7 +134,9 @@ public class EquipmentServlet extends HttpServlet {
                 json.append("\"equipments\":[");
                 for (int i = 0; i < equipments.size(); i++) {
                     EquipmentType et = equipments.get(i);
-                    if (i > 0) json.append(",");
+                    if (i > 0) {
+                        json.append(",");
+                    }
                     json.append("{");
                     json.append("\"id\":").append(et.getId()).append(",");
                     json.append("\"model\":").append(jsonStr(et.getModel())).append(",");
@@ -142,15 +157,15 @@ public class EquipmentServlet extends HttpServlet {
                 unitsMap.put(et.getId(), equipmentDAO.findUnitsByTypeId(et.getId()));
             }
 
-            req.setAttribute("equipments",  equipments);
-            req.setAttribute("unitsMap",    unitsMap);
-            req.setAttribute("categories",  categoryDAO.findByType("EQUIPMENT"));
-            req.setAttribute("keyword",     keyword    != null ? keyword    : "");
-            req.setAttribute("categoryId",  categoryId != null ? categoryId : "");
-            req.setAttribute("sortBy",      sortBy     != null ? sortBy     : "");
+            req.setAttribute("equipments", equipments);
+            req.setAttribute("unitsMap", unitsMap);
+            req.setAttribute("categories", categoryDAO.findByType("EQUIPMENT"));
+            req.setAttribute("keyword", keyword != null ? keyword : "");
+            req.setAttribute("categoryId", categoryId != null ? categoryId : "");
+            req.setAttribute("sortBy", sortBy != null ? sortBy : "");
             req.setAttribute("currentPage", page);
-            req.setAttribute("totalPages",  totalPages);
-            req.setAttribute("total",       total);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("total", total);
             req.getRequestDispatcher("/numberEquipment.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -166,15 +181,18 @@ public class EquipmentServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
         User currentUser = (User) req.getSession().getAttribute("user");
-        if (currentUser == null) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
+        if (currentUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         try {
             switch (action != null ? action : "") {
                 case "create": {
-                    String model  = req.getParameter("model");
-                    int    catId  = Integer.parseInt(req.getParameter("categoryId"));
-                    String desc   = req.getParameter("description");
-                    double price  = Double.parseDouble(req.getParameter("unitPrice"));
+                    String model = req.getParameter("model");
+                    int catId = Integer.parseInt(req.getParameter("categoryId"));
+                    String desc = req.getParameter("description");
+                    double price = Double.parseDouble(req.getParameter("unitPrice"));
                     if (model == null || model.trim().length() < 3) {
                         req.getSession().setAttribute("flashError", "Tên model phải có ít nhất 3 ký tự!");
                         break;
@@ -189,16 +207,18 @@ public class EquipmentServlet extends HttpServlet {
                     et.setUpdatedBy(currentUser.getId());
                     int newId = equipmentDAO.insertType(et);
                     String serial = generateSerial(model.trim());
-                    if (equipmentDAO.existsSerialNumber(serial)) serial = generateSerial(model.trim());
+                    if (equipmentDAO.existsSerialNumber(serial)) {
+                        serial = generateSerial(model.trim());
+                    }
                     equipmentDAO.insertUnit(newId, serial, currentUser.getId());
                     req.getSession().setAttribute("flashSuccess", "Thêm thiết bị thành công! Serial: " + serial);
                     break;
                 }
                 case "edit": {
-                    int    id    = Integer.parseInt(req.getParameter("id"));
+                    int id = Integer.parseInt(req.getParameter("id"));
                     String model = req.getParameter("model");
-                    int    catId = Integer.parseInt(req.getParameter("categoryId"));
-                    String desc  = req.getParameter("description");
+                    int catId = Integer.parseInt(req.getParameter("categoryId"));
+                    String desc = req.getParameter("description");
                     double price = Double.parseDouble(req.getParameter("unitPrice"));
                     if (model == null || model.trim().length() < 3) {
                         req.getSession().setAttribute("flashError", "Tên model phải có ít nhất 3 ký tự!");
@@ -211,9 +231,13 @@ public class EquipmentServlet extends HttpServlet {
                     }
                     String imageUrl = resolveImage(req, "edit");
                     EquipmentType et = new EquipmentType();
-                    et.setId(id); et.setModel(model.trim()); et.setCategoryId(catId);
+                    et.setId(id);
+                    et.setModel(model.trim());
+                    et.setCategoryId(catId);
                     et.setDescription(desc != null ? desc.trim() : "");
-                    et.setUnitPrice(price); et.setImageUrl(imageUrl); et.setUpdatedBy(currentUser.getId());
+                    et.setUnitPrice(price);
+                    et.setImageUrl(imageUrl);
+                    et.setUpdatedBy(currentUser.getId());
                     equipmentDAO.updateType(et);
                     req.getSession().setAttribute("flashSuccess", "Cập nhật thiết bị thành công!");
                     String referer = req.getParameter("referer");
@@ -236,7 +260,7 @@ public class EquipmentServlet extends HttpServlet {
                 }
                 case "stockIn": {
                     int typeId = Integer.parseInt(req.getParameter("equipmentTypeId"));
-                    int qty    = Integer.parseInt(req.getParameter("quantity"));
+                    int qty = Integer.parseInt(req.getParameter("quantity"));
                     String referer = req.getParameter("referer");
                     if (qty < 1 || qty > 100) {
                         req.getSession().setAttribute("flashError", "Số lượng nhập phải từ 1–100!");
@@ -252,7 +276,8 @@ public class EquipmentServlet extends HttpServlet {
                         String serial = generateSerial(et != null ? et.getModel() : "EQ");
                         int tries = 0;
                         while (equipmentDAO.existsSerialNumber(serial) && tries < 10) {
-                            serial = generateSerial(et != null ? et.getModel() : "EQ"); tries++;
+                            serial = generateSerial(et != null ? et.getModel() : "EQ");
+                            tries++;
                         }
                         equipmentDAO.insertUnit(typeId, serial, currentUser.getId());
                         added.add(serial);
@@ -266,7 +291,7 @@ public class EquipmentServlet extends HttpServlet {
                 }
                 case "reduceStock": {
                     int typeId = Integer.parseInt(req.getParameter("equipmentTypeId"));
-                    int qty    = Integer.parseInt(req.getParameter("reduceQty"));
+                    int qty = Integer.parseInt(req.getParameter("reduceQty"));
                     if (qty < 1) {
                         req.getSession().setAttribute("flashError", "Số lượng giảm phải ít nhất 1!");
                         resp.sendRedirect(req.getContextPath() + "/numberEquipment?action=detailPage&id=" + typeId);
@@ -275,11 +300,12 @@ public class EquipmentServlet extends HttpServlet {
                     EquipmentType current = equipmentDAO.findTypeById(typeId);
                     if (current == null) {
                         req.getSession().setAttribute("flashError", "Không tìm thấy thiết bị!");
-                        resp.sendRedirect(req.getContextPath() + "/numberEquipment"); return;
+                        resp.sendRedirect(req.getContextPath() + "/numberEquipment");
+                        return;
                     }
                     if (qty > current.getAvailableUnits()) {
                         req.getSession().setAttribute("flashError",
-                            "Chỉ có " + current.getAvailableUnits() + " unit AVAILABLE, không thể xóa " + qty + "!");
+                                "Chỉ có " + current.getAvailableUnits() + " unit AVAILABLE, không thể xóa " + qty + "!");
                         resp.sendRedirect(req.getContextPath() + "/numberEquipment?action=detailPage&id=" + typeId);
                         return;
                     }
@@ -292,25 +318,36 @@ public class EquipmentServlet extends HttpServlet {
                     int typeId = Integer.parseInt(req.getParameter("equipmentTypeId"));
                     String serialsRaw = req.getParameter("serialNumbers");
                     if (serialsRaw == null || serialsRaw.trim().isEmpty()) {
-                        req.getSession().setAttribute("flashError", "Không có serial number nào được tạo!"); break;
+                        req.getSession().setAttribute("flashError", "Không có serial number nào được tạo!");
+                        break;
                     }
                     String[] parts = serialsRaw.split(",");
                     List<String> toInsert = new ArrayList<>(), duplicates = new ArrayList<>();
                     for (String raw : parts) {
                         String s = raw.trim();
-                        if (s.isEmpty()) continue;
-                        if (equipmentDAO.existsSerialNumber(s)) duplicates.add(s); else toInsert.add(s);
+                        if (s.isEmpty()) {
+                            continue;
+                        }
+                        if (equipmentDAO.existsSerialNumber(s)) {
+                            duplicates.add(s);
+                        } else {
+                            toInsert.add(s);
+                        }
                     }
                     if (toInsert.isEmpty()) {
-                        req.getSession().setAttribute("flashError", "Tất cả serial đã tồn tại: " + String.join(", ", duplicates)); break;
+                        req.getSession().setAttribute("flashError", "Tất cả serial đã tồn tại: " + String.join(", ", duplicates));
+                        break;
                     }
-                    for (String s : toInsert) equipmentDAO.insertUnit(typeId, s, currentUser.getId());
+                    for (String s : toInsert) {
+                        equipmentDAO.insertUnit(typeId, s, currentUser.getId());
+                    }
                     req.getSession().setAttribute("flashSuccess", duplicates.isEmpty()
-                        ? "Nhập kho thành công " + toInsert.size() + " thiết bị!"
-                        : "Nhập kho " + toInsert.size() + " thành công. Bỏ qua " + duplicates.size() + " serial trùng.");
+                            ? "Nhập kho thành công " + toInsert.size() + " thiết bị!"
+                            : "Nhập kho " + toInsert.size() + " thành công. Bỏ qua " + duplicates.size() + " serial trùng.");
                     break;
                 }
-                default: break;
+                default:
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -320,7 +357,6 @@ public class EquipmentServlet extends HttpServlet {
     }
 
     // ── HELPERS ──────────────────────────────────────────────────────
-
     private boolean isJson(HttpServletRequest req) {
         String accept = req.getHeader("Accept");
         return accept != null && accept.contains("application/json");
@@ -333,33 +369,42 @@ public class EquipmentServlet extends HttpServlet {
     }
 
     private String jsonStr(String s) {
-        if (s == null) return "null";
+        if (s == null) {
+            return "null";
+        }
         return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
     }
 
     private String generateSerial(String modelName) {
         String prefix = modelName.replaceAll("[^A-Za-z0-9]", "")
-                                 .toUpperCase()
-                                 .substring(0, Math.min(4, modelName.replaceAll("[^A-Za-z0-9]","").length()));
-        if (prefix.isEmpty()) prefix = "EQ";
-        String uuid8 = UUID.randomUUID().toString().replace("-","").substring(0, 8).toUpperCase();
+                .toUpperCase()
+                .substring(0, Math.min(4, modelName.replaceAll("[^A-Za-z0-9]", "").length()));
+        if (prefix.isEmpty()) {
+            prefix = "EQ";
+        }
+        String uuid8 = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
         return "EQ-" + prefix + "-" + uuid8;
     }
 
     private String resolveImage(HttpServletRequest req, String mode)
             throws IOException, ServletException {
-        if ("edit".equals(mode) && "true".equals(req.getParameter("clearImage"))) return null;
+        if ("edit".equals(mode) && "true".equals(req.getParameter("clearImage"))) {
+            return null;
+        }
         Part filePart = null;
-        try { filePart = req.getPart("imageFile"); } catch (Exception ignored) {}
+        try {
+            filePart = req.getPart("imageFile");
+        } catch (Exception ignored) {
+        }
         if (filePart != null && filePart.getSize() > 0) {
-            String fileName  = sanitizeFileName(filePart.getSubmittedFileName());
+            String fileName = sanitizeFileName(filePart.getSubmittedFileName());
             String extension = getExtension(fileName);
             if (!isImageExtension(extension)) {
                 req.getSession().setAttribute("flashError", "Chỉ chấp nhận file ảnh: jpg, png, webp, gif, avif");
                 return null;
             }
             String uniqueName = UUID.randomUUID() + "." + extension;
-            String uploadDir  = getUploadDir();
+            String uploadDir = getUploadDir();
             Files.createDirectories(Paths.get(uploadDir));
             try (InputStream in = filePart.getInputStream()) {
                 Files.copy(in, Paths.get(uploadDir + File.separator + uniqueName), StandardCopyOption.REPLACE_EXISTING);
@@ -367,10 +412,14 @@ public class EquipmentServlet extends HttpServlet {
             return "/uploads/equipment/" + uniqueName;
         }
         String imageUrl = req.getParameter("imageUrl");
-        if (imageUrl != null && !imageUrl.trim().isEmpty()) return imageUrl.trim();
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            return imageUrl.trim();
+        }
         if ("edit".equals(mode)) {
             String existing = req.getParameter("existingImageUrl");
-            if (existing != null && !existing.trim().isEmpty()) return existing.trim();
+            if (existing != null && !existing.trim().isEmpty()) {
+                return existing.trim();
+            }
         }
         return null;
     }
@@ -380,11 +429,15 @@ public class EquipmentServlet extends HttpServlet {
             String relativePath = imageUrl.replace("/", File.separator);
             String fullPath = getServletContext().getRealPath("") + relativePath;
             Files.deleteIfExists(Paths.get(fullPath));
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String sanitizeFileName(String name) {
-        if (name == null) return "image";
+        if (name == null) {
+            return "image";
+        }
         int idx = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
         return idx >= 0 ? name.substring(idx + 1) : name;
     }
