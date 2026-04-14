@@ -14,17 +14,17 @@ import model.PartType;
 
 public class StorekeeperDashboardServlet extends HttpServlet {
 
-    private final PartDAO      partDAO      = new PartDAO();
+    private final PartDAO partDAO = new PartDAO();
     private final EquipmentDAO equipmentDAO = new EquipmentDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
-            Map<String, Integer> partStats   = partDAO.getDashboardStats();
-            Map<String, Integer> eqStats     = equipmentDAO.getDashboardStats();
-            List<?>              lowStockList = partDAO.getLowStockParts(5);
-            List<?>              mostUsedList = partDAO.getMostUsedParts(5);
+            Map<String, Integer> partStats = partDAO.getDashboardStats();
+            Map<String, Integer> eqStats = equipmentDAO.getDashboardStats();
+            List<?> lowStockList = partDAO.getLowStockParts(5);
+            List<?> mostUsedList = partDAO.getMostUsedParts(5);
 
             // ── JSON response ────────────────────────────────────────
             String accept = req.getHeader("Accept");
@@ -37,9 +37,11 @@ public class StorekeeperDashboardServlet extends HttpServlet {
                 json.append("\"partStats\":{");
                 boolean firstP = true;
                 for (Map.Entry<String, Integer> e : partStats.entrySet()) {
-                    if (!firstP) json.append(",");
+                    if (!firstP) {
+                        json.append(",");
+                    }
                     json.append("\"").append(safe(e.getKey())).append("\":")
-                        .append(e.getValue() != null ? e.getValue() : 0);
+                            .append(e.getValue() != null ? e.getValue() : 0);
                     firstP = false;
                 }
                 json.append("},");
@@ -48,9 +50,11 @@ public class StorekeeperDashboardServlet extends HttpServlet {
                 json.append("\"eqStats\":{");
                 boolean firstE = true;
                 for (Map.Entry<String, Integer> e : eqStats.entrySet()) {
-                    if (!firstE) json.append(",");
+                    if (!firstE) {
+                        json.append(",");
+                    }
                     json.append("\"").append(safe(e.getKey())).append("\":")
-                        .append(e.getValue() != null ? e.getValue() : 0);
+                            .append(e.getValue() != null ? e.getValue() : 0);
                     firstE = false;
                 }
                 json.append("},");
@@ -67,8 +71,8 @@ public class StorekeeperDashboardServlet extends HttpServlet {
             }
             // ── hết JSON ─────────────────────────────────────────────
 
-            req.setAttribute("partStats",    partStats);
-            req.setAttribute("eqStats",      eqStats);
+            req.setAttribute("partStats", partStats);
+            req.setAttribute("eqStats", eqStats);
             req.setAttribute("lowStockList", lowStockList);
             req.setAttribute("mostUsedList", mostUsedList);
             req.getRequestDispatcher("/storekeeper.jsp").forward(req, resp);
@@ -80,16 +84,19 @@ public class StorekeeperDashboardServlet extends HttpServlet {
     }
 
     // ── HELPERS ──────────────────────────────────────────────────────
-
     private String safe(String s) {
         return s != null ? s.replace("\"", "\\\"") : "";
     }
 
     private String partTypeListToJson(List<?> list) {
-        if (list == null || list.isEmpty()) return "[]";
+        if (list == null || list.isEmpty()) {
+            return "[]";
+        }
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < list.size(); i++) {
-            if (i > 0) sb.append(",");
+            if (i > 0) {
+                sb.append(",");
+            }
             PartType pt = (PartType) list.get(i);
             sb.append("{");
             sb.append("\"id\":").append(pt.getId()).append(",");

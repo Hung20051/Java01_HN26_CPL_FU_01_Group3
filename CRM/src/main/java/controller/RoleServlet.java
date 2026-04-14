@@ -8,32 +8,41 @@ import java.io.IOException;
 import java.util.List;
 
 public class RoleServlet extends HttpServlet {
+
     private final RoleDAO roleDAO = new RoleDAO();
 
     @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
-    String action = req.getParameter("action");
-    if (action == null) action = "list";
-
-    try {
-        switch (action) {
-            case "edit":   showEdit(req, resp);   break;
-            case "delete": handleDelete(req, resp); break;  // đổi ở đây
-            default:       showList(req, resp);   break;
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if (action == null) {
+            action = "list";
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        resp.sendRedirect(req.getContextPath() + "/role/list");
+
+        try {
+            switch (action) {
+                case "edit":
+                    showEdit(req, resp);
+                    break;
+                case "delete":
+                    handleDelete(req, resp);
+                    break;  // đổi ở đây
+                default:
+                    showList(req, resp);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/role/list");
+        }
     }
-}
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         try {
-            int id   = Integer.parseInt(req.getParameter("id"));
+            int id = Integer.parseInt(req.getParameter("id"));
             String name = req.getParameter("name");
             Role role = new Role(id, name);
             roleDAO.update(role);
@@ -59,13 +68,13 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp)
         req.getRequestDispatcher("/role-edit.jsp").forward(req, resp);
     }
 
-   private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
-        throws Exception {
-    String idStr = req.getParameter("id");
-    if (idStr != null && !idStr.isEmpty()) {
-        int id = Integer.parseInt(idStr);
-        roleDAO.deleteAndReassign(id, 2);
+    private void handleDelete(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        String idStr = req.getParameter("id");
+        if (idStr != null && !idStr.isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            roleDAO.deleteAndReassign(id, 2);
+        }
+        resp.sendRedirect(req.getContextPath() + "/role/list?success=deleted");
     }
-    resp.sendRedirect(req.getContextPath() + "/role/list?success=deleted");
-}
 }
