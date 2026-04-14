@@ -37,851 +37,1600 @@
 %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><%=sr.getRequestCode()%> – TM Detail</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --sb-bg:        #1e1b4b;
-            --sb-border:    rgba(255,255,255,0.08);
-            --sb-text:      rgba(255,255,255,0.45);
-            --sb-accent:    #818cf8;
-            --sb-accent-2:  #a5b4fc;
-            --sb-item-on:   rgba(129,140,248,0.2);
-            --sb-width:     252px;
-            --bg:           #f3f4f9;
-            --bg-card:      #ffffff;
-            --bg-topbar:    #ffffff;
-            --border-light: #e8ecf5;
-            --border-light2:#f0f2fb;
-            --text-h:       #1e1b4b;
-            --text-b:       #374151;
-            --text-m:       #6b7280;
-            --text-s:       #9ca3af;
-            --primary:      #4f46e5;
-            --primary-2:    #6366f1;
-            --primary-light:#ede9fe;
-            --purple: #7c3aed;
-            --blue:   #2563eb;
-            --teal:   #0d9488;
-            --green:  #16a34a;
-            --red:    #dc2626;
-            --amber:  #d97706;
-            --orange: #ea580c;
-            --info:   #0284c7;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title><%=sr.getRequestCode()%> – TM Detail</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            :root {
+                --sb-bg:        #1e1b4b;
+                --sb-border:    rgba(255,255,255,0.08);
+                --sb-text:      rgba(255,255,255,0.45);
+                --sb-accent:    #818cf8;
+                --sb-accent-2:  #a5b4fc;
+                --sb-item-on:   rgba(129,140,248,0.2);
+                --sb-width:     252px;
+                --bg:           #f3f4f9;
+                --bg-card:      #ffffff;
+                --bg-topbar:    #ffffff;
+                --border-light: #e8ecf5;
+                --border-light2:#f0f2fb;
+                --text-h:       #1e1b4b;
+                --text-b:       #374151;
+                --text-m:       #6b7280;
+                --text-s:       #9ca3af;
+                --primary:      #4f46e5;
+                --primary-2:    #6366f1;
+                --primary-light:#ede9fe;
+                --purple: #7c3aed;
+                --blue:   #2563eb;
+                --teal:   #0d9488;
+                --green:  #16a34a;
+                --red:    #dc2626;
+                --amber:  #d97706;
+                --orange: #ea580c;
+                --info:   #0284c7;
+            }
 
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text-b);min-height:100vh;display:flex}
-        ::-webkit-scrollbar{width:4px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:rgba(79,70,229,0.3);border-radius:4px}
+            *,*::before,*::after{
+                box-sizing:border-box;
+                margin:0;
+                padding:0
+            }
+            html{
+                scroll-behavior:smooth
+            }
+            body{
+                font-family:'Sora',sans-serif;
+                background:var(--bg);
+                color:var(--text-b);
+                min-height:100vh;
+                display:flex
+            }
+            ::-webkit-scrollbar{
+                width:4px
+            }
+            ::-webkit-scrollbar-track{
+                background:transparent
+            }
+            ::-webkit-scrollbar-thumb{
+                background:rgba(79,70,229,0.3);
+                border-radius:4px
+            }
 
-        /* ═══ SIDEBAR ═══ */
-        .sb{width:var(--sb-width);min-height:100vh;background:var(--sb-bg);
-            border-right:1px solid rgba(79,70,229,0.2);display:flex;flex-direction:column;
-            position:fixed;top:0;left:0;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,0.15)}
-        .sb-brand{padding:20px 16px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--sb-border)}
-        .sb-logo{width:36px;height:36px;background:linear-gradient(135deg,#818cf8,#a78bfa);border-radius:10px;
-            display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;
-            box-shadow:0 4px 12px rgba(129,140,248,0.4);flex-shrink:0}
-        .sb-name{color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:-.3px}
-        .sb-role{display:inline-flex;align-items:center;background:rgba(217,119,6,0.2);
-            border:1px solid rgba(217,119,6,0.35);color:#fbbf24;font-size:.6rem;font-weight:700;
-            letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-top:3px}
-        .sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
-        .sb-lbl{color:rgba(255,255,255,0.22);font-size:.6rem;font-weight:700;text-transform:uppercase;
-            letter-spacing:1.6px;padding:0 8px;margin:14px 0 5px}
-        .sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;margin-bottom:1px;
-            color:var(--sb-text);text-decoration:none;font-size:.81rem;font-weight:500;
-            transition:all .18s;border-left:2px solid transparent}
-        .sb-item i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-            font-size:.78rem;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0;transition:all .18s}
-        .sb-item.on{color:#fff;background:var(--sb-item-on);border-left-color:var(--sb-accent)}
-        .sb-item.on i{background:rgba(129,140,248,0.3);color:var(--sb-accent-2)}
-        .sb-item:hover:not(.on){color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.06)}
-        .sb-foot{padding:12px 10px 14px;border-top:1px solid var(--sb-border)}
-        .sb-user{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;
-            background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);
-            margin-bottom:5px;text-decoration:none;transition:all .18s;cursor:pointer}
-        .sb-user:hover{background:rgba(129,140,248,0.18);border-color:rgba(129,140,248,0.3)}
-        .sb-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#a78bfa);
-            display:flex;align-items:center;justify-content:center;color:#fff;font-size:.88rem;
-            font-weight:700;flex-shrink:0;overflow:hidden}
-        .sb-ava img{width:34px;height:34px;object-fit:cover;border-radius:50%}
-        .sb-uname{color:#fff;font-size:.8rem;font-weight:600}
-        .sb-urole{color:rgba(255,255,255,0.35);font-size:.66rem;margin-top:1px}
-        .sb-logout{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:9px;
-            color:rgba(255,255,255,0.3);text-decoration:none;font-size:.78rem;transition:all .18s}
-        .sb-logout:hover{color:#fca5a5;background:rgba(239,68,68,0.1)}
+            /* ═══ SIDEBAR ═══ */
+            .sb{
+                width:var(--sb-width);
+                min-height:100vh;
+                background:var(--sb-bg);
+                border-right:1px solid rgba(79,70,229,0.2);
+                display:flex;
+                flex-direction:column;
+                position:fixed;
+                top:0;
+                left:0;
+                z-index:100;
+                box-shadow:4px 0 24px rgba(0,0,0,0.15)
+            }
+            .sb-brand{
+                padding:20px 16px 16px;
+                display:flex;
+                align-items:center;
+                gap:10px;
+                border-bottom:1px solid var(--sb-border)
+            }
+            .sb-logo{
+                width:36px;
+                height:36px;
+                background:linear-gradient(135deg,#818cf8,#a78bfa);
+                border-radius:10px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#fff;
+                font-size:.9rem;
+                box-shadow:0 4px 12px rgba(129,140,248,0.4);
+                flex-shrink:0
+            }
+            .sb-name{
+                color:#fff;
+                font-size:1.05rem;
+                font-weight:800;
+                letter-spacing:-.3px
+            }
+            .sb-role{
+                display:inline-flex;
+                align-items:center;
+                background:rgba(217,119,6,0.2);
+                border:1px solid rgba(217,119,6,0.35);
+                color:#fbbf24;
+                font-size:.6rem;
+                font-weight:700;
+                letter-spacing:1px;
+                text-transform:uppercase;
+                padding:2px 8px;
+                border-radius:20px;
+                margin-top:3px
+            }
+            .sb-nav{
+                flex:1;
+                padding:12px 10px;
+                overflow-y:auto
+            }
+            .sb-lbl{
+                color:rgba(255,255,255,0.22);
+                font-size:.6rem;
+                font-weight:700;
+                text-transform:uppercase;
+                letter-spacing:1.6px;
+                padding:0 8px;
+                margin:14px 0 5px
+            }
+            .sb-item{
+                display:flex;
+                align-items:center;
+                gap:9px;
+                padding:8px 10px;
+                border-radius:9px;
+                margin-bottom:1px;
+                color:var(--sb-text);
+                text-decoration:none;
+                font-size:.81rem;
+                font-weight:500;
+                transition:all .18s;
+                border-left:2px solid transparent
+            }
+            .sb-item i{
+                width:28px;
+                height:28px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:.78rem;
+                border-radius:8px;
+                background:rgba(255,255,255,0.06);
+                flex-shrink:0;
+                transition:all .18s
+            }
+            .sb-item.on{
+                color:#fff;
+                background:var(--sb-item-on);
+                border-left-color:var(--sb-accent)
+            }
+            .sb-item.on i{
+                background:rgba(129,140,248,0.3);
+                color:var(--sb-accent-2)
+            }
+            .sb-item:hover:not(.on){
+                color:rgba(255,255,255,0.78);
+                background:rgba(255,255,255,0.06)
+            }
+            .sb-foot{
+                padding:12px 10px 14px;
+                border-top:1px solid var(--sb-border)
+            }
+            .sb-user{
+                display:flex;
+                align-items:center;
+                gap:9px;
+                padding:9px 10px;
+                border-radius:10px;
+                background:rgba(255,255,255,0.07);
+                border:1px solid rgba(255,255,255,0.1);
+                margin-bottom:5px;
+                text-decoration:none;
+                transition:all .18s;
+                cursor:pointer
+            }
+            .sb-user:hover{
+                background:rgba(129,140,248,0.18);
+                border-color:rgba(129,140,248,0.3)
+            }
+            .sb-ava{
+                width:34px;
+                height:34px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#818cf8,#a78bfa);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#fff;
+                font-size:.88rem;
+                font-weight:700;
+                flex-shrink:0;
+                overflow:hidden
+            }
+            .sb-ava img{
+                width:34px;
+                height:34px;
+                object-fit:cover;
+                border-radius:50%
+            }
+            .sb-uname{
+                color:#fff;
+                font-size:.8rem;
+                font-weight:600
+            }
+            .sb-urole{
+                color:rgba(255,255,255,0.35);
+                font-size:.66rem;
+                margin-top:1px
+            }
+            .sb-logout{
+                display:flex;
+                align-items:center;
+                gap:8px;
+                width:100%;
+                padding:8px 10px;
+                border-radius:9px;
+                color:rgba(255,255,255,0.3);
+                text-decoration:none;
+                font-size:.78rem;
+                transition:all .18s
+            }
+            .sb-logout:hover{
+                color:#fca5a5;
+                background:rgba(239,68,68,0.1)
+            }
 
-        /* ═══ MAIN ═══ */
-        .main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;min-height:100vh}
-        .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;
-            background:var(--bg-topbar);border-bottom:1px solid var(--border-light);
-            position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
-        .topbar-title{font-size:1.2rem;font-weight:800;color:var(--text-h);letter-spacing:-.3px;
-            display:flex;align-items:center;gap:9px}
-        .topbar-title i{color:var(--primary-2);font-size:1rem}
-        .topbar-sub{color:var(--text-s);font-size:.78rem;margin-top:2px}
+            /* ═══ MAIN ═══ */
+            .main{
+                margin-left:var(--sb-width);
+                flex:1;
+                display:flex;
+                flex-direction:column;
+                min-height:100vh
+            }
+            .topbar{
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:18px 28px;
+                background:var(--bg-topbar);
+                border-bottom:1px solid var(--border-light);
+                position:sticky;
+                top:0;
+                z-index:50;
+                box-shadow:0 1px 6px rgba(0,0,0,0.06)
+            }
+            .topbar-title{
+                font-size:1.2rem;
+                font-weight:800;
+                color:var(--text-h);
+                letter-spacing:-.3px;
+                display:flex;
+                align-items:center;
+                gap:9px
+            }
+            .topbar-title i{
+                color:var(--primary-2);
+                font-size:1rem
+            }
+            .topbar-sub{
+                color:var(--text-s);
+                font-size:.78rem;
+                margin-top:2px
+            }
 
-        /* ═══ 2-COLUMN LAYOUT ═══ */
-        .content{padding:24px 28px;flex:1}
-        .layout-grid{
-            display:grid;
-            grid-template-columns:7fr 5fr;
-            gap:20px;
-            align-items:start;
-        }
-        .col-left{}
-        .col-right{
-            position:sticky;
-            top:88px; /* topbar height + gap */
-        }
+            /* ═══ 2-COLUMN LAYOUT ═══ */
+            .content{
+                padding:24px 28px;
+                flex:1
+            }
+            .layout-grid{
+                display:grid;
+                grid-template-columns:7fr 5fr;
+                gap:20px;
+                align-items:start;
+            }
+            .col-left{
+            }
+            .col-right{
+                position:sticky;
+                top:88px; /* topbar height + gap */
+            }
 
-        /* Alert */
-        @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-        .alert{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;
-            margin-bottom:20px;font-size:.82rem;animation:cardIn .5s ease both}
-        .alert-success{background:#d1fae5;border:1px solid #a7f3d0;color:#065f46}
-        .alert-success i{color:var(--green)}
-        .alert-error{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}
-        .alert-error i{color:var(--red)}
+            /* Alert */
+            @keyframes cardIn{
+                from{
+                    opacity:0;
+                    transform:translateY(16px)
+                }
+                to{
+                    opacity:1;
+                    transform:none
+                }
+            }
+            .alert{
+                display:flex;
+                align-items:center;
+                gap:12px;
+                padding:12px 18px;
+                border-radius:12px;
+                margin-bottom:20px;
+                font-size:.82rem;
+                animation:cardIn .5s ease both
+            }
+            .alert-success{
+                background:#d1fae5;
+                border:1px solid #a7f3d0;
+                color:#065f46
+            }
+            .alert-success i{
+                color:var(--green)
+            }
+            .alert-error{
+                background:#fee2e2;
+                border:1px solid #fca5a5;
+                color:#991b1b
+            }
+            .alert-error i{
+                color:var(--red)
+            }
 
-        /* Cards */
-        .card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;
-            overflow:hidden;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,0.05);
-            animation:cardIn .45s ease both}
-        .card:nth-child(1){animation-delay:.04s}
-        .card:nth-child(2){animation-delay:.08s}
-        .card:nth-child(3){animation-delay:.12s}
-        .card:nth-child(4){animation-delay:.16s}
-        .card:nth-child(5){animation-delay:.20s}
-        .card:nth-child(6){animation-delay:.24s}
-        .card:nth-child(7){animation-delay:.28s}
-        .card:nth-child(8){animation-delay:.32s}
-        .card-hd{display:flex;align-items:center;gap:10px;padding:14px 18px;
-            border-bottom:1px solid var(--border-light2);background:#fafbff}
-        .card-hd-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
-            justify-content:center;font-size:.8rem;flex-shrink:0}
-        .card-hd-title{font-size:.88rem;font-weight:700;color:var(--text-h)}
-        .card-hd-badge{margin-left:auto;display:flex;align-items:center;gap:6px}
-        .card-body{padding:20px}
+            /* Cards */
+            .card{
+                background:var(--bg-card);
+                border:1px solid var(--border-light);
+                border-radius:16px;
+                overflow:hidden;
+                margin-bottom:18px;
+                box-shadow:0 1px 6px rgba(0,0,0,0.05);
+                animation:cardIn .45s ease both
+            }
+            .card:nth-child(1){
+                animation-delay:.04s
+            }
+            .card:nth-child(2){
+                animation-delay:.08s
+            }
+            .card:nth-child(3){
+                animation-delay:.12s
+            }
+            .card:nth-child(4){
+                animation-delay:.16s
+            }
+            .card:nth-child(5){
+                animation-delay:.20s
+            }
+            .card:nth-child(6){
+                animation-delay:.24s
+            }
+            .card:nth-child(7){
+                animation-delay:.28s
+            }
+            .card:nth-child(8){
+                animation-delay:.32s
+            }
+            .card-hd{
+                display:flex;
+                align-items:center;
+                gap:10px;
+                padding:14px 18px;
+                border-bottom:1px solid var(--border-light2);
+                background:#fafbff
+            }
+            .card-hd-icon{
+                width:30px;
+                height:30px;
+                border-radius:9px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:.8rem;
+                flex-shrink:0
+            }
+            .card-hd-title{
+                font-size:.88rem;
+                font-weight:700;
+                color:var(--text-h)
+            }
+            .card-hd-badge{
+                margin-left:auto;
+                display:flex;
+                align-items:center;
+                gap:6px
+            }
+            .card-body{
+                padding:20px
+            }
 
-        /* Info grid */
-        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-        .info-item label{font-size:.67rem;font-weight:700;color:var(--text-s);text-transform:uppercase;
-            letter-spacing:1px;display:block;margin-bottom:5px}
-        .info-item .val{font-size:.85rem;color:var(--text-b);font-weight:500;line-height:1.5}
-        .info-item .val.mono{font-family:'Courier New',monospace;color:var(--primary-2);font-weight:700;font-size:.88rem}
-        .sub-lbl{font-size:.67rem;font-weight:700;color:var(--text-s);text-transform:uppercase;
-            letter-spacing:1px;margin-bottom:7px;margin-top:16px}
-        .desc-box{background:#fafbff;border:1px solid var(--border-light);border-radius:12px;
-            padding:14px 16px;font-size:.83rem;color:var(--text-b);line-height:1.7;white-space:pre-wrap;
-            border-left:3px solid var(--primary-2)}
-        .reject-box{padding:13px 16px;margin-top:14px;background:#fee2e2;
-            border:1.5px solid #fca5a5;border-radius:12px}
-        .reject-box-title{font-size:.72rem;font-weight:700;color:var(--red);margin-bottom:4px}
-        .reject-box-body{font-size:.82rem;color:#991b1b}
+            /* Info grid */
+            .info-grid{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:16px
+            }
+            .info-item label{
+                font-size:.67rem;
+                font-weight:700;
+                color:var(--text-s);
+                text-transform:uppercase;
+                letter-spacing:1px;
+                display:block;
+                margin-bottom:5px
+            }
+            .info-item .val{
+                font-size:.85rem;
+                color:var(--text-b);
+                font-weight:500;
+                line-height:1.5
+            }
+            .info-item .val.mono{
+                font-family:'Courier New',monospace;
+                color:var(--primary-2);
+                font-weight:700;
+                font-size:.88rem
+            }
+            .sub-lbl{
+                font-size:.67rem;
+                font-weight:700;
+                color:var(--text-s);
+                text-transform:uppercase;
+                letter-spacing:1px;
+                margin-bottom:7px;
+                margin-top:16px
+            }
+            .desc-box{
+                background:#fafbff;
+                border:1px solid var(--border-light);
+                border-radius:12px;
+                padding:14px 16px;
+                font-size:.83rem;
+                color:var(--text-b);
+                line-height:1.7;
+                white-space:pre-wrap;
+                border-left:3px solid var(--primary-2)
+            }
+            .reject-box{
+                padding:13px 16px;
+                margin-top:14px;
+                background:#fee2e2;
+                border:1.5px solid #fca5a5;
+                border-radius:12px
+            }
+            .reject-box-title{
+                font-size:.72rem;
+                font-weight:700;
+                color:var(--red);
+                margin-bottom:4px
+            }
+            .reject-box-body{
+                font-size:.82rem;
+                color:#991b1b
+            }
 
-        /* Badges */
-        .b{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;
-            font-size:.68rem;font-weight:700;white-space:nowrap}
-        .b-pending    {background:#fef3c7;color:#92400e}
-        .b-approved   {background:#d1fae5;color:#065f46}
-        .b-rejected   {background:#fee2e2;color:#991b1b}
-        .b-in_progress,.b-in-progress{background:#dbeafe;color:#1e40af}
-        .b-completed  {background:#ede9fe;color:#5b21b6}
-        .b-cancelled  {background:#f3f4f6;color:#6b7280}
-        .b-low    {background:#dcfce7;color:#166534}
-        .b-medium {background:#fef3c7;color:#92400e}
-        .b-high   {background:#ffedd5;color:#9a3412}
-        .b-urgent {background:#fee2e2;color:#991b1b}
-        .ct-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.67rem;font-weight:700}
-        .ct-wr{background:#d1fae5;color:#065f46}
-        .ct-mt{background:#dbeafe;color:#1e40af}
+            /* Badges */
+            .b{
+                display:inline-flex;
+                align-items:center;
+                padding:3px 9px;
+                border-radius:20px;
+                font-size:.68rem;
+                font-weight:700;
+                white-space:nowrap
+            }
+            .b-pending    {
+                background:#fef3c7;
+                color:#92400e
+            }
+            .b-approved   {
+                background:#d1fae5;
+                color:#065f46
+            }
+            .b-rejected   {
+                background:#fee2e2;
+                color:#991b1b
+            }
+            .b-in_progress,.b-in-progress{
+                background:#dbeafe;
+                color:#1e40af
+            }
+            .b-completed  {
+                background:#ede9fe;
+                color:#5b21b6
+            }
+            .b-cancelled  {
+                background:#f3f4f6;
+                color:#6b7280
+            }
+            .b-low    {
+                background:#dcfce7;
+                color:#166534
+            }
+            .b-medium {
+                background:#fef3c7;
+                color:#92400e
+            }
+            .b-high   {
+                background:#ffedd5;
+                color:#9a3412
+            }
+            .b-urgent {
+                background:#fee2e2;
+                color:#991b1b
+            }
+            .ct-badge{
+                display:inline-block;
+                padding:2px 7px;
+                border-radius:5px;
+                font-size:.67rem;
+                font-weight:700
+            }
+            .ct-wr{
+                background:#d1fae5;
+                color:#065f46
+            }
+            .ct-mt{
+                background:#dbeafe;
+                color:#1e40af
+            }
 
-        /* Table */
-        table{width:100%;border-collapse:collapse;font-size:.8rem}
-        thead tr{background:#fafbff}
-        th{padding:10px 16px;text-align:left;color:var(--text-s);font-weight:700;font-size:.67rem;
-            text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border-light2)}
-        td{padding:12px 16px;border-bottom:1px solid var(--border-light2);vertical-align:middle;color:var(--text-b)}
-        tr:last-child td{border-bottom:none}
-        tbody tr:hover td{background:#f7f8ff}
-        .td-muted{color:var(--text-s);font-size:.75rem}
-        .td-code{font-family:'Courier New',monospace;font-size:.78rem;color:var(--text-m)}
-        .src-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;
-            font-size:.68rem;font-weight:700;background:var(--primary-light);color:var(--primary-2);
-            border:1px solid rgba(99,102,241,0.25)}
+            /* Table */
+            table{
+                width:100%;
+                border-collapse:collapse;
+                font-size:.8rem
+            }
+            thead tr{
+                background:#fafbff
+            }
+            th{
+                padding:10px 16px;
+                text-align:left;
+                color:var(--text-s);
+                font-weight:700;
+                font-size:.67rem;
+                text-transform:uppercase;
+                letter-spacing:.8px;
+                border-bottom:1px solid var(--border-light2)
+            }
+            td{
+                padding:12px 16px;
+                border-bottom:1px solid var(--border-light2);
+                vertical-align:middle;
+                color:var(--text-b)
+            }
+            tr:last-child td{
+                border-bottom:none
+            }
+            tbody tr:hover td{
+                background:#f7f8ff
+            }
+            .td-muted{
+                color:var(--text-s);
+                font-size:.75rem
+            }
+            .td-code{
+                font-family:'Courier New',monospace;
+                font-size:.78rem;
+                color:var(--text-m)
+            }
+            .src-badge{
+                display:inline-flex;
+                align-items:center;
+                padding:2px 9px;
+                border-radius:20px;
+                font-size:.68rem;
+                font-weight:700;
+                background:var(--primary-light);
+                color:var(--primary-2);
+                border:1px solid rgba(99,102,241,0.25)
+            }
 
-        /* Buttons */
-        .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;
-            font-size:.81rem;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;border:none;
-            text-decoration:none;transition:all .2s}
-        .btn-success{background:var(--green);color:#fff;box-shadow:0 3px 10px rgba(22,163,74,.28)}
-        .btn-success:hover{background:#15803d;transform:translateY(-1px)}
-        .btn-danger{background:var(--red);color:#fff;box-shadow:0 3px 10px rgba(220,38,38,.28)}
-        .btn-danger:hover{background:#b91c1c;transform:translateY(-1px)}
-        .btn-primary{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(79,70,229,.28)}
-        .btn-primary:hover{background:#4338ca;transform:translateY(-1px)}
-        .btn-secondary{background:#fff;color:var(--text-m);border:1.5px solid var(--border-light)}
-        .btn-secondary:hover{background:#f3f4f6;color:var(--text-b)}
-        .action-bar{display:flex;gap:10px;flex-wrap:wrap}
+            /* Buttons */
+            .btn{
+                display:inline-flex;
+                align-items:center;
+                gap:7px;
+                padding:9px 18px;
+                border-radius:10px;
+                font-size:.81rem;
+                font-weight:600;
+                font-family:'Sora',sans-serif;
+                cursor:pointer;
+                border:none;
+                text-decoration:none;
+                transition:all .2s
+            }
+            .btn-success{
+                background:var(--green);
+                color:#fff;
+                box-shadow:0 3px 10px rgba(22,163,74,.28)
+            }
+            .btn-success:hover{
+                background:#15803d;
+                transform:translateY(-1px)
+            }
+            .btn-danger{
+                background:var(--red);
+                color:#fff;
+                box-shadow:0 3px 10px rgba(220,38,38,.28)
+            }
+            .btn-danger:hover{
+                background:#b91c1c;
+                transform:translateY(-1px)
+            }
+            .btn-primary{
+                background:var(--primary);
+                color:#fff;
+                box-shadow:0 3px 10px rgba(79,70,229,.28)
+            }
+            .btn-primary:hover{
+                background:#4338ca;
+                transform:translateY(-1px)
+            }
+            .btn-secondary{
+                background:#fff;
+                color:var(--text-m);
+                border:1.5px solid var(--border-light)
+            }
+            .btn-secondary:hover{
+                background:#f3f4f6;
+                color:var(--text-b)
+            }
+            .action-bar{
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap
+            }
 
-        /* ══ WORKLOAD PANEL ══ */
-        .wl-list{display:flex;flex-direction:column;gap:6px;padding:2px 0}
-        .wl-card{
-            border:1px solid var(--border-light);border-radius:14px;
-            padding:11px 14px;background:var(--bg-card);
-            display:flex;align-items:center;gap:12px;
-            transition:all .18s;position:relative;overflow:hidden;
-        }
-        .wl-card::before{
-            content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-            border-radius:3px 0 0 3px;background:var(--wl-accent,#e5e7eb);
-        }
-        .wl-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.09);transform:translateY(-1px)}
-        .wl-card.is-avail{--wl-accent:#22c55e;background:linear-gradient(to right,#f0fdf4,#fff 60%)}
-        .wl-card.is-mod  {--wl-accent:#f59e0b;background:linear-gradient(to right,#fffbeb,#fff 60%)}
-        .wl-card.is-busy {--wl-accent:#f97316;background:linear-gradient(to right,#fff7ed,#fff 60%)}
-        .wl-card.is-full {--wl-accent:#ef4444;background:linear-gradient(to right,#fef2f2,#fff 60%);opacity:.7}
-        .wl-ava-wrap{position:relative;flex-shrink:0}
-        .wl-ava{
-            width:40px;height:40px;border-radius:50%;
-            background:linear-gradient(135deg,#818cf8,#a78bfa);
-            display:flex;align-items:center;justify-content:center;
-            color:#fff;font-size:.9rem;font-weight:700;
-            border:2px solid #fff;
-            box-shadow:0 0 0 2px var(--wl-accent,#e5e7eb);
-            overflow:hidden;transition:box-shadow .18s;
-        }
-        .wl-ava img{width:40px;height:40px;object-fit:cover;border-radius:50%}
-        .wl-dot{
-            position:absolute;bottom:1px;right:1px;
-            width:10px;height:10px;border-radius:50%;
-            background:var(--wl-accent,#9ca3af);border:2px solid #fff;
-        }
-        .wl-info{flex:1;min-width:0}
-        .wl-name{font-size:.83rem;font-weight:700;color:var(--text-h);
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:1px}
-        .wl-email{font-size:.67rem;color:var(--text-s);
-            overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:5px}
-        .wl-status{display:inline-flex;align-items:center;gap:4px;
-            padding:2px 8px;border-radius:20px;font-size:.63rem;font-weight:700}
-        .wl-avail{background:#dcfce7;color:#166534}
-        .wl-mod  {background:#fef3c7;color:#92400e}
-        .wl-busy {background:#ffedd5;color:#9a3412}
-        .wl-full {background:#fee2e2;color:#991b1b}
-        .wl-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;min-width:76px}
-        .wl-count{font-size:.72rem;font-weight:700;color:var(--text-m)}
-        .wl-bar-bg{width:76px;height:6px;background:rgba(0,0,0,.07);border-radius:6px;overflow:hidden}
-        .wl-bar{height:100%;border-radius:6px;transition:width .4s cubic-bezier(.4,0,.2,1)}
-        .wl-bar-g{background:linear-gradient(to right,#4ade80,#22c55e)}
-        .wl-bar-a{background:linear-gradient(to right,#fbbf24,#f59e0b)}
-        .wl-bar-o{background:linear-gradient(to right,#fb923c,#f97316)}
-        .wl-bar-r{background:linear-gradient(to right,#f87171,#ef4444)}
-        .wl-pct{font-size:.65rem;color:var(--text-s)}
-        .wl-empty{text-align:center;padding:24px;color:var(--text-s);font-size:.82rem}
-        .wl-empty i{font-size:1.6rem;display:block;margin-bottom:8px;opacity:.3}
+            /* ══ WORKLOAD PANEL ══ */
+            .wl-list{
+                display:flex;
+                flex-direction:column;
+                gap:6px;
+                padding:2px 0
+            }
+            .wl-card{
+                border:1px solid var(--border-light);
+                border-radius:14px;
+                padding:11px 14px;
+                background:var(--bg-card);
+                display:flex;
+                align-items:center;
+                gap:12px;
+                transition:all .18s;
+                position:relative;
+                overflow:hidden;
+            }
+            .wl-card::before{
+                content:'';
+                position:absolute;
+                left:0;
+                top:0;
+                bottom:0;
+                width:3px;
+                border-radius:3px 0 0 3px;
+                background:var(--wl-accent,#e5e7eb);
+            }
+            .wl-card:hover{
+                box-shadow:0 4px 18px rgba(0,0,0,.09);
+                transform:translateY(-1px)
+            }
+            .wl-card.is-avail{
+                --wl-accent:#22c55e;
+                background:linear-gradient(to right,#f0fdf4,#fff 60%)
+            }
+            .wl-card.is-mod  {
+                --wl-accent:#f59e0b;
+                background:linear-gradient(to right,#fffbeb,#fff 60%)
+            }
+            .wl-card.is-busy {
+                --wl-accent:#f97316;
+                background:linear-gradient(to right,#fff7ed,#fff 60%)
+            }
+            .wl-card.is-full {
+                --wl-accent:#ef4444;
+                background:linear-gradient(to right,#fef2f2,#fff 60%);
+                opacity:.7
+            }
+            .wl-ava-wrap{
+                position:relative;
+                flex-shrink:0
+            }
+            .wl-ava{
+                width:40px;
+                height:40px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#818cf8,#a78bfa);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#fff;
+                font-size:.9rem;
+                font-weight:700;
+                border:2px solid #fff;
+                box-shadow:0 0 0 2px var(--wl-accent,#e5e7eb);
+                overflow:hidden;
+                transition:box-shadow .18s;
+            }
+            .wl-ava img{
+                width:40px;
+                height:40px;
+                object-fit:cover;
+                border-radius:50%
+            }
+            .wl-dot{
+                position:absolute;
+                bottom:1px;
+                right:1px;
+                width:10px;
+                height:10px;
+                border-radius:50%;
+                background:var(--wl-accent,#9ca3af);
+                border:2px solid #fff;
+            }
+            .wl-info{
+                flex:1;
+                min-width:0
+            }
+            .wl-name{
+                font-size:.83rem;
+                font-weight:700;
+                color:var(--text-h);
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                margin-bottom:1px
+            }
+            .wl-email{
+                font-size:.67rem;
+                color:var(--text-s);
+                overflow:hidden;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                margin-bottom:5px
+            }
+            .wl-status{
+                display:inline-flex;
+                align-items:center;
+                gap:4px;
+                padding:2px 8px;
+                border-radius:20px;
+                font-size:.63rem;
+                font-weight:700
+            }
+            .wl-avail{
+                background:#dcfce7;
+                color:#166534
+            }
+            .wl-mod  {
+                background:#fef3c7;
+                color:#92400e
+            }
+            .wl-busy {
+                background:#ffedd5;
+                color:#9a3412
+            }
+            .wl-full {
+                background:#fee2e2;
+                color:#991b1b
+            }
+            .wl-right{
+                display:flex;
+                flex-direction:column;
+                align-items:flex-end;
+                gap:5px;
+                flex-shrink:0;
+                min-width:76px
+            }
+            .wl-count{
+                font-size:.72rem;
+                font-weight:700;
+                color:var(--text-m)
+            }
+            .wl-bar-bg{
+                width:76px;
+                height:6px;
+                background:rgba(0,0,0,.07);
+                border-radius:6px;
+                overflow:hidden
+            }
+            .wl-bar{
+                height:100%;
+                border-radius:6px;
+                transition:width .4s cubic-bezier(.4,0,.2,1)
+            }
+            .wl-bar-g{
+                background:linear-gradient(to right,#4ade80,#22c55e)
+            }
+            .wl-bar-a{
+                background:linear-gradient(to right,#fbbf24,#f59e0b)
+            }
+            .wl-bar-o{
+                background:linear-gradient(to right,#fb923c,#f97316)
+            }
+            .wl-bar-r{
+                background:linear-gradient(to right,#f87171,#ef4444)
+            }
+            .wl-pct{
+                font-size:.65rem;
+                color:var(--text-s)
+            }
+            .wl-empty{
+                text-align:center;
+                padding:24px;
+                color:var(--text-s);
+                font-size:.82rem
+            }
+            .wl-empty i{
+                font-size:1.6rem;
+                display:block;
+                margin-bottom:8px;
+                opacity:.3
+            }
 
-        /* ══ ASSIGNED TASKS TABLE ══ */
-        .task-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
-            border-radius:20px;font-size:.67rem;font-weight:700}
-        .task-assigned  {background:#fef3c7;color:#92400e}
-        .task-inprogress{background:#dbeafe;color:#1e40af}
-        .task-completed {background:#dcfce7;color:#166534}
-        .task-cancelled {background:#f3f4f6;color:#6b7280}
+            /* ══ ASSIGNED TASKS TABLE ══ */
+            .task-badge{
+                display:inline-flex;
+                align-items:center;
+                gap:4px;
+                padding:2px 8px;
+                border-radius:20px;
+                font-size:.67rem;
+                font-weight:700
+            }
+            .task-assigned  {
+                background:#fef3c7;
+                color:#92400e
+            }
+            .task-inprogress{
+                background:#dbeafe;
+                color:#1e40af
+            }
+            .task-completed {
+                background:#dcfce7;
+                color:#166534
+            }
+            .task-cancelled {
+                background:#f3f4f6;
+                color:#6b7280
+            }
 
-        /* ══ INLINE ASSIGN FORM ══ */
-        .assign-form-wrap{padding:16px}
-        .form-row{margin-bottom:12px}
-        .form-row label{display:block;font-size:.72rem;font-weight:700;color:var(--text-s);
-            text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-        .form-row input,
-        .form-row select{width:100%;padding:8px 11px;border:1.5px solid var(--border-light);
-            border-radius:9px;font-size:.82rem;font-family:'Sora',sans-serif;color:var(--text-b);
-            background:var(--bg-card);outline:none;transition:all .2s}
-        .form-row input:focus,
-        .form-row select:focus{border-color:rgba(79,70,229,.4);background:#faf9ff;
-            box-shadow:0 0 0 3px rgba(79,70,229,.07)}
-        .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-        /* Technician checkbox list */
-        .tech-pick-list{border:1.5px solid var(--border-light);border-radius:10px;overflow:hidden;
-            max-height:260px;overflow-y:auto}
-        .tech-pick-item{display:flex;align-items:center;gap:10px;padding:9px 12px;
-            border-bottom:1px solid var(--border-light2);cursor:pointer;transition:background .12s}
-        .tech-pick-item:last-child{border-bottom:none}
-        .tech-pick-item:hover{background:#f7f8ff}
-        .tech-pick-item.overloaded{opacity:.45;pointer-events:none}
-        .tech-pick-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--primary);flex-shrink:0}
-        .tech-pick-info{flex:1;min-width:0}
-        .tech-pick-name{font-size:.8rem;font-weight:600;color:var(--text-h)}
-        .tech-pick-sub{font-size:.68rem;color:var(--text-s);margin-top:1px}
-        .full-label{color:var(--red);font-size:.65rem;font-weight:700;margin-left:5px}
-        .mini-bar-bg{width:48px;height:5px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;flex-shrink:0}
-        .mini-bar{height:100%;border-radius:4px}
-        .btn-full{width:100%;justify-content:center}
+            /* ══ INLINE ASSIGN FORM ══ */
+            .assign-form-wrap{
+                padding:16px
+            }
+            .form-row{
+                margin-bottom:12px
+            }
+            .form-row label{
+                display:block;
+                font-size:.72rem;
+                font-weight:700;
+                color:var(--text-s);
+                text-transform:uppercase;
+                letter-spacing:.8px;
+                margin-bottom:6px
+            }
+            .form-row input,
+            .form-row select{
+                width:100%;
+                padding:8px 11px;
+                border:1.5px solid var(--border-light);
+                border-radius:9px;
+                font-size:.82rem;
+                font-family:'Sora',sans-serif;
+                color:var(--text-b);
+                background:var(--bg-card);
+                outline:none;
+                transition:all .2s
+            }
+            .form-row input:focus,
+            .form-row select:focus{
+                border-color:rgba(79,70,229,.4);
+                background:#faf9ff;
+                box-shadow:0 0 0 3px rgba(79,70,229,.07)
+            }
+            .form-row-2{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:10px;
+                margin-bottom:12px
+            }
+            /* Technician checkbox list */
+            .tech-pick-list{
+                border:1.5px solid var(--border-light);
+                border-radius:10px;
+                overflow:hidden;
+                max-height:260px;
+                overflow-y:auto
+            }
+            .tech-pick-item{
+                display:flex;
+                align-items:center;
+                gap:10px;
+                padding:9px 12px;
+                border-bottom:1px solid var(--border-light2);
+                cursor:pointer;
+                transition:background .12s
+            }
+            .tech-pick-item:last-child{
+                border-bottom:none
+            }
+            .tech-pick-item:hover{
+                background:#f7f8ff
+            }
+            .tech-pick-item.overloaded{
+                opacity:.45;
+                pointer-events:none
+            }
+            .tech-pick-item input[type=checkbox]{
+                width:15px;
+                height:15px;
+                accent-color:var(--primary);
+                flex-shrink:0
+            }
+            .tech-pick-info{
+                flex:1;
+                min-width:0
+            }
+            .tech-pick-name{
+                font-size:.8rem;
+                font-weight:600;
+                color:var(--text-h)
+            }
+            .tech-pick-sub{
+                font-size:.68rem;
+                color:var(--text-s);
+                margin-top:1px
+            }
+            .full-label{
+                color:var(--red);
+                font-size:.65rem;
+                font-weight:700;
+                margin-left:5px
+            }
+            .mini-bar-bg{
+                width:48px;
+                height:5px;
+                background:rgba(0,0,0,.08);
+                border-radius:4px;
+                overflow:hidden;
+                flex-shrink:0
+            }
+            .mini-bar{
+                height:100%;
+                border-radius:4px
+            }
+            .btn-full{
+                width:100%;
+                justify-content:center
+            }
 
-        /* Modal */
-        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);
-            backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
-        .modal-overlay.show{display:flex}
-        .modal{background:#fff;border:1px solid var(--border-light);border-radius:18px;padding:28px;
-            width:100%;max-width:460px;box-shadow:0 24px 60px rgba(0,0,0,.15);
-            animation:modalIn .25s cubic-bezier(.4,0,.2,1) both}
-        @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
-        .modal h3{font-size:.98rem;font-weight:700;color:var(--text-h);margin-bottom:14px;
-            display:flex;align-items:center;gap:9px}
-        .modal-desc{font-size:.82rem;color:var(--text-m);line-height:1.65;margin-bottom:20px;
-            padding:12px 14px;background:#fafbff;border:1px solid var(--border-light);border-radius:10px}
-        .modal-desc strong{color:var(--primary-2)}
-        .modal label{font-size:.72rem;font-weight:700;color:var(--text-s);text-transform:uppercase;
-            letter-spacing:.8px;display:block;margin-bottom:7px}
-        .modal textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border-light);
-            border-radius:9px;font-size:.83rem;font-family:'Sora',sans-serif;color:var(--text-b);
-            background:#fff;outline:none;resize:vertical;transition:all .2s}
-        .modal textarea:focus{border-color:rgba(79,70,229,.4);background:#faf9ff;
-            box-shadow:0 0 0 3px rgba(79,70,229,.07)}
-        .modal textarea::placeholder{color:var(--text-s)}
-        .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+            /* Modal */
+            .modal-overlay{
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(0,0,0,0.45);
+                backdrop-filter:blur(4px);
+                z-index:1000;
+                align-items:center;
+                justify-content:center
+            }
+            .modal-overlay.show{
+                display:flex
+            }
+            .modal{
+                background:#fff;
+                border:1px solid var(--border-light);
+                border-radius:18px;
+                padding:28px;
+                width:100%;
+                max-width:460px;
+                box-shadow:0 24px 60px rgba(0,0,0,.15);
+                animation:modalIn .25s cubic-bezier(.4,0,.2,1) both
+            }
+            @keyframes modalIn{
+                from{
+                    opacity:0;
+                    transform:scale(.95) translateY(10px)
+                }
+                to{
+                    opacity:1;
+                    transform:none
+                }
+            }
+            .modal h3{
+                font-size:.98rem;
+                font-weight:700;
+                color:var(--text-h);
+                margin-bottom:14px;
+                display:flex;
+                align-items:center;
+                gap:9px
+            }
+            .modal-desc{
+                font-size:.82rem;
+                color:var(--text-m);
+                line-height:1.65;
+                margin-bottom:20px;
+                padding:12px 14px;
+                background:#fafbff;
+                border:1px solid var(--border-light);
+                border-radius:10px
+            }
+            .modal-desc strong{
+                color:var(--primary-2)
+            }
+            .modal label{
+                font-size:.72rem;
+                font-weight:700;
+                color:var(--text-s);
+                text-transform:uppercase;
+                letter-spacing:.8px;
+                display:block;
+                margin-bottom:7px
+            }
+            .modal textarea{
+                width:100%;
+                padding:10px 13px;
+                border:1.5px solid var(--border-light);
+                border-radius:9px;
+                font-size:.83rem;
+                font-family:'Sora',sans-serif;
+                color:var(--text-b);
+                background:#fff;
+                outline:none;
+                resize:vertical;
+                transition:all .2s
+            }
+            .modal textarea:focus{
+                border-color:rgba(79,70,229,.4);
+                background:#faf9ff;
+                box-shadow:0 0 0 3px rgba(79,70,229,.07)
+            }
+            .modal textarea::placeholder{
+                color:var(--text-s)
+            }
+            .modal-footer{
+                display:flex;
+                gap:10px;
+                justify-content:flex-end;
+                margin-top:20px
+            }
 
-        /* Responsive: collapse to 1 column on small screens */
-        @media(max-width:900px){
-            .layout-grid{grid-template-columns:1fr}
-            .col-right{position:static}
-        }
-    </style>
-</head>
-<body>
+            /* Responsive: collapse to 1 column on small screens */
+            @media(max-width:900px){
+                .layout-grid{
+                    grid-template-columns:1fr
+                }
+                .col-right{
+                    position:static
+                }
+            }
+        </style>
+    </head>
+    <body>
 
-<%-- ═══ SIDEBAR ═══ --%>
-<aside class="sb">
-    <div class="sb-brand">
-        <div class="sb-logo"><i class="fas fa-bolt"></i></div>
-        <div>
-            <div class="sb-name">DRSMS</div>
-            <div class="sb-role">Tech Manager</div>
-        </div>
-    </div>
-    <nav class="sb-nav">
-        <div class="sb-lbl">Management</div>
-        <a href="<%=ctx%>/tmServiceRequests" class="sb-item on">
-            <i class="fas fa-clipboard-list"></i> Service Requests
-        </a>
-    </nav>
-    <div class="sb-foot">
-        <a href="<%=ctx%>/profile" class="sb-user">
-            <div class="sb-ava">
-                <%if(me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()){%>
-                <img src="<%=ctx%><%=me.getAvatarUrl()%>" alt="">
-                <%}else{%><%=initials%><%}%>
+        <%-- ═══ SIDEBAR ═══ --%>
+        <aside class="sb">
+            <div class="sb-brand">
+                <div class="sb-logo"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <div class="sb-name">DRSMS</div>
+                    <div class="sb-role">Tech Manager</div>
+                </div>
             </div>
-            <div>
-                <div class="sb-uname"><%=me.getFullName()%></div>
-                <div class="sb-urole">Technical Manager</div>
+            <nav class="sb-nav">
+                <div class="sb-lbl">Management</div>
+                <a href="<%=ctx%>/tmServiceRequests" class="sb-item on">
+                    <i class="fas fa-clipboard-list"></i> Service Requests
+                </a>
+            </nav>
+            <div class="sb-foot">
+                <a href="<%=ctx%>/profile" class="sb-user">
+                    <div class="sb-ava">
+                        <%if(me.getAvatarUrl()!=null&&!me.getAvatarUrl().isEmpty()){%>
+                        <img src="<%=ctx%><%=me.getAvatarUrl()%>" alt="">
+                        <%}else{%><%=initials%><%}%>
+                    </div>
+                    <div>
+                        <div class="sb-uname"><%=me.getFullName()%></div>
+                        <div class="sb-urole">Technical Manager</div>
+                    </div>
+                </a>
+                <a href="<%=ctx%>/logout" class="sb-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </a>
             </div>
-        </a>
-        <a href="<%=ctx%>/logout" class="sb-logout">
-            <i class="fas fa-sign-out-alt"></i> Sign Out
-        </a>
-    </div>
-</aside>
+        </aside>
 
-<%-- ═══ MAIN ═══ --%>
-<main class="main">
+        <%-- ═══ MAIN ═══ --%>
+        <main class="main">
 
-    <div class="topbar">
-        <div>
-            <div class="topbar-title">
-                <i class="fas fa-clipboard-list"></i> Service Request Detail
+            <div class="topbar">
+                <div>
+                    <div class="topbar-title">
+                        <i class="fas fa-clipboard-list"></i> Service Request Detail
+                    </div>
+                    <div class="topbar-sub"><%=sr.getRequestCode()%> · <%=sr.getTitle()%></div>
+                </div>
+                <a href="<%=ctx%>/tmServiceRequests" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to list
+                </a>
             </div>
-            <div class="topbar-sub"><%=sr.getRequestCode()%> · <%=sr.getTitle()%></div>
-        </div>
-        <a href="<%=ctx%>/tmServiceRequests" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to list
-        </a>
-    </div>
 
-    <div class="content">
+            <div class="content">
 
-        <%-- Flash --%>
-        <%if(flashOk!=null){%>
-        <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%=flashOk%></div>
-        <%}%>
-        <%if(flashErr!=null){%>
-        <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%=flashErr%></div>
-        <%}%>
-
-        <%
-        String bSt="b-pending";
-        if("APPROVED".equals(sr.getStatus()))         bSt="b-approved";
-        else if("REJECTED".equals(sr.getStatus()))    bSt="b-rejected";
-        else if("IN_PROGRESS".equals(sr.getStatus())) bSt="b-in_progress";
-        else if("COMPLETED".equals(sr.getStatus()))   bSt="b-completed";
-        else if("CANCELLED".equals(sr.getStatus()))   bSt="b-cancelled";
-        String bPr="b-medium";
-        if("LOW".equals(sr.getPriority()))             bPr="b-low";
-        else if("HIGH".equals(sr.getPriority()))       bPr="b-high";
-        else if("URGENT".equals(sr.getPriority()))     bPr="b-urgent";
-        %>
-
-        <%-- ═══ 2-COLUMN GRID ═══ --%>
-        <div class="layout-grid">
-
-            <%-- ══════════ LEFT COLUMN ══════════ --%>
-            <div class="col-left">
-
-                <%-- ── Request Info Card ── --%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:var(--primary-light);color:var(--primary-2)">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="card-hd-title"><%=sr.getRequestCode()%></div>
-                        <div class="card-hd-badge"><span class="b <%=bSt%>"><%=sr.getStatusLabel()%></span></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Request Code</label>
-                                <div class="val mono"><%=sr.getRequestCode()%></div>
-                            </div>
-                            <div class="info-item">
-                                <label>Customer</label>
-                                <div class="val"><%=sr.getCustomerName()%></div>
-                            </div>
-                            <div class="info-item">
-                                <label>Contract</label>
-                                <div class="val" style="display:flex;align-items:center;gap:7px">
-                                    <span style="font-family:'Courier New',monospace;font-size:.82rem;color:var(--primary-2);font-weight:700">
-                                        <%=sr.getContractCode()%>
-                                    </span>
-                                    <span class="ct-badge <%="WARRANTY".equals(sr.getContractType())?"ct-wr":"ct-mt"%>">
-                                        <%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <label>Priority</label>
-                                <div class="val"><span class="b <%=bPr%>"><%=sr.getPriority()%></span></div>
-                            </div>
-                            <div class="info-item">
-                                <label>Title</label>
-                                <div class="val"><%=sr.getTitle()%></div>
-                            </div>
-                            <div class="info-item">
-                                <label>Created At</label>
-                                <div class="val td-muted">
-                                    <%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sub-lbl">Description</div>
-                        <div class="desc-box"><%=sr.getDescription()%></div>
-                    </div>
-                </div>
-
-                <%-- ── Equipment Card ── --%>
-                <%if(!equips.isEmpty()){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
-                            <i class="fas fa-desktop"></i>
-                        </div>
-                        <div class="card-hd-title">Equipment
-                            <span style="color:var(--text-s);font-weight:400"> (<%=equips.size()%>)</span>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr><th>#</th><th>Name</th><th>Serial</th><th>Source</th><th>Issue</th></tr>
-                        </thead>
-                        <tbody>
-                        <%int idx=1;for(ServiceRequestEquipment e:equips){%>
-                        <tr>
-                            <td class="td-muted"><%=idx++%></td>
-                            <td style="font-weight:600;color:var(--text-h)"><%=e.getDisplayName()!=null?e.getDisplayName():"-"%></td>
-                            <td class="td-code"><%=e.getDisplaySerial()!=null?e.getDisplaySerial():"-"%></td>
-                            <td><span class="src-badge"><%=e.getSource()!=null?e.getSource():"-"%></span></td>
-                            <td class="td-muted"><%=e.getIssueDescription()!=null?e.getIssueDescription():"-"%></td>
-                        </tr>
-                        <%}%>
-                        </tbody>
-                    </table>
-                </div>
+                <%-- Flash --%>
+                <%if(flashOk!=null){%>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%=flashOk%></div>
+                <%}%>
+                <%if(flashErr!=null){%>
+                <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%=flashErr%></div>
                 <%}%>
 
-                <%-- ── Review Info Card ── --%>
-                <%if(sr.getReviewedBy()!=null){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#d1fae5;color:var(--green)">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="card-hd-title">Review Info</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Reviewed By</label>
-                                <div class="val"><%=sr.getReviewedByName()!=null?sr.getReviewedByName():"-"%></div>
+                <%
+                String bSt="b-pending";
+                if("APPROVED".equals(sr.getStatus()))         bSt="b-approved";
+                else if("REJECTED".equals(sr.getStatus()))    bSt="b-rejected";
+                else if("IN_PROGRESS".equals(sr.getStatus())) bSt="b-in_progress";
+                else if("COMPLETED".equals(sr.getStatus()))   bSt="b-completed";
+                else if("CANCELLED".equals(sr.getStatus()))   bSt="b-cancelled";
+                String bPr="b-medium";
+                if("LOW".equals(sr.getPriority()))             bPr="b-low";
+                else if("HIGH".equals(sr.getPriority()))       bPr="b-high";
+                else if("URGENT".equals(sr.getPriority()))     bPr="b-urgent";
+                %>
+
+                <%-- ═══ 2-COLUMN GRID ═══ --%>
+                <div class="layout-grid">
+
+                    <%-- ══════════ LEFT COLUMN ══════════ --%>
+                    <div class="col-left">
+
+                        <%-- ── Request Info Card ── --%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:var(--primary-light);color:var(--primary-2)">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="card-hd-title"><%=sr.getRequestCode()%></div>
+                                <div class="card-hd-badge"><span class="b <%=bSt%>"><%=sr.getStatusLabel()%></span></div>
                             </div>
-                            <div class="info-item">
-                                <label>Reviewed At</label>
-                                <div class="val td-muted">
-                                    <%=sr.getReviewedAt()!=null?sr.getReviewedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                                </div>
-                            </div>
-                        </div>
-                        <%if(sr.getRejectReason()!=null&&!sr.getRejectReason().isEmpty()){%>
-                        <div class="reject-box">
-                            <div class="reject-box-title"><i class="fas fa-times-circle"></i> Rejection Reason</div>
-                            <div class="reject-box-body"><%=sr.getRejectReason()%></div>
-                        </div>
-                        <%}%>
-                    </div>
-                </div>
-                <%}%>
-
-
-                <%-- ── Actions Card (chỉ hiện khi PENDING) ── --%>
-                <%if(isPending){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#fef3c7;color:var(--amber)">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <div class="card-hd-title">Actions</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="action-bar">
-                            <button class="btn btn-success"
-                                    onclick="document.getElementById('modalApprove').classList.add('show')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-danger"
-                                    onclick="document.getElementById('modalReject').classList.add('show')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <%}%>
-
-                <%-- ── Assigned Tasks Table ── --%>
-                <%if(!assignedTasks.isEmpty()){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#d1fae5;color:var(--teal)">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <div class="card-hd-title">Assigned Technicians
-                            <span style="color:var(--text-s);font-weight:400"> (<%=assignedTasks.size()%>)</span>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Technician</th>
-                                <th>Task Type</th>
-                                <th>Status</th>
-                                <th>Assigned At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <%int ti=1;for(WorkTask wt : assignedTasks){
-                            String tsCls = "task-assigned";
-                            if("In Progress".equals(wt.getStatus())) tsCls="task-inprogress";
-                            else if("Completed".equals(wt.getStatus())) tsCls="task-completed";
-                            else if("Cancelled".equals(wt.getStatus())) tsCls="task-cancelled";
-                        %>
-                        <tr>
-                            <td class="td-muted"><%=ti++%></td>
-                            <td style="font-weight:600;color:var(--text-h)">
-                                <%=wt.getTechnicianName()!=null?wt.getTechnicianName():"Technician #"+wt.getTechnicianId()%>
-                            </td>
-                            <td class="td-muted"><%=wt.getTaskType()%></td>
-                            <td><span class="task-badge <%=tsCls%>"><%=wt.getStatus()%></span></td>
-                            <td class="td-muted">
-                                <%=wt.getCreatedAt()!=null?wt.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
-                            </td>
-                        </tr>
-                        <%}%>
-                        </tbody>
-                    </table>
-                </div>
-                <%}%>
-
-            </div><%-- end col-left --%>
-
-            <%-- ══════════ RIGHT COLUMN ══════════ --%>
-            <div class="col-right" id="assignSection">
-
-                <%-- ── Technician Availability ── --%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#ede9fe;color:var(--purple)">
-                            <i class="fas fa-users-cog"></i>
-                        </div>
-                        <div class="card-hd-title">Technician Availability</div>
-                        <div class="card-hd-badge">
-                            <%
-                                long availCnt = 0, fullCnt = 0;
-                                for(User tech : technicians){
-                                    TechnicianWorkload tw = null;
-                                    for(TechnicianWorkload w : workloads){
-                                        if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
-                                    }
-                                    boolean avail = tw==null || tw.isAvailable();
-                                    if(avail) availCnt++; else fullCnt++;
-                                }
-                            %>
-                            <span class="b b-approved"><%=availCnt%> avail</span>
-                            <%if(fullCnt>0){%>
-                            <span class="b b-rejected"><%=fullCnt%> full</span>
-                            <%}%>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding:14px 16px">
-                        <%if(technicians.isEmpty()){%>
-                        <div class="wl-empty">
-                            <i class="fas fa-user-slash"></i>
-                            No technicians found.
-                        </div>
-                        <%}else{%>
-                        <div class="wl-list">
-                        <%for(User tech : technicians){
-                            // Tìm workload tương ứng (có thể null nếu chưa có record)
-                            TechnicianWorkload tw = null;
-                            for(TechnicianWorkload w : workloads){
-                                if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
-                            }
-                            int cur = tw!=null?tw.getCurrentActiveTasks():0;
-                            int max = tw!=null?tw.getMaxConcurrentTasks():5;
-                            double ratio = max>0?(double)cur/max:0.0;
-                            int pct = Math.min(100,(int)(ratio*100));
-                            String wlStatus, wlClass, wlBar;
-                            if(ratio>=1.0)      {wlStatus="Overloaded"; wlClass="wl-full"; wlBar="wl-bar-r";}
-                            else if(ratio>=0.7) {wlStatus="Busy";       wlClass="wl-busy"; wlBar="wl-bar-o";}
-                            else if(ratio>=0.4) {wlStatus="Moderate";   wlClass="wl-mod";  wlBar="wl-bar-a";}
-                            else                {wlStatus="Available";  wlClass="wl-avail";wlBar="wl-bar-g";}
-                            String twInit = tech.getFullName()!=null&&!tech.getFullName().isEmpty()
-                                ? tech.getFullName().substring(0,1).toUpperCase() : "T";
-                        %>
-                            <%
-                                String cardCls = ratio>=1.0?"is-full":ratio>=0.7?"is-busy":ratio>=0.4?"is-mod":"is-avail";
-                            %>
-                            <div class="wl-card <%=cardCls%>">
-                                <div class="wl-ava-wrap">
-                                    <div class="wl-ava">
-                                        <%if(tech.getAvatarUrl()!=null&&!tech.getAvatarUrl().isEmpty()){%>
-                                        <img src="<%=ctx%><%=tech.getAvatarUrl()%>" alt="<%=twInit%>">
-                                        <%}else{%><%=twInit%><%}%>
+                            <div class="card-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>Request Code</label>
+                                        <div class="val mono"><%=sr.getRequestCode()%></div>
                                     </div>
-                                    <span class="wl-dot"></span>
-                                </div>
-                                <div class="wl-info">
-                                    <div class="wl-name" title="<%=tech.getFullName()!=null?tech.getFullName():""%>">
-                                        <%=tech.getFullName()!=null?tech.getFullName():"Technician #"+tech.getId()%>
+                                    <div class="info-item">
+                                        <label>Customer</label>
+                                        <div class="val"><%=sr.getCustomerName()%></div>
                                     </div>
-                                    <div class="wl-email" title="<%=tech.getEmail()!=null?tech.getEmail():""%>">
-                                        <%=tech.getEmail()!=null?tech.getEmail():"—"%>
-                                    </div>
-                                    <span class="wl-status <%=wlClass%>">
-                                        <%if("Available".equals(wlStatus)){%>
-                                            <i class="fas fa-circle" style="font-size:.4rem"></i>
-                                        <%}else if("Overloaded".equals(wlStatus)){%>
-                                            <i class="fas fa-exclamation-triangle" style="font-size:.52rem"></i>
-                                        <%}else{%>
-                                            <i class="fas fa-clock" style="font-size:.48rem"></i>
-                                        <%}%>
-                                        <%=wlStatus%>
-                                    </span>
-                                </div>
-                                <div class="wl-right">
-                                    <div class="wl-count"><%=cur%>/<%=max%></div>
-                                    <div class="wl-bar-bg">
-                                        <div class="wl-bar <%=wlBar%>" style="width:<%=pct%>%"></div>
-                                    </div>
-                                    <div class="wl-pct"><%=pct%>%</div>
-                                </div>
-                            </div>
-                        <%}%>
-                        </div>
-                        <%}%>
-                    </div>
-                </div>
-
-                <%-- ── Inline Assign Form (chỉ khi APPROVED) ── --%>
-                <%if(isApproved&&!technicians.isEmpty()){%>
-                <div class="card">
-                    <div class="card-hd">
-                        <div class="card-hd-icon" style="background:#dbeafe;color:var(--blue)">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="card-hd-title">Assign Technician(s)</div>
-                    </div>
-                    <div class="assign-form-wrap">
-                        <%-- Legend --%>
-                        <div style="background:#f8f9fc;border:1px solid var(--border-light);border-radius:9px;
-                                    padding:9px 12px;margin-bottom:12px;font-size:.73rem;color:var(--text-m);
-                                    display:flex;flex-wrap:wrap;gap:8px">
-                            <span><i class="fas fa-circle" style="color:#22c55e;font-size:.45rem"></i> Available</span>
-                            <span><i class="fas fa-clock" style="color:#f59e0b;font-size:.55rem"></i> Moderate</span>
-                            <span><i class="fas fa-clock" style="color:#f97316;font-size:.55rem"></i> Busy</span>
-                            <span><i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:.55rem"></i> Full</span>
-                        </div>
-
-                        <form method="post" action="<%=ctx%>/tmServiceRequests" id="assignForm">
-                            <input type="hidden" name="action" value="assign">
-                            <input type="hidden" name="id" value="<%=sr.getId()%>">
-
-                            <div class="form-row">
-                                <label>Select Technician(s) <span style="color:var(--red)">*</span></label>
-                                <div class="tech-pick-list">
-                                <%for(User t : technicians){
-                                    TechnicianWorkload tw2 = null;
-                                    for(TechnicianWorkload w : workloads){
-                                        if(w.getTechnicianId()==t.getId()){ tw2=w; break; }
-                                    }
-                                    boolean overloaded = (tw2!=null&&!tw2.isAvailable());
-                                    int cur2 = tw2!=null?tw2.getCurrentActiveTasks():0;
-                                    int max2 = tw2!=null?tw2.getMaxConcurrentTasks():5;
-                                    double r2 = max2>0?(double)cur2/max2:0;
-                                    int p2 = Math.min(100,(int)(r2*100));
-                                    String bar2 = r2>=1.0?"wl-bar-r":r2>=0.7?"wl-bar-o":r2>=0.4?"wl-bar-a":"wl-bar-g";
-                                    String slots2 = tw2!=null
-                                        ? cur2+"/"+max2+" · "+tw2.getAvailableSlots()+" free"
-                                        : "no data";
-                                %>
-                                <label class="tech-pick-item <%=overloaded?"overloaded":""%>">
-                                    <input type="checkbox" name="technicianIds" value="<%=t.getId()%>" <%=overloaded?"disabled":""%>>
-                                    <div class="tech-pick-info">
-                                        <div class="tech-pick-name">
-                                            <%=t.getFullName()%>
-                                            <%if(overloaded){%><span class="full-label">FULL</span><%}%>
+                                    <div class="info-item">
+                                        <label>Contract</label>
+                                        <div class="val" style="display:flex;align-items:center;gap:7px">
+                                            <span style="font-family:'Courier New',monospace;font-size:.82rem;color:var(--primary-2);font-weight:700">
+                                                <%=sr.getContractCode()%>
+                                            </span>
+                                            <span class="ct-badge <%="WARRANTY".equals(sr.getContractType())?"ct-wr":"ct-mt"%>">
+                                                <%="WARRANTY".equals(sr.getContractType())?"WR":"MT"%>
+                                            </span>
                                         </div>
-                                        <div class="tech-pick-sub"><%=slots2%></div>
                                     </div>
-                                    <div>
-                                        <div class="mini-bar-bg">
-                                            <div class="mini-bar <%=bar2%>" style="width:<%=p2%>%"></div>
+                                    <div class="info-item">
+                                        <label>Priority</label>
+                                        <div class="val"><span class="b <%=bPr%>"><%=sr.getPriority()%></span></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Title</label>
+                                        <div class="val"><%=sr.getTitle()%></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Created At</label>
+                                        <div class="val td-muted">
+                                            <%=sr.getCreatedAt()!=null?sr.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
                                         </div>
-                                        <div style="font-size:.64rem;color:var(--text-s);text-align:right"><%=p2%>%</div>
                                     </div>
-                                </label>
+                                </div>
+                                <div class="sub-lbl">Description</div>
+                                <div class="desc-box"><%=sr.getDescription()%></div>
+                            </div>
+                        </div>
+
+                        <%-- ── Equipment Card ── --%>
+                        <%if(!equips.isEmpty()){%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#e0f2fe;color:var(--info)">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                                <div class="card-hd-title">Equipment
+                                    <span style="color:var(--text-s);font-weight:400"> (<%=equips.size()%>)</span>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr><th>#</th><th>Name</th><th>Serial</th><th>Source</th><th>Issue</th></tr>
+                                </thead>
+                                <tbody>
+                                    <%int idx=1;for(ServiceRequestEquipment e:equips){%>
+                                    <tr>
+                                        <td class="td-muted"><%=idx++%></td>
+                                        <td style="font-weight:600;color:var(--text-h)"><%=e.getDisplayName()!=null?e.getDisplayName():"-"%></td>
+                                        <td class="td-code"><%=e.getDisplaySerial()!=null?e.getDisplaySerial():"-"%></td>
+                                        <td><span class="src-badge"><%=e.getSource()!=null?e.getSource():"-"%></span></td>
+                                        <td class="td-muted"><%=e.getIssueDescription()!=null?e.getIssueDescription():"-"%></td>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                        <%}%>
+
+                        <%-- ── Review Info Card ── --%>
+                        <%if(sr.getReviewedBy()!=null){%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#d1fae5;color:var(--green)">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="card-hd-title">Review Info</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>Reviewed By</label>
+                                        <div class="val"><%=sr.getReviewedByName()!=null?sr.getReviewedByName():"-"%></div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Reviewed At</label>
+                                        <div class="val td-muted">
+                                            <%=sr.getReviewedAt()!=null?sr.getReviewedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%if(sr.getRejectReason()!=null&&!sr.getRejectReason().isEmpty()){%>
+                                <div class="reject-box">
+                                    <div class="reject-box-title"><i class="fas fa-times-circle"></i> Rejection Reason</div>
+                                    <div class="reject-box-body"><%=sr.getRejectReason()%></div>
+                                </div>
                                 <%}%>
+                            </div>
+                        </div>
+                        <%}%>
+
+
+                        <%-- ── Actions Card (chỉ hiện khi PENDING) ── --%>
+                        <%if(isPending){%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#fef3c7;color:var(--amber)">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="card-hd-title">Actions</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="action-bar">
+                                    <button class="btn btn-success"
+                                            onclick="document.getElementById('modalApprove').classList.add('show')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger"
+                                            onclick="document.getElementById('modalReject').classList.add('show')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
                                 </div>
                             </div>
+                        </div>
+                        <%}%>
 
-                            <div class="form-row-2">
-                                <div>
-                                    <label>Priority</label>
-                                    <select name="priority">
-                                        <option value="LOW">Low (1pt)</option>
-                                        <option value="MEDIUM" selected>Medium (1pt)</option>
-                                        <option value="HIGH">High (2pt)</option>
-                                        <option value="URGENT">Urgent (3pt)</option>
-                                    </select>
+                        <%-- ── Assigned Tasks Table ── --%>
+                        <%if(!assignedTasks.isEmpty()){%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#d1fae5;color:var(--teal)">
+                                    <i class="fas fa-tasks"></i>
                                 </div>
-                                <div>
-                                    <label>Est. Duration (h)</label>
-                                    <input type="number" name="estimatedDuration"
-                                           min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                                <div class="card-hd-title">Assigned Technicians
+                                    <span style="color:var(--text-s);font-weight:400"> (<%=assignedTasks.size()%>)</span>
                                 </div>
                             </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Technician</th>
+                                        <th>Task Type</th>
+                                        <th>Status</th>
+                                        <th>Assigned At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%int ti=1;for(WorkTask wt : assignedTasks){
+                                        String tsCls = "task-assigned";
+                                        if("In Progress".equals(wt.getStatus())) tsCls="task-inprogress";
+                                        else if("Completed".equals(wt.getStatus())) tsCls="task-completed";
+                                        else if("Cancelled".equals(wt.getStatus())) tsCls="task-cancelled";
+                                    %>
+                                    <tr>
+                                        <td class="td-muted"><%=ti++%></td>
+                                        <td style="font-weight:600;color:var(--text-h)">
+                                            <%=wt.getTechnicianName()!=null?wt.getTechnicianName():"Technician #"+wt.getTechnicianId()%>
+                                        </td>
+                                        <td class="td-muted"><%=wt.getTaskType()%></td>
+                                        <td><span class="task-badge <%=tsCls%>"><%=wt.getStatus()%></span></td>
+                                        <td class="td-muted">
+                                            <%=wt.getCreatedAt()!=null?wt.getCreatedAt().toString().replace("T"," ").substring(0,16):"—"%>
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                        <%}%>
 
-                            <div class="form-row">
-                                <label>Required Skills <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-s)">— optional</span></label>
-                                <input type="text" name="requiredSkills"
-                                       placeholder="e.g. HVAC, Electrical">
+                    </div><%-- end col-left --%>
+
+                    <%-- ══════════ RIGHT COLUMN ══════════ --%>
+                    <div class="col-right" id="assignSection">
+
+                        <%-- ── Technician Availability ── --%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#ede9fe;color:var(--purple)">
+                                    <i class="fas fa-users-cog"></i>
+                                </div>
+                                <div class="card-hd-title">Technician Availability</div>
+                                <div class="card-hd-badge">
+                                    <%
+                                        long availCnt = 0, fullCnt = 0;
+                                        for(User tech : technicians){
+                                            TechnicianWorkload tw = null;
+                                            for(TechnicianWorkload w : workloads){
+                                                if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
+                                            }
+                                            boolean avail = tw==null || tw.isAvailable();
+                                            if(avail) availCnt++; else fullCnt++;
+                                        }
+                                    %>
+                                    <span class="b b-approved"><%=availCnt%> avail</span>
+                                    <%if(fullCnt>0){%>
+                                    <span class="b b-rejected"><%=fullCnt%> full</span>
+                                    <%}%>
+                                </div>
                             </div>
+                            <div class="card-body" style="padding:14px 16px">
+                                <%if(technicians.isEmpty()){%>
+                                <div class="wl-empty">
+                                    <i class="fas fa-user-slash"></i>
+                                    No technicians found.
+                                </div>
+                                <%}else{%>
+                                <div class="wl-list">
+                                    <%for(User tech : technicians){
+                                        // Tìm workload tương ứng (có thể null nếu chưa có record)
+                                        TechnicianWorkload tw = null;
+                                        for(TechnicianWorkload w : workloads){
+                                            if(w.getTechnicianId()==tech.getId()){ tw=w; break; }
+                                        }
+                                        int cur = tw!=null?tw.getCurrentActiveTasks():0;
+                                        int max = tw!=null?tw.getMaxConcurrentTasks():5;
+                                        double ratio = max>0?(double)cur/max:0.0;
+                                        int pct = Math.min(100,(int)(ratio*100));
+                                        String wlStatus, wlClass, wlBar;
+                                        if(ratio>=1.0)      {wlStatus="Overloaded"; wlClass="wl-full"; wlBar="wl-bar-r";}
+                                        else if(ratio>=0.7) {wlStatus="Busy";       wlClass="wl-busy"; wlBar="wl-bar-o";}
+                                        else if(ratio>=0.4) {wlStatus="Moderate";   wlClass="wl-mod";  wlBar="wl-bar-a";}
+                                        else                {wlStatus="Available";  wlClass="wl-avail";wlBar="wl-bar-g";}
+                                        String twInit = tech.getFullName()!=null&&!tech.getFullName().isEmpty()
+                                            ? tech.getFullName().substring(0,1).toUpperCase() : "T";
+                                    %>
+                                    <%
+                                        String cardCls = ratio>=1.0?"is-full":ratio>=0.7?"is-busy":ratio>=0.4?"is-mod":"is-avail";
+                                    %>
+                                    <div class="wl-card <%=cardCls%>">
+                                        <div class="wl-ava-wrap">
+                                            <div class="wl-ava">
+                                                <%if(tech.getAvatarUrl()!=null&&!tech.getAvatarUrl().isEmpty()){%>
+                                                <img src="<%=ctx%><%=tech.getAvatarUrl()%>" alt="<%=twInit%>">
+                                                <%}else{%><%=twInit%><%}%>
+                                            </div>
+                                            <span class="wl-dot"></span>
+                                        </div>
+                                        <div class="wl-info">
+                                            <div class="wl-name" title="<%=tech.getFullName()!=null?tech.getFullName():""%>">
+                                                <%=tech.getFullName()!=null?tech.getFullName():"Technician #"+tech.getId()%>
+                                            </div>
+                                            <div class="wl-email" title="<%=tech.getEmail()!=null?tech.getEmail():""%>">
+                                                <%=tech.getEmail()!=null?tech.getEmail():"—"%>
+                                            </div>
+                                            <span class="wl-status <%=wlClass%>">
+                                                <%if("Available".equals(wlStatus)){%>
+                                                <i class="fas fa-circle" style="font-size:.4rem"></i>
+                                                <%}else if("Overloaded".equals(wlStatus)){%>
+                                                <i class="fas fa-exclamation-triangle" style="font-size:.52rem"></i>
+                                                <%}else{%>
+                                                <i class="fas fa-clock" style="font-size:.48rem"></i>
+                                                <%}%>
+                                                <%=wlStatus%>
+                                            </span>
+                                        </div>
+                                        <div class="wl-right">
+                                            <div class="wl-count"><%=cur%>/<%=max%></div>
+                                            <div class="wl-bar-bg">
+                                                <div class="wl-bar <%=wlBar%>" style="width:<%=pct%>%"></div>
+                                            </div>
+                                            <div class="wl-pct"><%=pct%>%</div>
+                                        </div>
+                                    </div>
+                                    <%}%>
+                                </div>
+                                <%}%>
+                            </div>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary btn-full"
-                                    onclick="return validateAssign()">
-                                <i class="fas fa-paper-plane"></i> Assign Technician(s)
-                            </button>
-                        </form>
-                    </div>
+                        <%-- ── Inline Assign Form (chỉ khi APPROVED) ── --%>
+                        <%if(isApproved&&!technicians.isEmpty()){%>
+                        <div class="card">
+                            <div class="card-hd">
+                                <div class="card-hd-icon" style="background:#dbeafe;color:var(--blue)">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="card-hd-title">Assign Technician(s)</div>
+                            </div>
+                            <div class="assign-form-wrap">
+                                <%-- Legend --%>
+                                <div style="background:#f8f9fc;border:1px solid var(--border-light);border-radius:9px;
+                                     padding:9px 12px;margin-bottom:12px;font-size:.73rem;color:var(--text-m);
+                                     display:flex;flex-wrap:wrap;gap:8px">
+                                    <span><i class="fas fa-circle" style="color:#22c55e;font-size:.45rem"></i> Available</span>
+                                    <span><i class="fas fa-clock" style="color:#f59e0b;font-size:.55rem"></i> Moderate</span>
+                                    <span><i class="fas fa-clock" style="color:#f97316;font-size:.55rem"></i> Busy</span>
+                                    <span><i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:.55rem"></i> Full</span>
+                                </div>
+
+                                <form method="post" action="<%=ctx%>/tmServiceRequests" id="assignForm">
+                                    <input type="hidden" name="action" value="assign">
+                                    <input type="hidden" name="id" value="<%=sr.getId()%>">
+
+                                    <div class="form-row">
+                                        <label>Select Technician(s) <span style="color:var(--red)">*</span></label>
+                                        <div class="tech-pick-list">
+                                            <%for(User t : technicians){
+                                                TechnicianWorkload tw2 = null;
+                                                for(TechnicianWorkload w : workloads){
+                                                    if(w.getTechnicianId()==t.getId()){ tw2=w; break; }
+                                                }
+                                                boolean overloaded = (tw2!=null&&!tw2.isAvailable());
+                                                int cur2 = tw2!=null?tw2.getCurrentActiveTasks():0;
+                                                int max2 = tw2!=null?tw2.getMaxConcurrentTasks():5;
+                                                double r2 = max2>0?(double)cur2/max2:0;
+                                                int p2 = Math.min(100,(int)(r2*100));
+                                                String bar2 = r2>=1.0?"wl-bar-r":r2>=0.7?"wl-bar-o":r2>=0.4?"wl-bar-a":"wl-bar-g";
+                                                String slots2 = tw2!=null
+                                                    ? cur2+"/"+max2+" · "+tw2.getAvailableSlots()+" free"
+                                                    : "no data";
+                                            %>
+                                            <label class="tech-pick-item <%=overloaded?"overloaded":""%>">
+                                                <input type="checkbox" name="technicianIds" value="<%=t.getId()%>" <%=overloaded?"disabled":""%>>
+                                                <div class="tech-pick-info">
+                                                    <div class="tech-pick-name">
+                                                        <%=t.getFullName()%>
+                                                        <%if(overloaded){%><span class="full-label">FULL</span><%}%>
+                                                    </div>
+                                                    <div class="tech-pick-sub"><%=slots2%></div>
+                                                </div>
+                                                <div>
+                                                    <div class="mini-bar-bg">
+                                                        <div class="mini-bar <%=bar2%>" style="width:<%=p2%>%"></div>
+                                                    </div>
+                                                    <div style="font-size:.64rem;color:var(--text-s);text-align:right"><%=p2%>%</div>
+                                                </div>
+                                            </label>
+                                            <%}%>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row-2">
+                                        <div>
+                                            <label>Priority</label>
+                                            <select name="priority">
+                                                <option value="LOW">Low (1pt)</option>
+                                                <option value="MEDIUM" selected>Medium (1pt)</option>
+                                                <option value="HIGH">High (2pt)</option>
+                                                <option value="URGENT">Urgent (3pt)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label>Est. Duration (h)</label>
+                                            <input type="number" name="estimatedDuration"
+                                                   min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <label>Required Skills <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-s)">— optional</span></label>
+                                        <input type="text" name="requiredSkills"
+                                               placeholder="e.g. HVAC, Electrical">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-full"
+                                            onclick="return validateAssign()">
+                                        <i class="fas fa-paper-plane"></i> Assign Technician(s)
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <%}%>
+
+                    </div><%-- end col-right --%>
+
+                </div><%-- end layout-grid --%>
+
+            </div><%-- end content --%>
+        </main>
+
+        <%-- ════ MODAL: APPROVE ════ --%>
+        <div class="modal-overlay" id="modalApprove">
+            <div class="modal">
+                <h3><i class="fas fa-check-circle" style="color:var(--green)"></i> Approve Request</h3>
+                <div class="modal-desc">
+                    Are you sure you want to approve <strong><%=sr.getRequestCode()%></strong>?<br>
+                    After approval, you can assign technician(s) to handle this request.
                 </div>
-                <%}%>
-
-            </div><%-- end col-right --%>
-
-        </div><%-- end layout-grid --%>
-
-    </div><%-- end content --%>
-</main>
-
-<%-- ════ MODAL: APPROVE ════ --%>
-<div class="modal-overlay" id="modalApprove">
-    <div class="modal">
-        <h3><i class="fas fa-check-circle" style="color:var(--green)"></i> Approve Request</h3>
-        <div class="modal-desc">
-            Are you sure you want to approve <strong><%=sr.getRequestCode()%></strong>?<br>
-            After approval, you can assign technician(s) to handle this request.
+                <form method="post" action="<%=ctx%>/tmServiceRequests">
+                    <input type="hidden" name="action" value="approve">
+                    <input type="hidden" name="id" value="<%=sr.getId()%>">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('modalApprove').classList.remove('show')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Yes, Approve
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form method="post" action="<%=ctx%>/tmServiceRequests">
-            <input type="hidden" name="action" value="approve">
-            <input type="hidden" name="id" value="<%=sr.getId()%>">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        onclick="document.getElementById('modalApprove').classList.remove('show')">
-                    Cancel
-                </button>
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-check"></i> Yes, Approve
-                </button>
+
+        <%-- ════ MODAL: REJECT ════ --%>
+        <div class="modal-overlay" id="modalReject">
+            <div class="modal">
+                <h3><i class="fas fa-times-circle" style="color:var(--red)"></i> Reject Request</h3>
+                <form method="post" action="<%=ctx%>/tmServiceRequests">
+                    <input type="hidden" name="action" value="reject">
+                    <input type="hidden" name="id" value="<%=sr.getId()%>">
+                    <label>Reason for rejection <span style="color:var(--red)">*</span></label>
+                    <textarea name="rejectReason" rows="4"
+                              placeholder="Explain why this request is rejected..." required></textarea>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('modalReject').classList.remove('show')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<%-- ════ MODAL: REJECT ════ --%>
-<div class="modal-overlay" id="modalReject">
-    <div class="modal">
-        <h3><i class="fas fa-times-circle" style="color:var(--red)"></i> Reject Request</h3>
-        <form method="post" action="<%=ctx%>/tmServiceRequests">
-            <input type="hidden" name="action" value="reject">
-            <input type="hidden" name="id" value="<%=sr.getId()%>">
-            <label>Reason for rejection <span style="color:var(--red)">*</span></label>
-            <textarea name="rejectReason" rows="4"
-                      placeholder="Explain why this request is rejected..." required></textarea>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        onclick="document.getElementById('modalReject').classList.remove('show')">
-                    Cancel
-                </button>
-                <button type="submit" class="btn btn-danger">
-                    <i class="fas fa-times"></i> Reject
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+        <script>
+            document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === overlay)
+                        overlay.classList.remove('show');
+                });
+            });
 
-<script>
-    document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
-        overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) overlay.classList.remove('show');
-        });
-    });
-
-    function validateAssign() {
-        var checks = document.querySelectorAll('input[name="technicianIds"]:checked');
-        if (checks.length === 0) {
-            alert('Please select at least one technician.');
-            return false;
-        }
-        return true;
-    }
-</script>
-</body>
+            function validateAssign() {
+                var checks = document.querySelectorAll('input[name="technicianIds"]:checked');
+                if (checks.length === 0) {
+                    alert('Please select at least one technician.');
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </body>
 </html>
