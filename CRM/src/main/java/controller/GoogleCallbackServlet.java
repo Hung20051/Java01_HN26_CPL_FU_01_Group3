@@ -30,7 +30,7 @@ public class GoogleCallbackServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
 
-        String code  = req.getParameter("code");
+        String code = req.getParameter("code");
         String state = req.getParameter("state");
         String error = req.getParameter("error");
 
@@ -55,9 +55,9 @@ public class GoogleCallbackServlet extends HttpServlet {
             JSONObject userInfo = getUserInfo(accessToken);
 
             String googleId = userInfo.getString("sub");
-            String email    = userInfo.optString("email", "");
-            String name     = userInfo.optString("name", "");
-            String picture  = userInfo.optString("picture", "");
+            String email = userInfo.optString("email", "");
+            String name = userInfo.optString("name", "");
+            String picture = userInfo.optString("picture", "");
 
             // 3. Tìm hoặc tạo user trong DB
             User user = userDAO.findByProviderId("GOOGLE", googleId);
@@ -87,34 +87,47 @@ public class GoogleCallbackServlet extends HttpServlet {
             session.removeAttribute("oauth_state");
 
             // Reload lại user từ DB để có roleName
-User savedUser = userDAO.findByProviderId("GOOGLE", googleId);
-session.setAttribute("user", savedUser);
-session.removeAttribute("oauth_state");
+            User savedUser = userDAO.findByProviderId("GOOGLE", googleId);
+            session.setAttribute("user", savedUser);
+            session.removeAttribute("oauth_state");
 
-String ctx = req.getContextPath();
-switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
-    case "ADMIN":             resp.sendRedirect(ctx + "/admin.jsp"); break;
-    case "TECHNICAL_MANAGER": resp.sendRedirect(ctx + "/technical-manager.jsp"); break;
-    case "CUSTOMER_SUPPORT":  resp.sendRedirect(ctx + "/customer-support.jsp"); break;
-    case "TECHNICIAN":        resp.sendRedirect(ctx + "/technician.jsp"); break;
-    case "STOREKEEPER":       resp.sendRedirect(ctx + "/dashboard.jsp"); break;
-    case "CUSTOMER":          resp.sendRedirect(ctx + "/customerDashboard"); break;
-    default:                  resp.sendRedirect(ctx + "/dashboard.jsp");
-}
+            String ctx = req.getContextPath();
+            switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
+                case "ADMIN":
+                    resp.sendRedirect(ctx + "/admin.jsp");
+                    break;
+                case "TECHNICAL_MANAGER":
+                    resp.sendRedirect(ctx + "/technical-manager.jsp");
+                    break;
+                case "CUSTOMER_SUPPORT":
+                    resp.sendRedirect(ctx + "/customer-support.jsp");
+                    break;
+                case "TECHNICIAN":
+                    resp.sendRedirect(ctx + "/technician.jsp");
+                    break;
+                case "STOREKEEPER":
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
+                    break;
+                case "CUSTOMER":
+                    resp.sendRedirect(ctx + "/customerDashboard");
+                    break;
+                default:
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
+            }
 
-       } catch (Exception e) {
-    e.printStackTrace();
-    resp.sendRedirect(req.getContextPath() + "/login.jsp?error=" + 
-        URLEncoder.encode(e.getMessage() != null ? e.getMessage() : e.getClass().getName(), StandardCharsets.UTF_8));
-}
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/login.jsp?error="
+                    + URLEncoder.encode(e.getMessage() != null ? e.getMessage() : e.getClass().getName(), StandardCharsets.UTF_8));
+        }
     }
 
     private String exchangeCodeForToken(String code) throws Exception {
-        String params = "code=" + URLEncoder.encode(code, StandardCharsets.UTF_8) +
-            "&client_id="     + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_ID, StandardCharsets.UTF_8) +
-            "&client_secret=" + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_SECRET, StandardCharsets.UTF_8) +
-            "&redirect_uri="  + URLEncoder.encode(AppConfig.GOOGLE_REDIRECT_URI, StandardCharsets.UTF_8) +
-            "&grant_type=authorization_code";
+        String params = "code=" + URLEncoder.encode(code, StandardCharsets.UTF_8)
+                + "&client_id=" + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_ID, StandardCharsets.UTF_8)
+                + "&client_secret=" + URLEncoder.encode(AppConfig.GOOGLE_CLIENT_SECRET, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(AppConfig.GOOGLE_REDIRECT_URI, StandardCharsets.UTF_8)
+                + "&grant_type=authorization_code";
 
         HttpURLConnection conn = (HttpURLConnection) new URL(AppConfig.GOOGLE_TOKEN_URL).openConnection();
         conn.setRequestMethod("POST");
@@ -136,13 +149,15 @@ switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
     }
 
     private String readResponse(HttpURLConnection conn) throws Exception {
-    int status = conn.getResponseCode();
-    InputStream is = (status >= 400) ? conn.getErrorStream() : conn.getInputStream();
-    try (Scanner sc = new Scanner(is, StandardCharsets.UTF_8)) {
-        String response = sc.useDelimiter("\\A").next();
-        System.out.println("=== HTTP " + status + " Response: " + response);
-        if (status >= 400) throw new Exception("HTTP " + status + ": " + response);
-        return response;
+        int status = conn.getResponseCode();
+        InputStream is = (status >= 400) ? conn.getErrorStream() : conn.getInputStream();
+        try (Scanner sc = new Scanner(is, StandardCharsets.UTF_8)) {
+            String response = sc.useDelimiter("\\A").next();
+            System.out.println("=== HTTP " + status + " Response: " + response);
+            if (status >= 400) {
+                throw new Exception("HTTP " + status + ": " + response);
+            }
+            return response;
+        }
     }
-}
 }
