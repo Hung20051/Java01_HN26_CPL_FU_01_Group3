@@ -28,7 +28,7 @@ public class FacebookCallbackServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
 
-        String code  = req.getParameter("code");
+        String code = req.getParameter("code");
         String state = req.getParameter("state");
         String error = req.getParameter("error");
 
@@ -47,9 +47,9 @@ public class FacebookCallbackServlet extends HttpServlet {
             String accessToken = exchangeCodeForToken(code);
             JSONObject userInfo = getUserInfo(accessToken);
 
-            String fbId   = userInfo.getString("id");
-            String name   = userInfo.optString("name", "Facebook User");
-            String email  = userInfo.optString("email", "");
+            String fbId = userInfo.getString("id");
+            String name = userInfo.optString("name", "Facebook User");
+            String email = userInfo.optString("email", "");
             String avatar = "";
             if (userInfo.has("picture") && userInfo.getJSONObject("picture").has("data")) {
                 avatar = userInfo.getJSONObject("picture").getJSONObject("data").optString("url", "");
@@ -78,20 +78,33 @@ public class FacebookCallbackServlet extends HttpServlet {
             }
 
             // Reload lại từ DB để có roleName
-User savedUser = userDAO.findByProviderId("FACEBOOK", fbId);
-session.setAttribute("user", savedUser);
-session.removeAttribute("fb_oauth_state");
+            User savedUser = userDAO.findByProviderId("FACEBOOK", fbId);
+            session.setAttribute("user", savedUser);
+            session.removeAttribute("fb_oauth_state");
 
-String ctx = req.getContextPath();
-switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
-    case "ADMIN":             resp.sendRedirect(ctx + "/admin.jsp"); break;
-    case "TECHNICAL_MANAGER": resp.sendRedirect(ctx + "/technical-manager.jsp"); break;
-    case "CUSTOMER_SUPPORT":  resp.sendRedirect(ctx + "/customer-support.jsp"); break;
-    case "TECHNICIAN":        resp.sendRedirect(ctx + "/technician.jsp"); break;
-    case "STOREKEEPER":       resp.sendRedirect(ctx + "/dashboard.jsp"); break;
-    case "CUSTOMER":          resp.sendRedirect(ctx + "/customerDashboard"); break;
-    default:                  resp.sendRedirect(ctx + "/dashboard.jsp");
-}
+            String ctx = req.getContextPath();
+            switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
+                case "ADMIN":
+                    resp.sendRedirect(ctx + "/admin.jsp");
+                    break;
+                case "TECHNICAL_MANAGER":
+                    resp.sendRedirect(ctx + "/technical-manager.jsp");
+                    break;
+                case "CUSTOMER_SUPPORT":
+                    resp.sendRedirect(ctx + "/customer-support.jsp");
+                    break;
+                case "TECHNICIAN":
+                    resp.sendRedirect(ctx + "/technician.jsp");
+                    break;
+                case "STOREKEEPER":
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
+                    break;
+                case "CUSTOMER":
+                    resp.sendRedirect(ctx + "/customerDashboard");
+                    break;
+                default:
+                    resp.sendRedirect(ctx + "/dashboard.jsp");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,11 +113,11 @@ switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
     }
 
     private String exchangeCodeForToken(String code) throws Exception {
-        String tokenUrl = AppConfig.FACEBOOK_TOKEN_URL +
-            "?client_id="     + URLEncoder.encode(AppConfig.FACEBOOK_APP_ID, StandardCharsets.UTF_8) +
-            "&client_secret=" + URLEncoder.encode(AppConfig.FACEBOOK_APP_SECRET, StandardCharsets.UTF_8) +
-            "&redirect_uri="  + URLEncoder.encode(AppConfig.FACEBOOK_REDIRECT_URI, StandardCharsets.UTF_8) +
-            "&code="          + URLEncoder.encode(code, StandardCharsets.UTF_8);
+        String tokenUrl = AppConfig.FACEBOOK_TOKEN_URL
+                + "?client_id=" + URLEncoder.encode(AppConfig.FACEBOOK_APP_ID, StandardCharsets.UTF_8)
+                + "&client_secret=" + URLEncoder.encode(AppConfig.FACEBOOK_APP_SECRET, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(AppConfig.FACEBOOK_REDIRECT_URI, StandardCharsets.UTF_8)
+                + "&code=" + URLEncoder.encode(code, StandardCharsets.UTF_8);
 
         HttpURLConnection conn = (HttpURLConnection) new URL(tokenUrl).openConnection();
         String response = readResponse(conn);
@@ -112,8 +125,8 @@ switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
     }
 
     private JSONObject getUserInfo(String accessToken) throws Exception {
-        String url = AppConfig.FACEBOOK_USERINFO_URL +
-            "&access_token=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
+        String url = AppConfig.FACEBOOK_USERINFO_URL
+                + "&access_token=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         return new JSONObject(readResponse(conn));
     }
@@ -124,4 +137,3 @@ switch (savedUser.getRoleName() != null ? savedUser.getRoleName() : "") {
         }
     }
 }
-
