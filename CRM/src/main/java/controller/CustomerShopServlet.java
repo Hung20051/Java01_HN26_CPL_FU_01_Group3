@@ -256,7 +256,9 @@ public class CustomerShopServlet extends HttpServlet {
         int typeId = parseInt(req.getParameter("typeId"), 0);
         int qty = parseInt(req.getParameter("quantity"), 1);
 
-        if ("EQUIPMENT".equals(itemType)) qty = 1;
+        if ("EQUIPMENT".equals(itemType)) {
+            qty = 1;
+        }
 
         String backAction = "PART".equals(itemType) ? "parts" : "equipment";
 
@@ -299,8 +301,11 @@ public class CustomerShopServlet extends HttpServlet {
         int qty = parseInt(req.getParameter("quantity"), 1);
         Map<String, CartItem> cart = getCart(req);
         if (cart.containsKey(key)) {
-            if (qty <= 0) cart.remove(key);
-            else cart.get(key).setQuantity(Math.min(qty, cart.get(key).getMaxQty()));
+            if (qty <= 0) {
+                cart.remove(key);
+            } else {
+                cart.get(key).setQuantity(Math.min(qty, cart.get(key).getMaxQty()));
+            }
             saveCart(req, cart);
         }
         resp.sendRedirect(req.getContextPath() + "/customerShop?action=cart");
@@ -379,7 +384,9 @@ public class CustomerShopServlet extends HttpServlet {
 
     private void handleVnpayCancel(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Integer payId = (Integer) req.getSession().getAttribute("pendingPaymentId");
-        if (payId != null) paymentDAO.updateStatus(payId, "CANCELLED", null);
+        if (payId != null) {
+            paymentDAO.updateStatus(payId, "CANCELLED", null);
+        }
         clearVnpaySession(req);
         resp.sendRedirect(req.getContextPath() + "/customerShop?action=cart");
     }
@@ -388,12 +395,12 @@ public class CustomerShopServlet extends HttpServlet {
     private void handleAddReview(HttpServletRequest req, HttpServletResponse resp, User me)
             throws Exception {
         String itemType = nvl(req.getParameter("itemType"));
-        int itemId   = parseInt(req.getParameter("itemId"), 0);
-        int rating   = parseInt(req.getParameter("rating"), 0);
+        int itemId = parseInt(req.getParameter("itemId"), 0);
+        int rating = parseInt(req.getParameter("rating"), 0);
         String comment = nvl(req.getParameter("comment"));
 
         String backUrl = req.getContextPath() + "/customerShop?action=detail&itemType="
-                         + itemType + "&id=" + itemId;
+                + itemType + "&id=" + itemId;
 
         if (rating < 1 || rating > 5 || comment.isEmpty()) {
             req.getSession().setAttribute("shopFlashError", "Vui lòng chọn số sao và nhập nhận xét!");
@@ -418,7 +425,10 @@ public class CustomerShopServlet extends HttpServlet {
             String contentType = filePart.getContentType();
             boolean allowed = false;
             for (String t : ALLOWED_IMG_TYPES) {
-                if (t.equalsIgnoreCase(contentType)) { allowed = true; break; }
+                if (t.equalsIgnoreCase(contentType)) {
+                    allowed = true;
+                    break;
+                }
             }
             if (!allowed) {
                 req.getSession().setAttribute("shopFlashError", "Ảnh phải là JPG, PNG, WEBP hoặc GIF!");
@@ -430,9 +440,9 @@ public class CustomerShopServlet extends HttpServlet {
                 resp.sendRedirect(backUrl);
                 return;
             }
-            String ext = contentType.equals("image/png")  ? ".png"
-                       : contentType.equals("image/webp") ? ".webp"
-                       : contentType.equals("image/gif")  ? ".gif" : ".jpg";
+            String ext = contentType.equals("image/png") ? ".png"
+                    : contentType.equals("image/webp") ? ".webp"
+                    : contentType.equals("image/gif") ? ".gif" : ".jpg";
             String filename = "review_" + me.getId() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
             try (InputStream in = filePart.getInputStream()) {
                 Files.copy(in, Paths.get(reviewUploadDir, filename), StandardCopyOption.REPLACE_EXISTING);
@@ -448,7 +458,9 @@ public class CustomerShopServlet extends HttpServlet {
     // ── INTERNAL HELPERS ─────────────────────────────────────────────
     private Invoice createShopInvoice(int customerId, List<InvoiceItem> items, int createdBy) throws Exception {
         BigDecimal sub = BigDecimal.ZERO;
-        for (InvoiceItem it : items) sub = sub.add(it.getTotalPrice());
+        for (InvoiceItem it : items) {
+            sub = sub.add(it.getTotalPrice());
+        }
         BigDecimal taxPct = new BigDecimal("10");
         BigDecimal taxAmt = sub.multiply(taxPct).divide(new BigDecimal("100"));
         BigDecimal total = sub.add(taxAmt);
@@ -456,8 +468,7 @@ public class CustomerShopServlet extends HttpServlet {
 
         String prefix = "INV" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()) + "-";
         String code;
-        try (Connection cx = util.DBConnection.getConnection();
-             PreparedStatement ps = cx.prepareStatement("SELECT COUNT(*) FROM invoices WHERE invoice_code LIKE ?")) {
+        try (Connection cx = util.DBConnection.getConnection(); PreparedStatement ps = cx.prepareStatement("SELECT COUNT(*) FROM invoices WHERE invoice_code LIKE ?")) {
             ps.setString(1, prefix + "%");
             ResultSet rs = ps.executeQuery();
             code = prefix + String.format("%04d", (rs.next() ? rs.getInt(1) : 0) + 1);
@@ -481,7 +492,11 @@ public class CustomerShopServlet extends HttpServlet {
                 ps.setInt(9, createdBy);
                 ps.executeUpdate();
                 int invId = -1;
-                try (ResultSet k = ps.getGeneratedKeys()) { if (k.next()) invId = k.getInt(1); }
+                try (ResultSet k = ps.getGeneratedKeys()) {
+                    if (k.next()) {
+                        invId = k.getInt(1);
+                    }
+                }
 
                 PreparedStatement psi = c.prepareStatement(
                         "INSERT INTO invoice_items (invoice_id,item_name,item_type,quantity,unit_price,total_price,ref_item_id) VALUES (?,?,?,?,?,?,?)");
@@ -589,6 +604,10 @@ public class CustomerShopServlet extends HttpServlet {
     }
 
     private int parseInt(String s, int def) {
-        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return def;
+        }
     }
 }
