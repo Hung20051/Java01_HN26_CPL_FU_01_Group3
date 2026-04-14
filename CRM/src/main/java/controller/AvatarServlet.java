@@ -46,7 +46,10 @@ public class AvatarServlet extends HttpServlet {
             String contentType = filePart.getContentType();
             boolean allowed = false;
             for (String t : ALLOWED_TYPES) {
-                if (t.equals(contentType)) { allowed = true; break; }
+                if (t.equals(contentType)) {
+                    allowed = true;
+                    break;
+                }
             }
             if (!allowed) {
                 resp.getWriter().write("{\"success\":false,\"error\":\"Only JPG, PNG, GIF, WEBP allowed\"}");
@@ -61,12 +64,15 @@ public class AvatarServlet extends HttpServlet {
             String oldUrl = me.getAvatarUrl();
             if (oldUrl != null && oldUrl.startsWith("/avatar/file/")) {
                 String oldFile = oldUrl.replace("/avatar/file/", "");
-                try { Files.deleteIfExists(Paths.get(uploadDir, oldFile)); } catch (Exception ignored) {}
+                try {
+                    Files.deleteIfExists(Paths.get(uploadDir, oldFile));
+                } catch (Exception ignored) {
+                }
             }
             // Generate unique filename
-            String ext = contentType.equals("image/png")  ? ".png"
-                       : contentType.equals("image/gif")  ? ".gif"
-                       : contentType.equals("image/webp") ? ".webp" : ".jpg";
+            String ext = contentType.equals("image/png") ? ".png"
+                    : contentType.equals("image/gif") ? ".gif"
+                    : contentType.equals("image/webp") ? ".webp" : ".jpg";
             String filename = "avatar_" + me.getId() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
             // Save file
             try (InputStream in = filePart.getInputStream()) {
